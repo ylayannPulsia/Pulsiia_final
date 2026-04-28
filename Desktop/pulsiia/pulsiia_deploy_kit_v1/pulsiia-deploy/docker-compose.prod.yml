@@ -1,0 +1,192 @@
+# ─────────────────────────────────────────────────────────────
+# Pulsiia — Production stack
+# ─────────────────────────────────────────────────────────────
+# Usage : docker compose -f docker-compose.prod.yml up -d
+# Requires : .env.production loaded
+# ─────────────────────────────────────────────────────────────
+
+name: pulsiia-prod
+
+services:
+  # ─── App Node (Pulsiia API + Pulse agent) ────────────────
+  app:
+    image: pulsiia/app:${PULSIIA_VERSION:-latest}
+    container_name: pulsiia-app
+    restart: unless-stopped
+    env_file: .env.production
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: postgresql://${DB_USER}:${DB_PASSWORD}@postgres:5432/${DB_NAME}?schema=public
+      REDIS_URL: redis://default:${REDIS_PASSWORD}@redis:6379
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - pulsiia-net
+    expose:
+      - "3000"
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 40s
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: '1.0'
+        reservations:
+          memory: 512M
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"
+
+  # ─── Postgres + pgvector ─────────────────────────────────
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: pulsiia-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+      # Tuning conservatif pour 2-4GB RAM VPS
+      POSTGRES_INITDB_ARGS: "--data-checksums"
+    volumes:
+      - pulsiia-pgdata:/var/lib/postgresql/data
+      - ./postgres/postgresql.conf:/etc/postgresql/postgresql.conf:ro
+      - ./postgres/init:/docker-entrypoint-initdb.d:ro
+    networks:
+      - pulsiia-net
+    expose:
+      - "5432"
+    # NE PAS exposer publiquement (ports:) — uniquement réseau interne
+    command: postgres -c config_file=/etc/postgresql/postgresql.conf
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+
+  # ─── Redis (sessions + rate limit + BullMQ jobs) ─────────
+  redis:
+    image: redis:7-alpine
+    container_name: pulsiia-redis
+    restart: unless-stopped
+    command: >
+      redis-server
+      --requirepass ${REDIS_PASSWORD}
+      --appendonly yes
+      --maxmemory 256mb
+      --maxmemory-policy allkeys-lru
+    volumes:
+      - pulsiia-redisdata:/data
+    networks:
+      - pulsiia-net
+    expose:
+      - "6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "${REDIS_PASSWORD}", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          memory: 384M
+
+  # ─── Nginx reverse proxy + SSL terminator ────────────────
+  nginx:
+    image: nginx:1.27-alpine
+    container_name: pulsiia-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      - pulsiia-certbot:/etc/letsencrypt
+      - pulsiia-certbot-www:/var/www/certbot
+    depends_on:
+      - app
+    networks:
+      - pulsiia-net
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  # ─── Certbot (SSL auto-renew) ────────────────────────────
+  certbot:
+    image: certbot/certbot:latest
+    container_name: pulsiia-certbot
+    restart: unless-stopped
+    volumes:
+      - pulsiia-certbot:/etc/letsencrypt
+      - pulsiia-certbot-www:/var/www/certbot
+    # Renew toutes les 12h ; certbot ne renew que si < 30j d'expiration
+    entrypoint: |
+      /bin/sh -c 'trap exit TERM; while :; do
+        certbot renew --webroot -w /var/www/certbot --quiet;
+        sleep 12h & wait $${!};
+      done'
+
+  # ─── Backup service (DB dumps périodiques) ───────────────
+  backup:
+    image: postgres:16-alpine
+    container_name: pulsiia-backup
+    restart: unless-stopped
+    environment:
+      PGUSER: ${DB_USER}
+      PGPASSWORD: ${DB_PASSWORD}
+      PGDATABASE: ${DB_NAME}
+      PGHOST: postgres
+      BACKUP_RETENTION_DAYS: 30
+      # Optionnel : si configuré, push vers S3-compatible
+      S3_ENDPOINT: ${BACKUP_S3_ENDPOINT:-}
+      S3_BUCKET: ${BACKUP_S3_BUCKET:-}
+      S3_ACCESS_KEY: ${BACKUP_S3_ACCESS_KEY:-}
+      S3_SECRET_KEY: ${BACKUP_S3_SECRET_KEY:-}
+    volumes:
+      - ./scripts/backup.sh:/usr/local/bin/backup.sh:ro
+      - pulsiia-backups:/backups
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - pulsiia-net
+    entrypoint: |
+      /bin/sh -c 'apk add --no-cache aws-cli;
+      while :; do
+        sleep 86400;
+        /usr/local/bin/backup.sh;
+      done'
+
+networks:
+  pulsiia-net:
+    driver: bridge
+    name: pulsiia-net
+
+volumes:
+  pulsiia-pgdata:
+    name: pulsiia-pgdata
+  pulsiia-redisdata:
+    name: pulsiia-redisdata
+  pulsiia-certbot:
+    name: pulsiia-certbot
+  pulsiia-certbot-www:
+    name: pulsiia-certbot-www
+  pulsiia-backups:
+    name: pulsiia-backups

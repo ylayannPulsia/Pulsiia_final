@@ -1,0 +1,37 @@
+// ─────────────────────────────────────────────────────────────
+// Pulse Agent v3 — MCP Schema additions
+// ─────────────────────────────────────────────────────────────
+// À ajouter au schema.prisma du monorepo en plus des modèles
+// AuditLog (v1), PulseMemory + ProactiveAlertSent (v2).
+// ─────────────────────────────────────────────────────────────
+
+model MCPConnection {
+  id              String    @id @default(cuid())
+  tenantId        String
+  // Pour les connexions tenant-scope (Slack, Silae) : userId = "__TENANT__"
+  // Pour les connexions user-scope (Outlook) : userId = id réel
+  userId          String
+  serverId        String    // 'slack' | 'outlook' | 'silae'
+  encryptedToken  String    // base64(IV || TAG || AES-256-GCM ciphertext)
+  scope           String?   // scopes accordés (espace-séparés)
+  expiresAt       DateTime? // expiration de l'access_token (null si long-lived)
+  connectedAt     DateTime  @default(now())
+  lastUsedAt      DateTime?
+  revokedAt       DateTime?
+
+  @@unique([tenantId, userId, serverId])
+  @@index([tenantId, serverId])
+  @@index([revokedAt])
+}
+
+model OAuthState {
+  state         String   @id          // anti-CSRF token, primary key
+  serverId      String
+  tenantId      String
+  userId        String?               // null pour les connexions tenant-scope
+  codeVerifier  String?               // PKCE verifier
+  expiresAt     DateTime              // typiquement now + 10 min
+  createdAt     DateTime @default(now())
+
+  @@index([expiresAt])  // pour purge automatique
+}

@@ -1,0 +1,78 @@
+// ─────────────────────────────────────────────────────────────
+// Pulse Agent — Schema additions
+// ─────────────────────────────────────────────────────────────
+// À copier dans le schema.prisma du monorepo, en plus du modèle
+// AuditLog déjà ajouté en v1.
+//
+// ⚠️  IMPORTANT : la table PulseMemory utilise pgvector.
+// Avant la migration, exécuter dans la DB :
+//
+//     CREATE EXTENSION IF NOT EXISTS vector;
+//
+// Puis configurer Prisma pour les types non gérés via :
+//
+//     generator client {
+//       provider        = "prisma-client-js"
+//       previewFeatures = ["postgresqlExtensions"]
+//     }
+//
+//     datasource db {
+//       provider   = "postgresql"
+//       url        = env("DATABASE_URL")
+//       extensions = [vector]
+//     }
+// ─────────────────────────────────────────────────────────────
+
+model PulseMemory {
+  id          String   @id
+  tenantId    String
+  userId      String?  // null = scoped tenant entier
+  category    String   // PLANNING_PATTERN | PREFERENCE_USER | PREFERENCE_COLLAB | DECISION | CONTEXT_TENANT
+  content     String   @db.VarChar(500)
+  metadata    Json     @default("{}")
+  confidence  Float    @default(0.7)
+  source      String   @default("auto") // 'auto' | 'user'
+
+  // pgvector — Prisma ne gère pas le type natif, on le crée via raw SQL après migration
+  // embedding   Unsupported("vector(1536)")?
+
+  createdAt   DateTime @default(now())
+  lastUsedAt  DateTime @default(now())
+  useCount    Int      @default(0)
+
+  @@index([tenantId, category])
+  @@index([tenantId, userId])
+  @@index([lastUsedAt])
+}
+
+// Préférences d'alerte par utilisateur — étendre le modèle User existant
+// Ajouter ces champs au model User { ... } :
+//
+//   alertPreferences  Json?    // { enabled, intervalMinutes, silenceFromHour, silenceToHour, channels[] }
+//   slackWebhookUrl   String?
+//   teamsWebhookUrl   String?
+//   lastScanAt        DateTime?
+
+model ProactiveAlertSent {
+  id          String   @id @default(cuid())
+  userId      String
+  tenantId    String
+  ruleId      String   // ex: "planning.uncovered_shift_24h"
+  severity    Int      // 1-4
+  title       String
+  body        String
+  targetType  String?
+  targetId    String?
+  channels    String   // JSON array
+  results     String   // JSON par canal { ok, error? }
+  sentAt      DateTime @default(now())
+
+  // Statut côté utilisateur (lu / ignoré / actionné)
+  readAt      DateTime?
+  dismissedAt DateTime?
+  actedOnAt   DateTime?
+
+  @@index([userId, sentAt])
+  @@index([tenantId, sentAt])
+  @@index([userId, ruleId, targetType, targetId, sentAt])
+}
