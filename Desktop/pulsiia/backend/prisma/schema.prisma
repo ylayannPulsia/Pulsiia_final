@@ -1,0 +1,161 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  nom       String
+  prenom    String
+  role      String   @default("COLLABORATEUR") // RH | MANAGER | COLLABORATEUR
+  poste     String?
+  telephone String?
+  avatar    String?
+  actif     Boolean  @default(true)
+  siteId    String?
+  site      Site?    @relation(fields: [siteId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  absences        Absence[]
+  shifts          PlanningShift[]
+  documents       Document[]
+  qcmReponses     QcmReponse[]
+  ppVariables     PrepaieVariable[]
+  notifications   Notification[]
+  refreshTokens   RefreshToken[]
+  messages        Message[]
+}
+
+model Site {
+  id      String @id @default(cuid())
+  nom     String
+  adresse String?
+  ville   String?
+  users   User[]
+  shifts  PlanningShift[]
+}
+
+model PlanningShift {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  siteId     String
+  site       Site     @relation(fields: [siteId], references: [id])
+  date       String   // ISO date string "2026-03-05"
+  heureDebut String
+  heureFin   String
+  poste      String
+  statut     String   @default("CONFIRME") // CONFIRME | REMPLACEMENT_REQUIS | ANNULE
+  note       String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model Absence {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type      String   // MALADIE | CONGES_PAYES | RTT | EVENEMENT_FAMILIAL | SANS_SOLDE
+  dateDebut String   // ISO date string
+  dateFin   String
+  motif     String?
+  statut    String   @default("EN_ATTENTE") // EN_ATTENTE | APPROUVE | REFUSE
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model PrepaieVariable {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  periode   String   // "mars-2026"
+  type      String   // "Heures supp", "Prime transport", etc.
+  montant   Float
+  statut    String   @default("A_VALIDER") // A_VALIDER | VALIDE | ANOMALIE
+  anomalie  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Document {
+  id        String   @id @default(cuid())
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  nom       String
+  type      String   // Bulletin | Contrat | Attestation | Avenant
+  periode   String?
+  url       String?
+  taille    String?
+  createdAt DateTime @default(now())
+}
+
+model QcmCampagne {
+  id          String        @id @default(cuid())
+  titre       String
+  description String?
+  statut      String        @default("ACTIVE") // ACTIVE | FERMEE | BROUILLON
+  dateDebut   String
+  dateFin     String
+  questions   QcmQuestion[]
+  reponses    QcmReponse[]
+  createdAt   DateTime      @default(now())
+}
+
+model QcmQuestion {
+  id         String      @id @default(cuid())
+  campagneId String
+  campagne   QcmCampagne @relation(fields: [campagneId], references: [id], onDelete: Cascade)
+  texte      String
+  type       String      // rating | text | yesno | choice
+  choix      String?     // JSON stringified array for "choice" type
+  ordre      Int
+}
+
+model QcmReponse {
+  id         String      @id @default(cuid())
+  campagneId String
+  campagne   QcmCampagne @relation(fields: [campagneId], references: [id])
+  userId     String
+  user       User        @relation(fields: [userId], references: [id])
+  reponses   String      // JSON stringified object
+  createdAt  DateTime    @default(now())
+}
+
+model Message {
+  id        String   @id @default(cuid())
+  auteurId  String
+  auteur    User     @relation(fields: [auteurId], references: [id])
+  titre     String
+  contenu   String
+  type      String   @default("ANNONCE") // ANNONCE | INDIVIDUEL | GROUPE
+  lu        Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  titre     String
+  message   String
+  type      String   @default("INFO") // INFO | ALERTE | URGENT
+  lu        Boolean  @default(false)
+  lien      String?
+  createdAt DateTime @default(now())
+}
+
+model RefreshToken {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}
