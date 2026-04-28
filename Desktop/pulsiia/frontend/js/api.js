@@ -61,7 +61,7 @@
     if (res.status === 401) {
       // Token vraiment invalide → redirect login seulement si on a tenté une vraie action
       clearSession();
-      window.location.href = '/login.html';
+      window.location.href = '/';
       return null;
     }
 

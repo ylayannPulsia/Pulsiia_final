@@ -9,13 +9,16 @@ const app = express();
 
 // ── Sécurité ──────────────────────────────────────────────────────────────────
 app.use(helmet({
+  strictTransportSecurity: false,           // pas de HSTS sur HTTP local
   contentSecurityPolicy: {
+    useDefaults: false,                     // NE PAS merger avec les defaults de Helmet
     directives: {
       defaultSrc: ["'self'"],
-      scriptSrc: ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
+      scriptSrc: ["'self'", "'unsafe-inline'"],
+      scriptSrcAttr: ["'unsafe-inline'"],   // autorise onclick="..." dans Maquettes.html
       styleSrc: ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com', 'https://fonts.gstatic.com'],
       fontSrc: ["'self'", 'https://fonts.gstatic.com'],
-      imgSrc: ["'self'", 'data:'],
+      imgSrc: ["'self'", 'data:', 'https:'],
       connectSrc: ["'self'"],
     },
   },
