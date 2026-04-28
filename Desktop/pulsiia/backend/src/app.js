@@ -27,13 +27,18 @@ app.use(express.json({ limit: '2mb' }));
 app.use(express.urlencoded({ extended: true }));
 
 // ── Frontend statique ─────────────────────────────────────────────────────────
-// Sert les fichiers depuis le dossier racine (pulsiia/)
-const publicDir = path.join(__dirname, '../../');
-app.use(express.static(publicDir, { index: 'login.html' }));
+const rootDir     = path.join(__dirname, '../../');       // pulsiia/
+const frontendDir = path.join(__dirname, '../../frontend'); // pulsiia/frontend/
 
-// Redirect /app → Maquettes.html
-app.get('/app', (req, res) => res.sendFile(path.join(publicDir, 'Maquettes.html')));
-app.get('/app.html', (req, res) => res.sendFile(path.join(publicDir, 'Maquettes.html')));
+// 1. Sert frontend/ en priorité (login.html, js/, css/)
+app.use(express.static(frontendDir, { index: 'login.html' }));
+// 2. Sert la racine en fallback (Maquettes.html, pulsiia_deploy_kit_v1, etc.)
+app.use(express.static(rootDir, { index: false }));
+
+// Routes nommées pour l'app
+app.get('/', (req, res) => res.sendFile(path.join(frontendDir, 'login.html')));
+app.get('/app', (req, res) => res.sendFile(path.join(rootDir, 'Maquettes.html')));
+app.get('/app.html', (req, res) => res.sendFile(path.join(rootDir, 'Maquettes.html')));
 
 // ── Routes API ────────────────────────────────────────────────────────────────
 app.use('/api/auth', require('./routes/auth'));

@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pulsiia — Connexion</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --blue: #2563EB;
+    --blue-dark: #1D4ED8;
+    --bg: #F7F8FA;
+    --text: #111827;
+    --text-2: #6B7280;
+    --border: #E5E7EB;
+    --error: #DC2626;
+    --error-bg: #FEF2F2;
+    --radius: 10px;
+  }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .card {
+    background: white;
+    border-radius: 16px;
+    padding: 40px;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 4px 24px rgba(0,0,0,.08), 0 1px 3px rgba(0,0,0,.04);
+  }
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 32px;
+  }
+  .logo-mark {
+    width: 40px; height: 40px;
+    background: var(--blue);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .logo-mark svg { width: 22px; height: 22px; fill: white; }
+  .logo-text { font-size: 22px; font-weight: 700; color: var(--text); letter-spacing: -.4px; }
+  .logo-sub { font-size: 11px; color: var(--text-2); }
+  h1 { font-size: 20px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+  .subtitle { font-size: 13.5px; color: var(--text-2); margin-bottom: 28px; }
+  label { display: block; font-size: 13px; font-weight: 500; color: var(--text); margin-bottom: 6px; }
+  input {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    font-size: 14px;
+    font-family: inherit;
+    color: var(--text);
+    outline: none;
+    transition: border-color .15s;
+    background: white;
+  }
+  input:focus { border-color: var(--blue); }
+  input.error { border-color: var(--error); background: var(--error-bg); }
+  .field { margin-bottom: 18px; }
+  .pw-wrap { position: relative; }
+  .pw-toggle {
+    position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+    background: none; border: none; cursor: pointer; color: var(--text-2);
+    padding: 4px; line-height: 1;
+  }
+  .pw-toggle:hover { color: var(--text); }
+  .btn-submit {
+    width: 100%; padding: 11px;
+    background: var(--blue); color: white;
+    border: none; border-radius: var(--radius);
+    font-size: 14px; font-weight: 600; font-family: inherit;
+    cursor: pointer; transition: background .15s;
+    margin-top: 4px;
+  }
+  .btn-submit:hover:not(:disabled) { background: var(--blue-dark); }
+  .btn-submit:disabled { opacity: .6; cursor: not-allowed; }
+  .alert {
+    background: var(--error-bg);
+    border: 1px solid #FECACA;
+    border-radius: var(--radius);
+    padding: 12px 14px;
+    font-size: 13px;
+    color: var(--error);
+    margin-bottom: 20px;
+    display: none;
+  }
+  .alert.show { display: block; }
+  .demo-hint {
+    margin-top: 24px;
+    background: #EFF6FF;
+    border: 1px solid #BFDBFE;
+    border-radius: var(--radius);
+    padding: 14px;
+  }
+  .demo-hint-title { font-size: 12px; font-weight: 600; color: var(--blue); margin-bottom: 8px; }
+  .demo-acc {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 7px 10px;
+    background: white;
+    border-radius: 7px;
+    cursor: pointer;
+    margin-bottom: 6px;
+    border: 1px solid #DBEAFE;
+    transition: background .12s;
+  }
+  .demo-acc:last-child { margin-bottom: 0; }
+  .demo-acc:hover { background: #EFF6FF; }
+  .demo-acc-label { font-size: 12px; font-weight: 500; color: var(--text); }
+  .demo-acc-email { font-size: 11.5px; color: var(--text-2); }
+  .demo-acc-role { font-size: 10.5px; font-weight: 600; padding: 2px 8px; border-radius: 20px; }
+  .role-rh { background: #EFF6FF; color: var(--blue); }
+  .role-collab { background: #ECFDF5; color: #059669; }
+  .footer { text-align: center; margin-top: 20px; font-size: 12px; color: var(--text-2); }
+  @media (max-width: 480px) { .card { padding: 28px 20px; } }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="logo">
+    <div class="logo-mark">
+      <svg viewBox="45 37 280 280"><path d="M 57.984375 305.449219 C 57.433594 305.394531 56.824219 305.171875 56.601562 304.921875 C 56.296875 304.5625 56.242188 287.652344 56.242188 207.589844 L 56.242188 110.699219 L 56.878906 107.101562 C 57.984375 100.792969 59.007812 96.226562 59.671875 94.371094 C 68.558594 72.398438 77.054688 62.269531 90.28125 53.773438 C 93.214844 51.890625 95.125 50.839844 98.140625 49.234375 C 100.9375 48.015625 104.148438 46.632812 106.96875 45.554688 C 108.355469 44.832031 112.144531 43.589844 116.933594 42.371094 C 123.269531 40.628906 130.273438 39.6875 136.777344 38.996094 C 141.425781 38.273438 159.609375 38.273438 164.035156 38.996094 C 170.816406 39.714844 178.289062 40.515625 187.835938 42.011719 C 194.894531 43.449219 201.121094 45.082031 209.285156 47.433594 C 219.773438 51.335938 229.015625 54.964844 235.160156 58.5625 C 244.097656 63.792969 255.390625 73.78125 262.558594 81.640625 C 266.628906 88.007812 270.167969 95.339844 272.355469 101.707031 C 273.710938 106.632812 274.542969 118.171875 273.492188 130.15625 C 272.660156 133.585938 271 140.339844 268.261719 146.898438 C 266.875 150.054688 262.753906 157.445312 250.242188 172.996094 C 246.535156 176.707031 240.695312 181.492188 234.027344 186.199219 C 229.488281 188.910156 225.03125 191.457031 216.976562 195.246094 C 211.082031 197.570312 204.027344 200.230469 196.71875 202.304688 C 191.988281 203.714844 185.621094 205.070312 180.144531 206.011719 C 175.246094 206.734375 168.710938 207.757812 152.328125 208.394531 C 147.761719 208.394531 147.707031 208.367188 147.707031 204.351562 C 147.707031 200.476562 152.992188 199.8125 156.980469 199.234375 C 160.300781 198.347656 165.75 195.910156 174.441406 189.628906 C 179.839844 183.679688 184.265625 176.152344 186.285156 171.03125 C 187.976562 165.800781 189.578125 156.308594 189.578125 150.691406 C 189.578125 145.820312 188.527344 138.789062 186.976562 131.871094 C 183.824219 122.128906 177.789062 109.425781 156.148438 82.859375 C 148.484375 76.742188 140.953125 71.789062 131.488281 67.113281 C 124.875 64.59375 115.1875 62.101562 102.875 62.101562 C 94.292969 64.152344 87.734375 68.441406 84.441406 73.921875 C 83.640625 80.394531 84.277344 86.070312 88.152344 92.65625 C 95.539062 99.90625 105.558594 105.773438 112.007812 109.511719 C 122.082031 116.347656 131.820312 126.335938 138.160156 137.960938 C 140.621094 148.613281 141.675781 230.257812 141.507812 304.480469 C 141.121094 305.144531 60.089844 305.644531 57.984375 305.449219 Z"/></svg>
+    </div>
+    <div>
+      <div class="logo-text">Pulsiia</div>
+      <div class="logo-sub">OS Organisationnel RH</div>
+    </div>
+  </div>
+
+  <h1>Connexion</h1>
+  <p class="subtitle">Accédez à votre espace RH sécurisé</p>
+
+  <div class="alert" id="alert-box"></div>
+
+  <form id="login-form">
+    <div class="field">
+      <label for="email">Adresse email</label>
+      <input type="email" id="email" name="email" placeholder="votre@email.fr" autocomplete="email" required>
+    </div>
+    <div class="field">
+      <label for="password">Mot de passe</label>
+      <div class="pw-wrap">
+        <input type="password" id="password" name="password" placeholder="••••••••" autocomplete="current-password" required>
+        <button type="button" class="pw-toggle" onclick="togglePw()" title="Afficher/masquer">
+          <svg id="pw-eye" width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.144 13.144 0 0 1 1.172 8z"/><path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z"/></svg>
+        </button>
+      </div>
+    </div>
+    <button type="submit" class="btn-submit" id="btn-submit">Se connecter</button>
+  </form>
+
+  <div class="demo-hint">
+    <div class="demo-hint-title">Comptes de démonstration</div>
+    <div class="demo-acc" onclick="fillDemo('marie.lambert@pulsiia.fr','Pulsiia2026!')">
+      <div>
+        <div class="demo-acc-label">Marie Lambert</div>
+        <div class="demo-acc-email">marie.lambert@pulsiia.fr</div>
+      </div>
+      <span class="demo-acc-role role-rh">DRH</span>
+    </div>
+    <div class="demo-acc" onclick="fillDemo('lea.anders@pulsiia.fr','Collab2026!')">
+      <div>
+        <div class="demo-acc-label">Léa Anders</div>
+        <div class="demo-acc-email">lea.anders@pulsiia.fr</div>
+      </div>
+      <span class="demo-acc-role role-collab">Collaboratrice</span>
+    </div>
+  </div>
+
+  <div class="footer">Groupe Saveurs &amp; Co · 5 établissements</div>
+</div>
+
+<script>
+  const API = '/api';
+
+  // Auto-redirect si déjà connecté
+  const token = localStorage.getItem('pulsiia_token');
+  if (token) {
+    fetch(API + '/auth/me', { headers: { Authorization: 'Bearer ' + token } })
+      .then(r => { if (r.ok) window.location.href = '/app'; })
+      .catch(() => {});
+  }
+
+  document.getElementById('login-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = document.getElementById('btn-submit');
+    const alertBox = document.getElementById('alert-box');
+    alertBox.classList.remove('show');
+    btn.disabled = true;
+    btn.textContent = 'Connexion…';
+
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value;
+
+    try {
+      const res = await fetch(API + '/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        alertBox.textContent = data.error || 'Identifiants incorrects';
+        alertBox.classList.add('show');
+        document.getElementById('email').classList.add('error');
+        document.getElementById('password').classList.add('error');
+        return;
+      }
+
+      localStorage.setItem('pulsiia_token', data.accessToken);
+      localStorage.setItem('pulsiia_refresh', data.refreshToken);
+      localStorage.setItem('pulsiia_user', JSON.stringify(data.user));
+      window.location.href = '/app';
+    } catch (err) {
+      alertBox.textContent = 'Impossible de contacter le serveur. Vérifiez que le backend est démarré.';
+      alertBox.classList.add('show');
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Se connecter';
+    }
+  });
+
+  document.querySelectorAll('input').forEach(inp => {
+    inp.addEventListener('input', () => inp.classList.remove('error'));
+  });
+
+  function togglePw() {
+    const inp = document.getElementById('password');
+    const eye = document.getElementById('pw-eye');
+    if (inp.type === 'password') {
+      inp.type = 'text';
+      eye.innerHTML = '<path d="M13.359 11.238C15.06 9.72 16 8 16 8s-3-5.5-8-5.5a7.028 7.028 0 0 0-2.79.588l.77.771A5.944 5.944 0 0 1 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.134 13.134 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755-.165.165-.337.328-.517.486l.708.709z"/><path d="M11.297 9.176a3.5 3.5 0 0 0-4.474-4.474l.823.823a2.5 2.5 0 0 1 2.829 2.829l.822.822zm-2.943 1.299.822.822a3.5 3.5 0 0 1-4.474-4.474l.823.823a2.5 2.5 0 0 0 2.829 2.829z"/><path d="M3.35 5.47c-.18.16-.353.322-.518.487A13.134 13.134 0 0 0 1.172 8l.195.288c.335.48.83 1.12 1.465 1.755C4.121 11.332 5.881 12.5 8 12.5c.716 0 1.39-.133 2.02-.36l.77.772A7.029 7.029 0 0 1 8 13.5C3 13.5 0 8 0 8s.939-1.721 2.641-3.238l.708.709z"/><path fill-rule="evenodd" d="M13.646 14.354l-12-12 .708-.708 12 12-.708.708z"/>';
+    } else {
+      inp.type = 'password';
+      eye.innerHTML = '<path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.144 13.144 0 0 1 1.172 8z"/><path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z"/>';
+    }
+  }
+
+  function fillDemo(email, pwd) {
+    document.getElementById('email').value = email;
+    document.getElementById('password').value = pwd;
+    document.getElementById('email').classList.remove('error');
+    document.getElementById('password').classList.remove('error');
+    document.getElementById('alert-box').classList.remove('show');
+  }
+</script>
+</body>
+</html>
