@@ -1560,9 +1560,6 @@
 
   <!-- TOPBAR -->
   <div class="topbar">
-    <button class="mobile-menu-btn" onclick="toggleSidebarMobile()" aria-label="Menu">
-      <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"/></svg>
-    </button>
     <div>
       <div class="topbar-title" id="page-title">Tableau de bord</div>
     </div>
@@ -10059,39 +10056,5 @@
 
 </div>
 
-<!-- Overlay mobile sidebar -->
-<div class="sidebar-overlay-m" id="sidebar-overlay-m" onclick="toggleSidebarMobile()"></div>
-
-<script>
-// ── Mobile sidebar ────────────────────────────────────────────────────────────
-function toggleSidebarMobile() {
-  const sidebar = document.querySelector('.sidebar');
-  const overlay = document.getElementById('sidebar-overlay-m');
-  const isOpen = sidebar.classList.contains('open');
-  sidebar.classList.toggle('open', !isOpen);
-  overlay.classList.toggle('open', !isOpen);
-}
-
-// Close sidebar on nav item click (mobile)
-document.querySelectorAll('.nav-item').forEach(item => {
-  item.addEventListener('click', () => {
-    if (window.innerWidth <= 768) {
-      document.querySelector('.sidebar').classList.remove('open');
-      document.getElementById('sidebar-overlay-m').classList.remove('open');
-    }
-  });
-});
-
-// Greet user with real name (fallback si pages.js pas encore chargé)
-(function() {
-  const stored = localStorage.getItem('pulsiia_user');
-  if (!stored) return;
-  try {
-    const user = JSON.parse(stored);
-    const greet = document.querySelector('#page-dashboard h2');
-    if (greet) greet.textContent = `Bonjour, ${user.prenom} 👋`;
-  } catch(e) {}
-})();
-</script>
 </body>
 </html>
