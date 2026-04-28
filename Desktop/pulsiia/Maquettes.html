@@ -10082,17 +10082,7 @@ document.querySelectorAll('.nav-item').forEach(item => {
   });
 });
 
-// ── API Integration ───────────────────────────────────────────────────────────
-// Hook into existing showPage to load data on navigation
-(function() {
-  const _orig = window.showPage;
-  window.showPage = function(name, navEl) {
-    if (_orig) _orig(name, navEl);
-    if (window._pulsiiaLoadPage) window._pulsiiaLoadPage(name);
-  };
-})();
-
-// Greet user with real name
+// Greet user with real name (fallback si pages.js pas encore chargé)
 (function() {
   const stored = localStorage.getItem('pulsiia_user');
   if (!stored) return;
