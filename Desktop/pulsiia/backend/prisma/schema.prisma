@@ -1,161 +1,527 @@
+// Pulsiia — schema Prisma
+// Référence : Cahier des charges v1.0 §10.2 (18 modèles)
+// Phase 1 : multi-tenant, auth, planning, paie, bien-être, RGPD, fichiers
+// Phase 2 ajoutera : pgvector pour la mémoire de l'agent IA (hors v1.0)
+
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = []
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  password  String
-  nom       String
-  prenom    String
-  role      String   @default("COLLABORATEUR") // RH | MANAGER | COLLABORATEUR
-  poste     String?
-  telephone String?
-  avatar    String?
-  actif     Boolean  @default(true)
-  siteId    String?
-  site      Site?    @relation(fields: [siteId], references: [id])
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+// ─── Énumérations ────────────────────────────────────────────────────────
 
-  absences        Absence[]
-  shifts          PlanningShift[]
-  documents       Document[]
-  qcmReponses     QcmReponse[]
-  ppVariables     PrepaieVariable[]
-  notifications   Notification[]
-  refreshTokens   RefreshToken[]
-  messages        Message[]
+enum UserRole {
+  COLLABORATEUR
+  MANAGER
+  RH
+  DRH
+  ADMIN
 }
+
+enum Sector {
+  HCR
+  SANTE
+  RETAIL
+  AUTRE
+}
+
+enum AuthMode {
+  PASSWORD
+  SSO_GOOGLE
+  SSO_MICROSOFT
+  SSO_OKTA
+}
+
+enum ShiftType {
+  MATIN
+  APRES_MIDI
+  NUIT
+  JOURNEE
+  REPOS
+}
+
+enum AbsenceType {
+  CP
+  RTT
+  MALADIE
+  MATERNITE
+  PATERNITE
+  ENFANT_MALADE
+  CONGE_SANS_SOLDE
+  FORMATION
+  ACCIDENT_TRAVAIL
+  EVENEMENT_FAMILIAL
+  AUTRE
+}
+
+enum AbsenceStatus {
+  DRAFT
+  PENDING
+  APPROVED
+  REJECTED
+  CANCELLED
+}
+
+enum PayVariableKind {
+  HEURES_SUPP
+  PRIME
+  ABSENCE
+  CONGE
+  AVANTAGE_NATURE
+  AUTRE
+}
+
+enum PayVariableStatus {
+  PENDING
+  VALIDATED
+  ANOMALY
+  REJECTED
+}
+
+enum SurveyStatus {
+  DRAFT
+  OPEN
+  CLOSED
+}
+
+enum DeletionStatus {
+  PENDING
+  SCHEDULED
+  COMPLETED
+  CANCELLED
+}
+
+enum ConsentKind {
+  CGU
+  PRIVACY
+  COOKIES
+  MARKETING
+}
+
+enum SSOProvider {
+  GOOGLE
+  MICROSOFT
+  OKTA
+}
+
+// ─── 1. Company (multi-tenant) ──────────────────────────────────────────
+
+model Company {
+  id        String   @id @default(cuid())
+  name      String
+  slug      String   @unique
+  sector    Sector   @default(HCR)
+  ccn       String? // convention collective (ex: "CHR")
+  headcount Int      @default(0)
+  authMode  AuthMode @default(PASSWORD)
+  // Domaine email d'entreprise → utilisé par /auth/check-domain
+  emailDomain String? @unique
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  sites     Site[]
+  users     User[]
+  shifts    Shift[]
+  absences  Absence[]
+  payVars   PayVariable[]
+  surveys   Survey[]
+  files     UploadedFile[]
+  auditLogs AuditLog[]
+}
+
+// ─── 2. Site (établissement) ────────────────────────────────────────────
 
 model Site {
-  id      String @id @default(cuid())
-  nom     String
-  adresse String?
-  ville   String?
-  users   User[]
-  shifts  PlanningShift[]
+  id        String   @id @default(cuid())
+  companyId String
+  name      String
+  city      String?
+  address   String?
+  isHQ      Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  company  Company   @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  users    User[]
+  shifts   Shift[]
+  absences Absence[]
+
+  @@index([companyId])
 }
 
-model PlanningShift {
-  id         String   @id @default(cuid())
-  userId     String
-  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  siteId     String
-  site       Site     @relation(fields: [siteId], references: [id])
-  date       String   // ISO date string "2026-03-05"
-  heureDebut String
-  heureFin   String
-  poste      String
-  statut     String   @default("CONFIRME") // CONFIRME | REMPLACEMENT_REQUIS | ANNULE
-  note       String?
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+// ─── 3. User ────────────────────────────────────────────────────────────
+
+model User {
+  id           String    @id @default(cuid())
+  companyId    String
+  primarySiteId String?
+  email        String    @unique
+  // Hash bcrypt — null si l'utilisateur ne se connecte qu'en SSO
+  passwordHash String?
+  firstName    String
+  lastName     String
+  phone        String?
+  role         UserRole  @default(COLLABORATEUR)
+  isActive     Boolean   @default(true)
+  jobTitle     String?
+  // Réinitialisation de mot de passe (token hashé + expiration)
+  resetTokenHash      String?
+  resetTokenExpiresAt DateTime?
+  // 2FA (phase 2 — placeholder)
+  totpSecret    String?
+  totpEnabled   Boolean   @default(false)
+  lastLoginAt   DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  company       Company           @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  primarySite   Site?             @relation(fields: [primarySiteId], references: [id], onDelete: SetNull)
+  shifts        Shift[]
+  absences      Absence[]         @relation("AbsenceOwner")
+  validations   Absence[]         @relation("AbsenceValidator")
+  payVariables  PayVariable[]     @relation("PayVarOwner")
+  payValidations PayVariable[]    @relation("PayVarValidator")
+  surveyResponses SurveyResponse[]
+  refreshTokens RefreshToken[]
+  pushSubs      PushSubscription[]
+  consentLogs   ConsentLog[]
+  exportRequests DataExportRequest[]
+  deletionRequests DeletionRequest[]
+  auditLogs     AuditLog[]
+  ssoAccounts   SSOAccount[]
+  uploadedFiles UploadedFile[]    @relation("FileUploader")
+
+  @@index([companyId])
+  @@index([primarySiteId])
+  @@index([role])
 }
+
+// ─── 4. Shift (créneau de planning) ─────────────────────────────────────
+
+model Shift {
+  id        String    @id @default(cuid())
+  companyId String
+  userId    String
+  siteId    String
+  startsAt  DateTime
+  endsAt    DateTime
+  type      ShiftType @default(JOURNEE)
+  notes     String?
+  // Heures effectives stockées (calculées à la création/MAJ)
+  hoursWorked Decimal @db.Decimal(5, 2) @default(0)
+  isPublished Boolean @default(false)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  site    Site    @relation(fields: [siteId], references: [id], onDelete: Restrict)
+
+  @@index([companyId])
+  @@index([userId])
+  @@index([siteId])
+  @@index([startsAt])
+}
+
+// ─── 5. Absence ─────────────────────────────────────────────────────────
 
 model Absence {
-  id        String   @id @default(cuid())
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  type      String   // MALADIE | CONGES_PAYES | RTT | EVENEMENT_FAMILIAL | SANS_SOLDE
-  dateDebut String   // ISO date string
-  dateFin   String
-  motif     String?
-  statut    String   @default("EN_ATTENTE") // EN_ATTENTE | APPROUVE | REFUSE
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model PrepaieVariable {
-  id        String   @id @default(cuid())
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  periode   String   // "mars-2026"
-  type      String   // "Heures supp", "Prime transport", etc.
-  montant   Float
-  statut    String   @default("A_VALIDER") // A_VALIDER | VALIDE | ANOMALIE
-  anomalie  String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model Document {
-  id        String   @id @default(cuid())
-  userId    String?
-  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
-  nom       String
-  type      String   // Bulletin | Contrat | Attestation | Avenant
-  periode   String?
-  url       String?
-  taille    String?
-  createdAt DateTime @default(now())
-}
-
-model QcmCampagne {
   id          String        @id @default(cuid())
-  titre       String
-  description String?
-  statut      String        @default("ACTIVE") // ACTIVE | FERMEE | BROUILLON
-  dateDebut   String
-  dateFin     String
-  questions   QcmQuestion[]
-  reponses    QcmReponse[]
-  createdAt   DateTime      @default(now())
-}
-
-model QcmQuestion {
-  id         String      @id @default(cuid())
-  campagneId String
-  campagne   QcmCampagne @relation(fields: [campagneId], references: [id], onDelete: Cascade)
-  texte      String
-  type       String      // rating | text | yesno | choice
-  choix      String?     // JSON stringified array for "choice" type
-  ordre      Int
-}
-
-model QcmReponse {
-  id         String      @id @default(cuid())
-  campagneId String
-  campagne   QcmCampagne @relation(fields: [campagneId], references: [id])
-  userId     String
-  user       User        @relation(fields: [userId], references: [id])
-  reponses   String      // JSON stringified object
-  createdAt  DateTime    @default(now())
-}
-
-model Message {
-  id        String   @id @default(cuid())
-  auteurId  String
-  auteur    User     @relation(fields: [auteurId], references: [id])
-  titre     String
-  contenu   String
-  type      String   @default("ANNONCE") // ANNONCE | INDIVIDUEL | GROUPE
-  lu        Boolean  @default(false)
+  companyId   String
+  userId      String
+  siteId      String?
+  type        AbsenceType
+  status      AbsenceStatus @default(PENDING)
+  startsAt    DateTime
+  endsAt      DateTime
+  reason      String?
+  rejectReason String?
+  validatedById String?
+  validatedAt   DateTime?
+  // Lien optionnel vers le justificatif uploadé
+  justificationFileId String?
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  company     Company       @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  user        User          @relation("AbsenceOwner", fields: [userId], references: [id], onDelete: Cascade)
+  site        Site?         @relation(fields: [siteId], references: [id], onDelete: SetNull)
+  validatedBy User?         @relation("AbsenceValidator", fields: [validatedById], references: [id], onDelete: SetNull)
+  justification UploadedFile? @relation("AbsenceJustification", fields: [justificationFileId], references: [id], onDelete: SetNull)
+
+  @@index([companyId])
+  @@index([userId])
+  @@index([status])
+  @@index([startsAt])
 }
 
-model Notification {
-  id        String   @id @default(cuid())
+// ─── 6. PayVariable (variable de paie) ──────────────────────────────────
+
+model PayVariable {
+  id        String            @id @default(cuid())
+  companyId String
   userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  titre     String
-  message   String
-  type      String   @default("INFO") // INFO | ALERTE | URGENT
-  lu        Boolean  @default(false)
-  lien      String?
+  kind      PayVariableKind
+  // Période concernée (ex: 2026-05)
+  periodYear  Int
+  periodMonth Int
+  amount    Decimal           @db.Decimal(10, 2)
+  unit      String? // "h", "€", "j" — selon kind
+  status    PayVariableStatus @default(PENDING)
+  // Anomalie détectée par l'IA / règles
+  anomalyReason String?
+  validatedById String?
+  validatedAt   DateTime?
+  rejectReason  String?
+  metadata      Json? // contexte (lien vers shift, absence, etc.)
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  company     Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  user        User    @relation("PayVarOwner", fields: [userId], references: [id], onDelete: Cascade)
+  validatedBy User?   @relation("PayVarValidator", fields: [validatedById], references: [id], onDelete: SetNull)
+
+  @@index([companyId])
+  @@index([userId])
+  @@index([status])
+  @@index([periodYear, periodMonth])
 }
+
+// ─── 7. Survey (sondage QCM bien-être) ──────────────────────────────────
+
+model Survey {
+  id        String       @id @default(cuid())
+  companyId String
+  title     String
+  weekStart DateTime // début de la semaine ISO
+  status    SurveyStatus @default(DRAFT)
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+  closedAt  DateTime?
+
+  company   Company          @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  questions Question[]
+  responses SurveyResponse[]
+
+  @@index([companyId])
+  @@index([status])
+  @@index([weekStart])
+}
+
+// ─── 8. Question ────────────────────────────────────────────────────────
+
+model Question {
+  id        String   @id @default(cuid())
+  surveyId  String
+  position  Int
+  prompt    String
+  // Choix possibles : ["Très mal", "Mal", "Bof", "Bien", "Au top"]
+  choices   Json
+  createdAt DateTime @default(now())
+
+  survey  Survey   @relation(fields: [surveyId], references: [id], onDelete: Cascade)
+  answers Answer[]
+
+  @@unique([surveyId, position])
+  @@index([surveyId])
+}
+
+// ─── 9. SurveyResponse ──────────────────────────────────────────────────
+
+model SurveyResponse {
+  id          String   @id @default(cuid())
+  surveyId    String
+  userId      String
+  submittedAt DateTime @default(now())
+  // Score moyen calculé (1-5)
+  score       Decimal  @db.Decimal(3, 2)
+
+  survey  Survey   @relation(fields: [surveyId], references: [id], onDelete: Cascade)
+  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  answers Answer[]
+
+  @@unique([surveyId, userId])
+  @@index([surveyId])
+  @@index([userId])
+}
+
+// ─── 10. Answer ─────────────────────────────────────────────────────────
+
+model Answer {
+  id              String  @id @default(cuid())
+  responseId      String
+  questionId      String
+  // Valeur 1-5 (ou index dans choices)
+  value           Int
+  comment         String?
+
+  response SurveyResponse @relation(fields: [responseId], references: [id], onDelete: Cascade)
+  question Question       @relation(fields: [questionId], references: [id], onDelete: Cascade)
+
+  @@unique([responseId, questionId])
+  @@index([responseId])
+  @@index([questionId])
+}
+
+// ─── 11. RefreshToken ───────────────────────────────────────────────────
 
 model RefreshToken {
   id        String   @id @default(cuid())
   userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  token     String   @unique
+  // Hash du token (jti) — jamais le token en clair
+  tokenHash String   @unique
+  // Empreinte du device pour aider à la révocation
+  userAgent String?
+  ipAddress String?
   expiresAt DateTime
+  revokedAt DateTime?
   createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+// ─── 12. PushSubscription (VAPID) ───────────────────────────────────────
+
+model PushSubscription {
+  id        String   @id @default(cuid())
+  userId    String
+  endpoint  String   @unique
+  p256dh    String
+  authKey   String
+  userAgent String?
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+// ─── 13. ConsentLog ─────────────────────────────────────────────────────
+
+model ConsentLog {
+  id        String      @id @default(cuid())
+  userId    String
+  kind      ConsentKind
+  granted   Boolean
+  version   String // version du document accepté (ex: "CGU-v1.2")
+  ipAddress String?
+  userAgent String?
+  createdAt DateTime    @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([kind])
+}
+
+// ─── 14. DataExportRequest (Article 20) ─────────────────────────────────
+
+model DataExportRequest {
+  id          String    @id @default(cuid())
+  userId      String
+  requestedAt DateTime  @default(now())
+  completedAt DateTime?
+  // URL signée vers l'export JSON (expire 24h)
+  downloadUrl       String?
+  downloadExpiresAt DateTime?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+// ─── 15. DeletionRequest (Article 17) ───────────────────────────────────
+
+model DeletionRequest {
+  id          String         @id @default(cuid())
+  userId      String
+  status      DeletionStatus @default(PENDING)
+  requestedAt DateTime       @default(now())
+  // Délai légal de 30 jours
+  scheduledFor DateTime
+  completedAt  DateTime?
+  cancelledAt  DateTime?
+  reason       String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([status])
+  @@index([scheduledFor])
+}
+
+// ─── 16. AuditLog ───────────────────────────────────────────────────────
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  companyId  String?
+  userId     String?
+  // Type d'action : "auth.login", "auth.logout", "prepaie.validate", etc.
+  action     String
+  resource   String? // entité concernée (ex: "PayVariable:abc123")
+  ipAddress  String?
+  userAgent  String?
+  metadata   Json? // payload contextuel
+  createdAt  DateTime @default(now())
+
+  company Company? @relation(fields: [companyId], references: [id], onDelete: SetNull)
+  user    User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([companyId])
+  @@index([userId])
+  @@index([action])
+  @@index([createdAt])
+}
+
+// ─── 17. SSOAccount ─────────────────────────────────────────────────────
+
+model SSOAccount {
+  id              String      @id @default(cuid())
+  userId          String
+  provider        SSOProvider
+  // ID externe chez le provider (sub OIDC)
+  providerUserId  String
+  email           String
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerUserId])
+  @@index([userId])
+}
+
+// ─── 18. UploadedFile ───────────────────────────────────────────────────
+
+model UploadedFile {
+  id            String   @id @default(cuid())
+  companyId     String
+  uploaderId    String
+  // Catégorie métier : "contrat", "bulletin", "justificatif", "modele", "autre"
+  category      String
+  originalName  String
+  storedPath    String // chemin hors webroot
+  mimeType      String
+  sizeBytes     Int
+  // Magic bytes vérifiés au upload
+  verifiedMime  String?
+  // Visibilité : owner uniquement / tout le monde dans l'entreprise
+  isPrivate     Boolean  @default(true)
+  createdAt     DateTime @default(now())
+
+  company  Company   @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  uploader User      @relation("FileUploader", fields: [uploaderId], references: [id], onDelete: Cascade)
+  absences Absence[] @relation("AbsenceJustification")
+
+  @@index([companyId])
+  @@index([uploaderId])
+  @@index([category])
 }

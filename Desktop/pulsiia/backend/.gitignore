@@ -1,5 +1,12 @@
 node_modules/
 .env
-*.db
-*.db-journal
+.env.local
+keys/
+*.pem
 coverage/
+dist/
+build/
+*.log
+uploads/
+storage/
+postgres-data/

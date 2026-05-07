@@ -1,0 +1,26 @@
+# Pulsiia — stack de développement local
+# Usage : docker compose up -d
+# Le backend tourne en local (npm run dev) et se connecte au Postgres du compose.
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: pulsiia-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: pulsiia
+      POSTGRES_PASSWORD: pulsiia_dev
+      POSTGRES_DB: pulsiia
+    ports:
+      - "5432:5432"
+    volumes:
+      - pulsiia_pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U pulsiia -d pulsiia"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  pulsiia_pg_data:
+    name: pulsiia_pg_data
