@@ -195,15 +195,18 @@
   </div>
 
   <div class="footer">Groupe Saveurs &amp; Co · 5 établissements</div>
+  <div style="text-align:center;margin-top:12px">
+    <a href="/" style="font-size:12px;color:var(--blue);font-weight:500">Accéder à l'app sans connexion →</a>
+  </div>
 </div>
 
 <script src="/js/api.js"></script>
 <script>
 'use strict';
 
-// Auto-redirect si session active
+// Auto-redirect si session active (désactivé si DB hors ligne)
 (async () => {
-  if (await API.initAuth()) window.location.replace('/');
+  try { if (await API.initAuth()) window.location.replace('/'); } catch {}
 })();
 
 const form    = document.getElementById('login-form');

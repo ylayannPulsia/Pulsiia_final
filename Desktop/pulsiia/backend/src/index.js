@@ -86,7 +86,11 @@ app.use('/api/sites', apiLimiter, sitesRouter);
 
 // ─── Frontend statique ───────────────────────────────────────────────────────
 app.use(express.static(FRONTEND));
-// SPA fallback : tout ce qui n'est pas /api → index.html
+// /app et sous-routes → SPA app.html
+app.get(/^\/app(\/.*)?$/, (req, res) => {
+  res.sendFile(path.join(FRONTEND, 'app.html'));
+});
+// Tout le reste non-API → landing (index.html)
 app.get(/^(?!\/api).*/, (req, res) => {
   res.sendFile(path.join(FRONTEND, 'index.html'));
 });

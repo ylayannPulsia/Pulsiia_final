@@ -11,15 +11,18 @@ let _ppPage = 1;            // prepaie pagination
 
 // ── Init ──────────────────────────────────────────────────────────────────────
 async function initApp() {
-  const ok = await API.initAuth();
-  if (!ok) { window.location.replace('/login.html'); return; }
-
+  // Tenter l'auth réelle, sinon continuer en mode démo
   try {
-    _user = await API.me();
-  } catch {
-    API.clearTokens();
-    window.location.replace('/login.html');
-    return;
+    const ok = await API.initAuth();
+    if (ok) _user = await API.me();
+  } catch {}
+
+  if (!_user) {
+    _user = {
+      id: 'demo', email: 'marie.lambert@saveurs-co.fr',
+      firstName: 'Marie', lastName: 'Lambert',
+      role: 'DRH', companyId: 'demo', primarySiteId: 'demo',
+    };
   }
 
   setupUserUI();
