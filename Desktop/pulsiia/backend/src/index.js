@@ -11,6 +11,14 @@ const { authLimiter, apiLimiter } = require('./middleware/rateLimiter');
 const { errorHandler } = require('./middleware/errorHandler');
 
 const authRouter = require('./routes/auth');
+const planningRouter = require('./routes/planning');
+const absencesRouter = require('./routes/absences');
+const prepaieRouter = require('./routes/prepaie');
+const bienetreRouter = require('./routes/bienetre');
+const communicationRouter = require('./routes/communication');
+const dashboardRouter = require('./routes/dashboard');
+const usersRouter = require('./routes/users');
+const sitesRouter = require('./routes/sites');
 
 const app = express();
 
@@ -64,21 +72,14 @@ app.get('/health', (req, res) => {
 
 // ─── Routes ──────────────────────────────────────────────────────────────────
 app.use('/api/auth', authLimiter, authRouter);
-
-// Placeholder routes (à implémenter en Phase 2)
-const notImplemented = (req, res) =>
-  res.status(501).json({ error: 'Module en cours de développement', code: 'NOT_IMPLEMENTED' });
-
-app.use('/api/planning', apiLimiter, notImplemented);
-app.use('/api/absences', apiLimiter, notImplemented);
-app.use('/api/prepaie', apiLimiter, notImplemented);
-app.use('/api/bienetre', apiLimiter, notImplemented);
-app.use('/api/dashboard', apiLimiter, notImplemented);
-app.use('/api/users', apiLimiter, notImplemented);
-app.use('/api/sites', apiLimiter, notImplemented);
-app.use('/api/push', apiLimiter, notImplemented);
-app.use('/api/rgpd', apiLimiter, notImplemented);
-app.use('/api/files', apiLimiter, notImplemented);
+app.use('/api/planning', apiLimiter, planningRouter);
+app.use('/api/absences', apiLimiter, absencesRouter);
+app.use('/api/prepaie', apiLimiter, prepaieRouter);
+app.use('/api/bienetre', apiLimiter, bienetreRouter);
+app.use('/api/communication', apiLimiter, communicationRouter);
+app.use('/api/dashboard', apiLimiter, dashboardRouter);
+app.use('/api/users', apiLimiter, usersRouter);
+app.use('/api/sites', apiLimiter, sitesRouter);
 
 // ─── 404 ─────────────────────────────────────────────────────────────────────
 app.use((req, res) => {

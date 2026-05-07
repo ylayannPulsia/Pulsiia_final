@@ -36,6 +36,8 @@ function setHM(date, h, m = 0) {
 
 async function reset() {
   // Ordre inverse des FK pour ne pas violer les contraintes
+  await prisma.message.deleteMany();
+  await prisma.channel.deleteMany();
   await prisma.answer.deleteMany();
   await prisma.surveyResponse.deleteMany();
   await prisma.question.deleteMany();
@@ -277,6 +279,30 @@ async function main() {
     }
   }
 
+  // ─── Channels (6 canaux pré-configurés Saveurs & Co) ────────────────
+  const channelsData = [
+    { name: 'Annonces générales', slug: 'annonces', kind: 'ANNOUNCEMENT', description: 'Informations officielles pour tous les collaborateurs' },
+    { name: 'Direction', slug: 'direction', kind: 'TEAM', description: 'Canal réservé à l\'équipe de direction' },
+    { name: 'Cuisine', slug: 'cuisine', kind: 'TEAM', description: 'Équipe cuisine — recettes, organisation, approvisionnement' },
+    { name: 'Service', slug: 'service', kind: 'TEAM', description: 'Équipe service en salle' },
+    { name: 'RH', slug: 'rh', kind: 'TEAM', description: 'Questions RH, contrats, absences' },
+    { name: 'Site Paris 11', slug: 'paris-11', kind: 'TEAM', description: 'Canal dédié au site Paris 11' },
+  ];
+  const channels = await Promise.all(
+    channelsData.map((c) => prisma.channel.create({ data: { ...c, companyId: company.id } })),
+  );
+  const [annonces] = channels;
+
+  // Message de bienvenue dans le canal annonces
+  await prisma.message.create({
+    data: {
+      channelId: annonces.id,
+      authorId: marie.id,
+      content: '👋 Bienvenue sur Pulsiia ! Ce canal est réservé aux annonces officielles. Bon démarrage à toute l\'équipe !',
+      isPinned: true,
+    },
+  });
+
   // ─── Récap ─────────────────────────────────────────────────────────
   console.log('');
   console.log('✓ Company:        Groupe Saveurs & Co');
@@ -285,6 +311,7 @@ async function main() {
   console.log(`✓ Shifts:         ${shiftCount}`);
   console.log(`✓ Absences:       ${absencesData.length}`);
   console.log(`✓ PayVariables:   ${payCount}`);
+  console.log(`✓ Channels:       ${channels.length} (1 message épinglé)`);
   console.log(`✓ Survey:         1 (${questions.length} questions, ${users.length} réponses)`);
   console.log('');
   console.log('Comptes démo (mot de passe: Pulsiia2026!) :');

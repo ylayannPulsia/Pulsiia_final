@@ -1,7 +1,8 @@
 // Pulsiia — schema Prisma
-// Référence : Cahier des charges v1.0 §10.2 (18 modèles)
+// Référence : Cahier des charges v1.0 §10.2 (18 modèles + 2 Phase 2)
 // Phase 1 : multi-tenant, auth, planning, paie, bien-être, RGPD, fichiers
-// Phase 2 ajoutera : pgvector pour la mémoire de l'agent IA (hors v1.0)
+// Phase 2 : + Channel, Message (communication)
+// Phase IA (hors v1.0) : pgvector pour mémoire agent
 
 generator client {
   provider        = "prisma-client-js"
@@ -109,6 +110,12 @@ enum SSOProvider {
   OKTA
 }
 
+enum ChannelKind {
+  ANNOUNCEMENT // lecture seule pour les non-admins
+  TEAM
+  CUSTOM
+}
+
 // ─── 1. Company (multi-tenant) ──────────────────────────────────────────
 
 model Company {
@@ -132,6 +139,7 @@ model Company {
   surveys   Survey[]
   files     UploadedFile[]
   auditLogs AuditLog[]
+  channels  Channel[]
 }
 
 // ─── 2. Site (établissement) ────────────────────────────────────────────
@@ -195,6 +203,7 @@ model User {
   auditLogs     AuditLog[]
   ssoAccounts   SSOAccount[]
   uploadedFiles UploadedFile[]    @relation("FileUploader")
+  messages      Message[]
 
   @@index([companyId])
   @@index([primarySiteId])
@@ -524,4 +533,48 @@ model UploadedFile {
   @@index([companyId])
   @@index([uploaderId])
   @@index([category])
+}
+
+// ─── 19. Channel (communication) ────────────────────────────────────────
+
+model Channel {
+  id          String      @id @default(cuid())
+  companyId   String
+  name        String
+  description String?
+  kind        ChannelKind @default(TEAM)
+  // Slug unique dans l'entreprise (ex: "cuisine", "rh", "annonces")
+  slug        String
+  isArchived  Boolean     @default(false)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  company  Company   @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  messages Message[]
+
+  @@unique([companyId, slug])
+  @@index([companyId])
+}
+
+// ─── 20. Message ────────────────────────────────────────────────────────
+
+model Message {
+  id          String    @id @default(cuid())
+  channelId   String
+  authorId    String
+  content     String
+  // Réponse à un autre message (thread)
+  parentId    String?
+  isPinned    Boolean   @default(false)
+  editedAt    DateTime?
+  createdAt   DateTime  @default(now())
+
+  channel  Channel   @relation(fields: [channelId], references: [id], onDelete: Cascade)
+  author   User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  parent   Message?  @relation("Thread", fields: [parentId], references: [id], onDelete: SetNull)
+  replies  Message[] @relation("Thread")
+
+  @@index([channelId])
+  @@index([authorId])
+  @@index([createdAt])
 }
