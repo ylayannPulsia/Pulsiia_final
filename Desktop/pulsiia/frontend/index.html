@@ -3,478 +3,419 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pulsiia — Gardez le pouls de vos équipes</title>
+<title>Pulsiia — Solution tout-en-1 pour piloter vos équipes</title>
 <link rel="manifest" href="/manifest.json">
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
   --blue: #2563EB;
-  --blue-dark: #1D4ED8;
   --teal: #14C2E0;
-  --purple: #8B5CF6;
-  --pink: #EC4899;
-  --amber: #F59E0B;
+  --yellow: #FFD233;
+  --yellow-dark: #F5C400;
+  --purple: #7C3AED;
   --green: #10B981;
-  --dark: #0F1117;
-  --text: #1E1B2E;
+  --text: #1a1a2e;
   --text-2: #6B7280;
   --border: #E5E7EB;
-  --bg: #F8F7FF;
 }
 
 html { scroll-behavior: smooth; }
-body { font-family: 'DM Sans', sans-serif; color: var(--text); background: white; overflow-x: hidden; }
+body { font-family: 'DM Sans', sans-serif; color: var(--text); background: #fff; overflow-x: hidden; }
 
 /* ── NAV ── */
 nav {
-  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-  height: 68px;
-  background: rgba(255,255,255,.92);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border-bottom: 1px solid rgba(0,0,0,.06);
-  display: flex; align-items: center;
-  padding: 0 6vw; gap: 32px;
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(255,255,255,.96);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(0,0,0,.07);
+  height: 68px; display: flex; align-items: center;
+  padding: 0 6vw; gap: 40px;
 }
-
-.nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; flex-shrink: 0; }
+.nav-logo { display: flex; align-items: center; gap: 9px; text-decoration: none; flex-shrink: 0; }
 .nav-logo-mark {
-  width: 38px; height: 38px;
-  background: linear-gradient(135deg, var(--blue), var(--teal));
-  border-radius: 10px;
-  display: flex; align-items: center; justify-content: center;
-  box-shadow: 0 4px 12px rgba(37,99,235,.3);
+  width: 36px; height: 36px; background: var(--blue);
+  border-radius: 9px; display: flex; align-items: center; justify-content: center;
 }
-.nav-logo-mark svg { width: 20px; height: 20px; fill: white; }
-.nav-logo-name { font-size: 19px; font-weight: 800; color: var(--text); letter-spacing: -.5px; }
+.nav-logo-mark svg { width: 19px; height: 19px; fill: white; }
+.nav-logo-name { font-size: 18px; font-weight: 800; color: var(--text); letter-spacing: -.4px; }
 
-.nav-links { display: flex; align-items: center; gap: 8px; }
+.nav-links { display: flex; align-items: center; gap: 4px; }
 .nav-link {
-  font-size: 14px; font-weight: 500; color: var(--text-2);
-  text-decoration: none; padding: 6px 14px; border-radius: 8px;
-  transition: all .15s;
+  font-size: 14px; font-weight: 500; color: #374151;
+  text-decoration: none; padding: 7px 14px; border-radius: 8px;
+  transition: background .15s, color .15s;
 }
-.nav-link:hover { color: var(--text); background: #F3F4F6; }
+.nav-link:hover { background: #F3F4F6; color: var(--text); }
 
-.nav-cta { margin-left: auto; display: flex; align-items: center; gap: 10px; }
-
-.btn {
-  display: inline-flex; align-items: center; gap: 7px;
-  font-family: inherit; font-weight: 600; font-size: 14px;
-  border: none; cursor: pointer; transition: all .2s; text-decoration: none;
-  border-radius: 10px; white-space: nowrap;
+.nav-right { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+.btn-ghost-nav {
+  font-family: inherit; font-size: 14px; font-weight: 600;
+  color: var(--text); background: none; border: none; cursor: pointer;
+  padding: 8px 16px; border-radius: 8px; text-decoration: none;
+  transition: background .15s;
 }
-.btn-nav {
-  padding: 9px 20px;
-  background: var(--blue); color: white;
-  box-shadow: 0 2px 8px rgba(37,99,235,.3);
+.btn-ghost-nav:hover { background: #F3F4F6; }
+.btn-yellow {
+  font-family: inherit; font-size: 14px; font-weight: 700;
+  background: var(--yellow); color: var(--text);
+  border: none; cursor: pointer; padding: 10px 22px;
+  border-radius: 10px; text-decoration: none; white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(255,210,51,.4);
+  transition: all .2s;
 }
-.btn-nav:hover { background: var(--blue-dark); transform: translateY(-1px); box-shadow: 0 4px 16px rgba(37,99,235,.4); }
+.btn-yellow:hover { background: var(--yellow-dark); transform: translateY(-1px); box-shadow: 0 4px 16px rgba(255,210,51,.5); }
 
 /* ── HERO ── */
 .hero {
-  min-height: 100vh;
-  background: linear-gradient(160deg, #0F1117 0%, #1a1035 50%, #0F1117 100%);
+  background: #fff;
+  padding: 80px 6vw 40px;
   display: flex; flex-direction: column; align-items: center;
-  justify-content: center; padding: 120px 6vw 80px;
-  position: relative; overflow: hidden;
+  text-align: center; position: relative; overflow: hidden;
+  min-height: 88vh; justify-content: center;
 }
 
-/* Orbs de couleur en arrière-plan */
-.hero::before {
-  content: '';
-  position: absolute; top: -100px; left: 50%; transform: translateX(-50%);
-  width: 900px; height: 600px;
-  background: radial-gradient(ellipse, rgba(20,194,224,.18) 0%, transparent 60%);
-  pointer-events: none;
+/* Blobs décoratifs */
+.blob {
+  position: absolute; border-radius: 50%;
+  filter: blur(60px); pointer-events: none; opacity: .35;
 }
-.orb {
-  position: absolute; border-radius: 50%; filter: blur(80px); pointer-events: none;
-}
-.orb-1 { width: 400px; height: 400px; background: rgba(37,99,235,.2); top: 10%; left: -5%; }
-.orb-2 { width: 300px; height: 300px; background: rgba(139,92,246,.2); bottom: 10%; right: 0%; }
-.orb-3 { width: 250px; height: 250px; background: rgba(20,194,224,.15); bottom: 20%; left: 30%; }
+.blob-teal  { width: 500px; height: 500px; background: var(--teal);  top: -120px; right: -100px; }
+.blob-yellow{ width: 350px; height: 350px; background: var(--yellow); bottom: -80px; left: -60px; }
+.blob-purple{ width: 280px; height: 280px; background: #A78BFA; top: 30%; left: -80px; opacity: .2; }
 
-/* Pulse line animée */
-.pulse-line {
-  position: absolute; bottom: 0; left: 0; right: 0;
-  height: 80px; overflow: hidden; opacity: .25;
-}
-.pulse-line svg { width: 200%; height: 100%; animation: slidePulse 4s linear infinite; }
-@keyframes slidePulse { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-
-.hero-content { position: relative; z-index: 2; text-align: center; max-width: 820px; }
-
-.hero-pill {
+.hero-eyebrow {
   display: inline-flex; align-items: center; gap: 8px;
-  background: rgba(255,255,255,.08);
-  border: 1px solid rgba(255,255,255,.14);
-  color: rgba(255,255,255,.75);
-  font-size: 13px; font-weight: 600; padding: 6px 16px;
-  border-radius: 100px; margin-bottom: 32px;
-}
-.hero-pill-dot {
-  width: 7px; height: 7px; border-radius: 50%;
-  background: var(--teal);
-  box-shadow: 0 0 8px var(--teal);
-  animation: pulse-dot 2s ease-in-out infinite;
-}
-@keyframes pulse-dot {
-  0%,100% { opacity:1; transform:scale(1); }
-  50% { opacity:.5; transform:scale(.7); }
+  background: #FFF9E6; border: 1.5px solid #FFE566;
+  color: #92600A; font-size: 13px; font-weight: 700;
+  padding: 6px 16px; border-radius: 100px; margin-bottom: 28px;
 }
 
 .hero h1 {
-  font-size: clamp(40px, 6.5vw, 78px);
-  font-weight: 800;
-  color: white;
-  line-height: 1.05;
-  letter-spacing: -2.5px;
-  margin-bottom: 10px;
+  font-size: clamp(40px, 6vw, 76px);
+  font-weight: 900; color: var(--text);
+  line-height: 1.04; letter-spacing: -3px;
+  max-width: 860px; margin-bottom: 22px; position: relative;
 }
-
-.hero h1 .highlight {
-  background: linear-gradient(90deg, var(--teal), var(--blue) 60%, var(--purple));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+.hero h1 .underline-teal {
+  position: relative; display: inline-block;
+}
+.hero h1 .underline-teal::after {
+  content: '';
+  position: absolute; left: 0; bottom: -4px; width: 100%; height: 6px;
+  background: linear-gradient(90deg, var(--teal), #60E8F8);
+  border-radius: 3px;
 }
 
 .hero-sub {
-  font-size: clamp(16px, 2vw, 22px);
-  color: rgba(255,255,255,.45);
-  font-weight: 400; line-height: 1.6; margin: 20px 0 40px;
-  max-width: 580px; margin-left: auto; margin-right: auto;
+  font-size: clamp(16px, 2vw, 20px); color: var(--text-2);
+  line-height: 1.65; max-width: 560px; margin: 0 auto 40px;
+  font-weight: 400; position: relative;
 }
 
-.hero-actions { display: flex; align-items: center; gap: 14px; justify-content: center; flex-wrap: wrap; margin-bottom: 60px; }
+.hero-btns { display: flex; align-items: center; gap: 14px; justify-content: center; flex-wrap: wrap; margin-bottom: 52px; position: relative; }
 
-.btn-hero {
-  padding: 16px 32px; font-size: 16px; border-radius: 14px;
-  background: linear-gradient(135deg, var(--blue), var(--teal));
-  color: white;
-  box-shadow: 0 8px 28px rgba(37,99,235,.4);
+.btn-hero-yellow {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: inherit; font-size: 16px; font-weight: 700;
+  background: var(--yellow); color: var(--text);
+  border: none; cursor: pointer;
+  padding: 16px 32px; border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(255,210,51,.45);
+  transition: all .2s; text-decoration: none;
 }
-.btn-hero:hover { transform: translateY(-2px); box-shadow: 0 12px 36px rgba(37,99,235,.5); }
+.btn-hero-yellow:hover { background: var(--yellow-dark); transform: translateY(-2px); box-shadow: 0 8px 28px rgba(255,210,51,.55); }
 
-.btn-hero-ghost {
-  padding: 16px 28px; font-size: 16px; border-radius: 14px;
-  background: rgba(255,255,255,.07);
-  color: rgba(255,255,255,.75);
-  border: 1px solid rgba(255,255,255,.15);
+.btn-hero-outline {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: inherit; font-size: 16px; font-weight: 600;
+  background: white; color: var(--text);
+  border: 2px solid var(--border);
+  cursor: pointer; padding: 14px 28px; border-radius: 12px;
+  transition: all .2s; text-decoration: none;
 }
-.btn-hero-ghost:hover { background: rgba(255,255,255,.12); color: white; }
+.btn-hero-outline:hover { border-color: #9CA3AF; transform: translateY(-1px); }
 
-/* Social proof */
+/* Proof */
 .hero-proof {
   display: flex; align-items: center; gap: 12px;
-  color: rgba(255,255,255,.35); font-size: 13px;
-  justify-content: center;
+  color: var(--text-2); font-size: 13.5px; position: relative;
 }
-.proof-avatars { display: flex; }
+.proof-avs { display: flex; }
 .proof-av {
-  width: 32px; height: 32px; border-radius: 50%;
-  border: 2px solid rgba(255,255,255,.15);
-  margin-left: -8px; font-size: 11px; font-weight: 700; color: white;
+  width: 34px; height: 34px; border-radius: 50%;
+  border: 2.5px solid white; margin-left: -10px;
+  font-size: 11px; font-weight: 700; color: white;
   display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 2px 6px rgba(0,0,0,.12);
 }
 .proof-av:first-child { margin-left: 0; }
+.proof-stars { color: #F59E0B; letter-spacing: 1px; font-size: 15px; }
 
-/* ── JEU D'ENFANT SECTION ── */
-.easy-section {
-  background: var(--bg);
+/* ── LOGOS CLIENTS ── */
+.logos-section {
+  padding: 32px 6vw;
+  border-top: 1px solid #F3F4F6;
+  border-bottom: 1px solid #F3F4F6;
+  display: flex; align-items: center; justify-content: center;
+  gap: 12px; flex-wrap: wrap;
+}
+.logos-label { font-size: 12px; font-weight: 600; color: #9CA3AF; text-transform: uppercase; letter-spacing: 1px; margin-right: 8px; }
+.client-logo {
+  background: #F9FAFB; border: 1.5px solid #E5E7EB;
+  border-radius: 10px; padding: 10px 22px;
+  font-size: 13px; font-weight: 700; color: #6B7280;
+  white-space: nowrap;
+}
+
+/* ── GAIN SECTION ── */
+.gain-section {
   padding: 100px 6vw;
+  background: #F8FAFF;
   display: flex; flex-direction: column; align-items: center;
-}
-
-.tag {
-  display: inline-flex; align-items: center; gap: 6px;
-  font-size: 12px; font-weight: 700; text-transform: uppercase;
-  letter-spacing: 1.2px; padding: 5px 14px; border-radius: 100px;
-  margin-bottom: 16px;
-}
-.tag-blue { background: #EFF4FF; color: var(--blue); }
-.tag-purple { background: #F3EEFF; color: var(--purple); }
-.tag-teal { background: #E8FAFA; color: #0891B2; }
-.tag-green { background: #ECFDF5; color: var(--green); }
-
-h2.big {
-  font-size: clamp(28px, 4.5vw, 52px);
-  font-weight: 800; color: var(--text);
-  letter-spacing: -1.5px; line-height: 1.1;
-  text-align: center; max-width: 700px; margin-bottom: 16px;
-}
-.section-desc {
-  font-size: 18px; color: var(--text-2); text-align: center;
-  max-width: 520px; line-height: 1.65; margin-bottom: 64px;
-}
-
-/* Cards "jeu d'enfant" */
-.easy-cards { display: grid; grid-template-columns: repeat(3,1fr); gap: 24px; width: 100%; max-width: 1100px; }
-@media(max-width:900px){ .easy-cards { grid-template-columns:1fr 1fr; } }
-@media(max-width:600px){ .easy-cards { grid-template-columns:1fr; } }
-
-.easy-card {
-  background: white; border-radius: 20px;
-  padding: 32px 28px;
-  border: 1.5px solid #F0EFF8;
-  transition: transform .2s, box-shadow .2s;
   position: relative; overflow: hidden;
 }
-.easy-card:hover { transform: translateY(-4px); box-shadow: 0 16px 48px rgba(0,0,0,.09); }
-
-.easy-card-emoji {
-  font-size: 42px; margin-bottom: 16px; display: block;
-  filter: drop-shadow(0 4px 8px rgba(0,0,0,.1));
-}
-.easy-card h3 { font-size: 17px; font-weight: 700; color: var(--text); margin-bottom: 8px; letter-spacing: -.3px; }
-.easy-card p { font-size: 14px; color: var(--text-2); line-height: 1.65; }
-
-.easy-card-accent {
-  position: absolute; top: 0; right: 0;
-  width: 80px; height: 80px; border-radius: 0 20px 0 80px;
-  opacity: .08;
+.gain-section::before {
+  content: '';
+  position: absolute; top: -200px; right: -100px;
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(20,194,224,.12), transparent 70%);
+  pointer-events: none;
 }
 
-/* ── APP PREVIEW (screenshot mockup) ── */
-.preview-section {
-  padding: 0 6vw 100px;
-  display: flex; justify-content: center;
-  background: var(--bg);
+.section-kicker {
+  font-size: 12px; font-weight: 800; text-transform: uppercase;
+  letter-spacing: 1.5px; color: var(--teal); margin-bottom: 14px;
+}
+h2.section-h2 {
+  font-size: clamp(28px, 4.5vw, 52px);
+  font-weight: 900; color: var(--text);
+  letter-spacing: -1.8px; line-height: 1.1;
+  text-align: center; max-width: 720px; margin-bottom: 16px;
+}
+.section-p {
+  font-size: 18px; color: var(--text-2);
+  text-align: center; max-width: 520px;
+  line-height: 1.65; margin-bottom: 60px;
 }
 
-.mockup-wrap {
-  width: 100%; max-width: 1060px; position: relative;
+.gain-cards { display: grid; grid-template-columns: repeat(3,1fr); gap: 22px; width: 100%; max-width: 1060px; }
+@media(max-width:900px){ .gain-cards{grid-template-columns:1fr 1fr} }
+@media(max-width:600px){ .gain-cards{grid-template-columns:1fr} }
+
+.gain-card {
+  background: white; border-radius: 18px;
+  border: 1.5px solid #EEECF8;
+  padding: 32px 28px 28px;
+  position: relative; overflow: hidden;
+  transition: transform .2s, box-shadow .2s;
+}
+.gain-card:hover { transform: translateY(-5px); box-shadow: 0 20px 50px rgba(0,0,0,.09); }
+
+.gain-num {
+  font-size: 48px; font-weight: 900; letter-spacing: -2px;
+  line-height: 1; margin-bottom: 8px;
+}
+.gain-card h3 { font-size: 17px; font-weight: 700; color: var(--text); margin-bottom: 8px; letter-spacing: -.3px; }
+.gain-card p { font-size: 14px; color: var(--text-2); line-height: 1.65; }
+
+.gain-icon {
+  position: absolute; top: 24px; right: 24px;
+  font-size: 28px; opacity: .5;
 }
 
-.mockup-shadow {
-  background: white;
-  border: 1.5px solid #E8E5F8;
-  border-radius: 20px;
-  overflow: hidden;
-  box-shadow: 0 32px 80px rgba(30,27,46,.12), 0 0 0 1px rgba(139,92,246,.06);
-}
+/* ── FEATURES ── */
+.features-section { padding: 100px 6vw; background: white; }
 
-.mockup-bar {
-  background: #F7F6FF;
-  padding: 12px 20px;
-  display: flex; align-items: center; gap: 8px;
-  border-bottom: 1px solid #EDE9FF;
+.feat-row {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 80px;
+  align-items: center; max-width: 1060px; margin: 0 auto 80px;
 }
-.mockup-dot { width: 11px; height: 11px; border-radius: 50%; }
-.mockup-url {
-  flex: 1; background: white; border: 1px solid #E5E7EB;
-  border-radius: 8px; padding: 5px 14px;
-  font-size: 12px; color: var(--text-2);
-  display: flex; align-items: center; gap: 6px; max-width: 280px; margin: 0 auto;
-}
+.feat-row.reverse { direction: rtl; }
+.feat-row.reverse > * { direction: ltr; }
+@media(max-width:800px){ .feat-row,.feat-row.reverse { grid-template-columns:1fr; direction:ltr; gap:40px; } }
 
-.mockup-body { display: flex; height: 460px; }
+.feat-text .kicker { font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 14px; display: block; }
+.feat-text h3 { font-size: clamp(22px,3vw,36px); font-weight: 900; color: var(--text); letter-spacing: -1px; line-height: 1.15; margin-bottom: 14px; }
+.feat-text p { font-size: 16px; color: var(--text-2); line-height: 1.7; margin-bottom: 24px; }
 
-/* Sidebar mockup */
-.m-sidebar {
-  width: 210px; flex-shrink: 0;
-  background: #0F1117;
-  padding: 20px 12px 20px;
-  display: flex; flex-direction: column; gap: 2px;
-  border-right: 1px solid rgba(255,255,255,.05);
+.feat-bullets { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.feat-bullets li {
+  display: flex; align-items: center; gap: 10px;
+  font-size: 14.5px; font-weight: 500; color: #374151;
 }
-.m-logo { display: flex; align-items: center; gap: 8px; padding: 4px 8px 20px; }
-.m-logo-mark {
-  width: 26px; height: 26px; border-radius: 7px;
-  background: linear-gradient(135deg, var(--blue), var(--teal));
+.feat-bullets li::before {
+  content: '✓';
+  width: 22px; height: 22px; border-radius: 50%;
+  background: #ECFDF5; color: var(--green);
+  font-size: 11px; font-weight: 800;
+  display: flex; align-items: center; justify-content: center;
   flex-shrink: 0;
 }
-.m-logo-text { font-size: 14px; font-weight: 700; color: white; }
-.m-nav { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border-radius: 7px; font-size: 12.5px; color: rgba(255,255,255,.4); }
-.m-nav.active { background: rgba(37,99,235,.2); color: white; font-weight: 600; }
-.m-nav-icon { width: 14px; height: 14px; flex-shrink: 0; opacity: .7; }
-.m-nav.active .m-nav-icon { opacity: 1; }
-.m-badge { margin-left: auto; background: #D97706; color: white; font-size: 9px; font-weight: 700; padding: 1px 5px; border-radius: 10px; }
 
-/* Main mockup */
-.m-main { flex: 1; background: #F7F8FA; padding: 22px 24px; overflow: hidden; }
-.m-topbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
-.m-title { font-size: 16px; font-weight: 700; color: var(--text); }
-.m-btn { background: var(--blue); color: white; font-size: 11px; font-weight: 600; padding: 5px 12px; border-radius: 7px; }
-
-.m-kpis { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; margin-bottom: 16px; }
-.m-kpi { background: white; border: 1px solid #E5E7EB; border-radius: 10px; padding: 14px; }
-.m-kpi-l { font-size: 9.5px; font-weight: 600; color: var(--text-2); text-transform: uppercase; letter-spacing: .4px; margin-bottom: 8px; }
-.m-kpi-v { font-size: 24px; font-weight: 800; letter-spacing: -1px; }
-
-.m-grid { display: grid; grid-template-columns: 3fr 2fr; gap: 12px; }
-.m-card { background: white; border: 1px solid #E5E7EB; border-radius: 10px; padding: 14px; }
-.m-card-t { font-size: 11px; font-weight: 700; color: var(--text); margin-bottom: 10px; }
-.m-row { display: flex; align-items: center; gap: 8px; padding: 5px 0; border-bottom: 1px solid #F9FAFB; }
-.m-row:last-child { border: none; }
-.m-av { width: 22px; height: 22px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 8px; font-weight: 700; color: white; }
-.m-row-t { font-size: 11px; color: var(--text); flex: 1; }
-.m-b { font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 8px; white-space: nowrap; }
-.m-pulse { display: flex; align-items: center; gap: 6px; margin-bottom: 8px; }
-.m-pulse-score { font-size: 30px; font-weight: 800; letter-spacing: -1px; color: var(--green); }
-.m-pulse-label { font-size: 10px; color: var(--text-2); line-height: 1.4; }
-.m-bars { display: flex; align-items: flex-end; gap: 3px; height: 50px; }
-.m-bar { width: 8px; border-radius: 2px 2px 0 0; background: #BFCFFE; }
-.m-bar.hi { background: var(--blue); }
-
-/* ── FEATURES BENTO ── */
-.bento-section { padding: 100px 6vw; background: white; }
-
-.bento-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: auto auto;
-  gap: 20px;
-  max-width: 1100px; margin: 0 auto;
-}
-@media(max-width:900px){ .bento-grid { grid-template-columns:1fr 1fr; } }
-@media(max-width:600px){ .bento-grid { grid-template-columns:1fr; } }
-
-.bento {
-  border-radius: 20px; padding: 32px 28px;
-  position: relative; overflow: hidden;
-  transition: transform .2s, box-shadow .2s;
-}
-.bento:hover { transform: translateY(-3px); box-shadow: 0 12px 40px rgba(0,0,0,.1); }
-
-.bento-wide { grid-column: span 2; }
-@media(max-width:900px){ .bento-wide { grid-column: span 2; } }
-@media(max-width:600px){ .bento-wide { grid-column: span 1; } }
-
-.bento-blue  { background: linear-gradient(135deg, #EFF4FF, #E0E7FF); border: 1.5px solid #C7D2FE; }
-.bento-teal  { background: linear-gradient(135deg, #E8FAFA, #CFFAFE); border: 1.5px solid #A5F3FC; }
-.bento-purple{ background: linear-gradient(135deg, #F3EEFF, #EDE9FE); border: 1.5px solid #DDD6FE; }
-.bento-amber { background: linear-gradient(135deg, #FFFBEB, #FEF3C7); border: 1.5px solid #FDE68A; }
-.bento-pink  { background: linear-gradient(135deg, #FDF2F8, #FCE7F3); border: 1.5px solid #FBCFE8; }
-.bento-green { background: linear-gradient(135deg, #ECFDF5, #D1FAE5); border: 1.5px solid #A7F3D0; }
-
-.bento-icon { font-size: 36px; margin-bottom: 16px; display: block; }
-.bento h3 { font-size: 18px; font-weight: 800; color: var(--text); margin-bottom: 8px; letter-spacing: -.4px; }
-.bento p { font-size: 14px; color: #4B5563; line-height: 1.65; max-width: 340px; }
-
-.bento-tag {
-  position: absolute; top: 24px; right: 24px;
-  font-size: 10px; font-weight: 700; padding: 3px 10px;
-  border-radius: 100px; background: rgba(255,255,255,.6);
-  color: var(--text-2); text-transform: uppercase; letter-spacing: .6px;
-}
-
-/* ── QUOTE ── */
-.quote-section {
-  background: linear-gradient(135deg, var(--blue) 0%, #7C3AED 100%);
-  padding: 80px 6vw;
-  display: flex; flex-direction: column; align-items: center;
-  position: relative; overflow: hidden;
-}
-.quote-section::before {
-  content: '❝';
-  position: absolute; top: -20px; left: 50%; transform: translateX(-50%);
-  font-size: 200px; color: rgba(255,255,255,.04); line-height: 1;
-  pointer-events: none; user-select: none;
-}
-.quote-text {
-  font-size: clamp(22px, 3.5vw, 38px); font-weight: 800;
-  color: white; text-align: center; letter-spacing: -1px;
-  line-height: 1.2; max-width: 800px; margin-bottom: 20px;
+.feat-visual {
+  border-radius: 20px; overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0,0,0,.1);
   position: relative;
 }
-.quote-sub { font-size: 16px; color: rgba(255,255,255,.55); text-align: center; }
 
-/* ── MODULES ── */
-.modules-section { padding: 100px 6vw; background: var(--bg); }
-
-.modules-header { text-align: center; max-width: 600px; margin: 0 auto 60px; }
-
-.modules-list {
-  display: grid; grid-template-columns: repeat(2, 1fr);
-  gap: 16px; max-width: 900px; margin: 0 auto;
+/* Mockup feature planning */
+.feat-mock {
+  background: #F7F8FA; padding: 20px;
+  min-height: 300px; display: flex; flex-direction: column; gap: 12px;
 }
-@media(max-width:700px){ .modules-list { grid-template-columns:1fr; } }
+.feat-mock-bar {
+  background: white; border-radius: 10px; padding: 12px 16px;
+  border: 1px solid #E5E7EB;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.fmb-label { font-size: 12px; font-weight: 600; color: var(--text); }
+.fmb-badge { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 8px; }
 
-.module-card {
-  background: white; border-radius: 16px;
-  padding: 24px 26px;
-  border: 1.5px solid #F0EFF8;
-  display: flex; align-items: flex-start; gap: 16px;
+.feat-mock-grid { display: flex; flex-direction: column; gap: 6px; }
+.fmg-row { display: grid; grid-template-columns: 80px repeat(5,1fr); gap: 4px; align-items: center; }
+.fmg-name { font-size: 11px; font-weight: 600; color: var(--text-2); }
+.fmg-cell { height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 700; }
+.shift-m { background: #EFF6FF; color: #1D4ED8; }
+.shift-a { background: #ECFDF5; color: #065F46; }
+.shift-n { background: #1E1B4B; color: #A5B4FC; }
+.shift-o { background: #F9FAFB; color: #D1D5DB; border: 1px dashed #E5E7EB; }
+.shift-abs { background: #FEF2F2; color: #DC2626; }
+
+/* ── TÉMOIGNAGES ── */
+.testi-section {
+  padding: 100px 6vw;
+  background: #F8FAFF;
+  display: flex; flex-direction: column; align-items: center;
+}
+
+.testi-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 22px; max-width: 1060px; }
+@media(max-width:900px){ .testi-grid{grid-template-columns:1fr 1fr} }
+@media(max-width:600px){ .testi-grid{grid-template-columns:1fr} }
+
+.testi-card {
+  background: white; border-radius: 18px;
+  border: 1.5px solid #EEECF8; padding: 28px;
   transition: transform .2s, box-shadow .2s;
 }
-.module-card:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(0,0,0,.07); }
+.testi-card:hover { transform: translateY(-3px); box-shadow: 0 12px 40px rgba(0,0,0,.07); }
+.testi-stars { color: #F59E0B; font-size: 16px; letter-spacing: 2px; margin-bottom: 14px; }
+.testi-quote { font-size: 15px; color: #374151; line-height: 1.65; margin-bottom: 20px; font-style: italic; }
+.testi-author { display: flex; align-items: center; gap: 10px; }
+.testi-av { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: white; flex-shrink: 0; }
+.testi-name { font-size: 13px; font-weight: 700; color: var(--text); }
+.testi-role { font-size: 12px; color: var(--text-2); }
 
-.module-num-badge {
-  width: 36px; height: 36px; border-radius: 10px; flex-shrink: 0;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 13px; font-weight: 800; color: white;
+/* ── CHIFFRES ── */
+.stats-section {
+  background: var(--text);
+  padding: 80px 6vw;
+  display: flex; justify-content: center;
 }
-.module-content h4 { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
-.module-content p { font-size: 13px; color: var(--text-2); line-height: 1.55; }
+.stats-inner { display: grid; grid-template-columns: repeat(4,1fr); gap: 0; max-width: 1000px; width: 100%; }
+@media(max-width:700px){ .stats-inner{grid-template-columns:1fr 1fr} }
+.stat-item {
+  text-align: center; padding: 32px 20px;
+  border-right: 1px solid rgba(255,255,255,.08);
+}
+.stat-item:last-child { border-right: none; }
+.stat-n { font-size: 48px; font-weight: 900; letter-spacing: -2px; color: var(--yellow); line-height: 1; margin-bottom: 8px; }
+.stat-l { font-size: 13px; color: rgba(255,255,255,.45); font-weight: 500; }
+
+/* ── FAQ ── */
+.faq-section { padding: 100px 6vw; background: white; display: flex; flex-direction: column; align-items: center; }
+
+.faq-list { width: 100%; max-width: 720px; }
+.faq-item {
+  border-bottom: 1.5px solid #F3F4F6;
+  padding: 20px 0;
+  cursor: pointer;
+}
+.faq-q {
+  display: flex; align-items: center; justify-content: space-between;
+  font-size: 16px; font-weight: 700; color: var(--text);
+  gap: 20px; user-select: none;
+}
+.faq-arrow {
+  width: 28px; height: 28px; border-radius: 8px; flex-shrink: 0;
+  background: #F3F4F6; display: flex; align-items: center; justify-content: center;
+  font-size: 14px; color: var(--text-2); transition: transform .2s, background .15s;
+}
+.faq-item.open .faq-arrow { transform: rotate(45deg); background: #FFF9E6; color: #92600A; }
+.faq-a {
+  font-size: 15px; color: var(--text-2); line-height: 1.7;
+  max-height: 0; overflow: hidden; transition: max-height .3s ease, padding .3s;
+}
+.faq-item.open .faq-a { max-height: 200px; padding-top: 14px; }
 
 /* ── CTA FINAL ── */
 .cta-section {
-  padding: 120px 6vw;
-  background: white;
+  padding: 100px 6vw;
+  background: #F8FAFF;
   display: flex; flex-direction: column; align-items: center;
   position: relative; overflow: hidden;
 }
-.cta-blob {
-  position: absolute; border-radius: 50%; filter: blur(100px); pointer-events: none;
+.cta-section::before {
+  content: '';
+  position: absolute; top: -100px; right: -100px;
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(20,194,224,.1), transparent 70%);
+  pointer-events: none;
 }
-.cta-blob-1 { width: 500px; height: 500px; background: rgba(37,99,235,.06); top: -100px; left: -100px; }
-.cta-blob-2 { width: 400px; height: 400px; background: rgba(139,92,246,.07); bottom: -100px; right: -100px; }
-
-.cta-pill {
-  display: inline-flex; align-items: center; gap: 6px;
-  background: #FFF7ED; color: #D97706; border: 1px solid #FDE68A;
-  font-size: 13px; font-weight: 700; padding: 5px 14px;
-  border-radius: 100px; margin-bottom: 20px;
+.cta-section::after {
+  content: '';
+  position: absolute; bottom: -100px; left: -100px;
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, rgba(255,210,51,.15), transparent 70%);
+  pointer-events: none;
 }
-.cta-section h2 {
-  font-size: clamp(32px, 5vw, 60px); font-weight: 800;
-  color: var(--text); letter-spacing: -2px; text-align: center;
-  line-height: 1.1; margin-bottom: 16px; position: relative;
+.cta-box {
+  background: var(--text); border-radius: 28px;
+  padding: 64px 60px; text-align: center;
+  max-width: 800px; width: 100%; position: relative;
+  overflow: hidden;
 }
-.cta-section p {
-  font-size: 18px; color: var(--text-2); text-align: center;
-  margin-bottom: 44px; position: relative;
+.cta-box::before {
+  content: '';
+  position: absolute; top: -60px; right: -60px;
+  width: 300px; height: 300px; border-radius: 50%;
+  background: rgba(255,210,51,.08); pointer-events: none;
 }
-.btn-cta {
-  padding: 18px 44px; font-size: 17px; border-radius: 14px;
-  background: linear-gradient(135deg, var(--blue), var(--teal));
-  color: white; position: relative;
-  box-shadow: 0 8px 32px rgba(37,99,235,.35);
+.cta-box h2 {
+  font-size: clamp(28px,4vw,46px); font-weight: 900;
+  color: white; letter-spacing: -1.5px; line-height: 1.1;
+  margin-bottom: 16px;
 }
-.btn-cta:hover { transform: translateY(-2px); box-shadow: 0 14px 40px rgba(37,99,235,.45); }
-
-.cta-hint { margin-top: 16px; font-size: 13px; color: var(--text-2); }
+.cta-box p { font-size: 17px; color: rgba(255,255,255,.5); margin-bottom: 36px; line-height: 1.6; }
+.cta-box .btn-hero-yellow { font-size: 16px; padding: 16px 36px; }
+.cta-hint { margin-top: 16px; font-size: 13px; color: rgba(255,255,255,.3); }
 
 /* ── FOOTER ── */
 footer {
-  background: var(--dark);
-  border-top: 1px solid rgba(255,255,255,.06);
-  padding: 48px 6vw 32px;
+  background: white;
+  border-top: 1.5px solid #F3F4F6;
+  padding: 60px 6vw 36px;
 }
-.footer-top { display: flex; gap: 60px; margin-bottom: 48px; flex-wrap: wrap; }
-.footer-brand { flex: 1; min-width: 220px; }
-.footer-logo { display: flex; align-items: center; gap: 9px; margin-bottom: 12px; }
-.footer-logo-mark {
-  width: 32px; height: 32px; border-radius: 8px;
-  background: linear-gradient(135deg, var(--blue), var(--teal));
-  display: flex; align-items: center; justify-content: center;
-}
-.footer-logo-mark svg { width: 17px; height: 17px; fill: white; }
-.footer-logo-text { font-size: 15px; font-weight: 700; color: white; }
-.footer-tagline { font-size: 13px; color: rgba(255,255,255,.3); line-height: 1.6; }
+.footer-cols { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 48px; margin-bottom: 48px; }
+@media(max-width:800px){ .footer-cols{grid-template-columns:1fr 1fr} }
+@media(max-width:500px){ .footer-cols{grid-template-columns:1fr} }
 
-.footer-col h5 { font-size: 11px; font-weight: 700; color: rgba(255,255,255,.3); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; }
-.footer-col a { display: block; font-size: 13.5px; color: rgba(255,255,255,.5); text-decoration: none; margin-bottom: 10px; transition: color .15s; }
-.footer-col a:hover { color: rgba(255,255,255,.85); }
+.footer-brand-logo { display: flex; align-items: center; gap: 9px; margin-bottom: 14px; }
+.footer-logo-mark { width: 34px; height: 34px; background: var(--blue); border-radius: 9px; display: flex; align-items: center; justify-content: center; }
+.footer-logo-mark svg { width: 18px; height: 18px; fill: white; }
+.footer-brand-name { font-size: 17px; font-weight: 800; color: var(--text); }
+.footer-tagline { font-size: 13.5px; color: var(--text-2); line-height: 1.65; max-width: 220px; margin-bottom: 20px; }
 
-.footer-bottom { display: flex; align-items: center; justify-content: space-between; padding-top: 24px; border-top: 1px solid rgba(255,255,255,.06); flex-wrap: wrap; gap: 12px; }
-.footer-bottom p { font-size: 12.5px; color: rgba(255,255,255,.2); }
-.footer-rgpd { display: flex; align-items: center; gap: 6px; font-size: 12px; color: rgba(255,255,255,.2); }
-.rgpd-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); }
+.footer-col h5 { font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: var(--text); margin-bottom: 18px; }
+.footer-col a { display: block; font-size: 14px; color: var(--text-2); text-decoration: none; margin-bottom: 11px; transition: color .15s; }
+.footer-col a:hover { color: var(--text); }
+
+.footer-bottom { display: flex; align-items: center; justify-content: space-between; padding-top: 28px; border-top: 1.5px solid #F3F4F6; flex-wrap: wrap; gap: 12px; }
+.footer-bottom p { font-size: 13px; color: #9CA3AF; }
+.footer-trust { display: flex; align-items: center; gap: 18px; }
+.trust-badge { display: flex; align-items: center; gap: 5px; font-size: 12px; color: #9CA3AF; font-weight: 500; }
+.trust-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green); }
 </style>
 </head>
 <body>
@@ -483,294 +424,428 @@ footer {
 <nav>
   <a class="nav-logo" href="/">
     <div class="nav-logo-mark">
-      <svg viewBox="45 37 280 280"><path d="M 57.984375 305.449219 C 57.433594 305.394531 56.824219 305.171875 56.601562 304.921875 C 56.296875 304.5625 56.242188 287.652344 56.242188 207.589844 L 56.242188 110.699219 L 56.878906 107.101562 C 57.984375 100.792969 59.007812 96.226562 59.671875 94.371094 C 68.558594 72.398438 77.054688 62.269531 90.28125 53.773438 C 93.214844 51.890625 95.125 50.839844 98.140625 49.234375 C 100.9375 48.015625 104.148438 46.632812 106.96875 45.554688 C 108.355469 44.832031 112.144531 43.589844 116.933594 42.371094 C 123.269531 40.628906 130.273438 39.6875 136.777344 38.996094 C 141.425781 38.273438 159.609375 38.273438 164.035156 38.996094 C 170.816406 39.714844 178.289062 40.515625 187.835938 42.011719 C 194.894531 43.449219 201.121094 45.082031 209.285156 47.433594 C 219.773438 51.335938 229.015625 54.964844 235.160156 58.5625 C 244.097656 63.792969 255.390625 73.78125 262.558594 81.640625 C 266.628906 88.007812 270.167969 95.339844 272.355469 101.707031 C 273.710938 106.632812 274.542969 118.171875 273.492188 130.15625 C 272.660156 133.585938 271 140.339844 268.261719 146.898438 C 266.875 150.054688 262.753906 157.445312 250.242188 172.996094 C 246.535156 176.707031 240.695312 181.492188 234.027344 186.199219 C 229.488281 188.910156 225.03125 191.457031 216.976562 195.246094 C 211.082031 197.570312 204.027344 200.230469 196.71875 202.304688 C 191.988281 203.714844 185.621094 205.070312 180.144531 206.011719 C 175.246094 206.734375 168.710938 207.757812 152.328125 208.394531 C 147.761719 208.394531 147.707031 208.367188 147.707031 204.351562 C 147.707031 200.476562 152.992188 199.8125 156.980469 199.234375 C 160.300781 198.347656 165.75 195.910156 174.441406 189.628906 C 179.839844 183.679688 184.265625 176.152344 186.285156 171.03125 C 187.976562 165.800781 189.578125 156.308594 189.578125 150.691406 C 189.578125 145.820312 188.527344 138.789062 186.976562 131.871094 C 183.824219 122.128906 177.789062 109.425781 156.148438 82.859375 C 148.484375 76.742188 140.953125 71.789062 131.488281 67.113281 C 124.875 64.59375 115.1875 62.101562 102.875 62.101562 C 94.292969 64.152344 87.734375 68.441406 84.441406 73.921875 C 83.640625 80.394531 84.277344 86.070312 88.152344 92.65625 C 95.539062 99.90625 105.558594 105.773438 112.007812 109.511719 C 122.082031 116.347656 131.820312 126.335938 138.160156 137.960938 C 140.621094 148.613281 141.675781 230.257812 141.507812 304.480469 C 141.121094 305.144531 60.089844 305.644531 57.984375 305.449219 Z"/></svg>
+      <svg viewBox="45 37 280 280"><path d="M57.984375 305.449219C57.433594 305.394531 56.824219 305.171875 56.601562 304.921875C56.296875 304.5625 56.242188 287.652344 56.242188 207.589844L56.242188 110.699219L56.878906 107.101562C57.984375 100.792969 59.007812 96.226562 59.671875 94.371094C68.558594 72.398438 77.054688 62.269531 90.28125 53.773438C93.214844 51.890625 95.125 50.839844 98.140625 49.234375C100.9375 48.015625 104.148438 46.632812 106.96875 45.554688C108.355469 44.832031 112.144531 43.589844 116.933594 42.371094C123.269531 40.628906 130.273438 39.6875 136.777344 38.996094C141.425781 38.273438 159.609375 38.273438 164.035156 38.996094C170.816406 39.714844 178.289062 40.515625 187.835938 42.011719C194.894531 43.449219 201.121094 45.082031 209.285156 47.433594C219.773438 51.335938 229.015625 54.964844 235.160156 58.5625C244.097656 63.792969 255.390625 73.78125 262.558594 81.640625C266.628906 88.007812 270.167969 95.339844 272.355469 101.707031C273.710938 106.632812 274.542969 118.171875 273.492188 130.15625C272.660156 133.585938 271 140.339844 268.261719 146.898438C266.875 150.054688 262.753906 157.445312 250.242188 172.996094C246.535156 176.707031 240.695312 181.492188 234.027344 186.199219C229.488281 188.910156 225.03125 191.457031 216.976562 195.246094C211.082031 197.570312 204.027344 200.230469 196.71875 202.304688C191.988281 203.714844 185.621094 205.070312 180.144531 206.011719C175.246094 206.734375 168.710938 207.757812 152.328125 208.394531C147.761719 208.394531 147.707031 208.367188 147.707031 204.351562C147.707031 200.476562 152.992188 199.8125 156.980469 199.234375C160.300781 198.347656 165.75 195.910156 174.441406 189.628906C179.839844 183.679688 184.265625 176.152344 186.285156 171.03125C187.976562 165.800781 189.578125 156.308594 189.578125 150.691406C189.578125 145.820312 188.527344 138.789062 186.976562 131.871094C183.824219 122.128906 177.789062 109.425781 156.148438 82.859375C148.484375 76.742188 140.953125 71.789062 131.488281 67.113281C124.875 64.59375 115.1875 62.101562 102.875 62.101562C94.292969 64.152344 87.734375 68.441406 84.441406 73.921875C83.640625 80.394531 84.277344 86.070312 88.152344 92.65625C95.539062 99.90625 105.558594 105.773438 112.007812 109.511719C122.082031 116.347656 131.820312 126.335938 138.160156 137.960938C140.621094 148.613281 141.675781 230.257812 141.507812 304.480469C141.121094 305.144531 60.089844 305.644531 57.984375 305.449219Z"/></svg>
     </div>
     <span class="nav-logo-name">Pulsiia</span>
   </a>
   <div class="nav-links">
-    <a class="nav-link" href="#pourquoi">Pourquoi Pulsiia</a>
-    <a class="nav-link" href="#modules">Modules</a>
-    <a class="nav-link" href="#demo">Aperçu</a>
+    <a class="nav-link" href="#pourquoi">Fonctionnalités</a>
+    <a class="nav-link" href="#temoignages">Témoignages</a>
+    <a class="nav-link" href="#faq">FAQ</a>
   </div>
-  <div class="nav-cta">
-    <a href="/app" class="btn btn-nav">Connexion →</a>
+  <div class="nav-right">
+    <a href="/app" class="btn-ghost-nav">Se connecter</a>
+    <a href="/app" class="btn-yellow">Planifier une démo →</a>
   </div>
 </nav>
 
 <!-- ── HERO ── -->
 <section class="hero">
-  <div class="orb orb-1"></div>
-  <div class="orb orb-2"></div>
-  <div class="orb orb-3"></div>
+  <div class="blob blob-teal"></div>
+  <div class="blob blob-yellow"></div>
+  <div class="blob blob-purple"></div>
 
-  <div class="hero-content">
-    <div class="hero-pill">
-      <div class="hero-pill-dot"></div>
-      Spécialement conçu pour le secteur HCR
-    </div>
-
-    <h1>
-      Gardez le <span class="highlight">pouls</span><br>de vos équipes
-    </h1>
-
-    <p class="hero-sub">
-      Planning, absences, pré-paie, bien-être — tout en un.
-      Tellement simple, c'est un <strong style="color:rgba(255,255,255,.75);font-weight:700">jeu d'enfant</strong>.
-    </p>
-
-    <div class="hero-actions">
-      <a href="/app" class="btn btn-hero">
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/><path d="M6.271 5.055a.5.5 0 0 1 .52.038l3.5 2.5a.5.5 0 0 1 0 .814l-3.5 2.5A.5.5 0 0 1 6 10.5v-5a.5.5 0 0 1 .271-.445z"/></svg>
-        Accéder à l'app
-      </a>
-      <a href="#demo" class="btn btn-hero-ghost">Voir la démo</a>
-    </div>
-
-    <div class="hero-proof">
-      <div class="proof-avatars">
-        <div class="proof-av" style="background:linear-gradient(135deg,#3B82F6,#6366F1)">ML</div>
-        <div class="proof-av" style="background:linear-gradient(135deg,#059669,#10B981)">TM</div>
-        <div class="proof-av" style="background:linear-gradient(135deg,#7C3AED,#8B5CF6)">CR</div>
-        <div class="proof-av" style="background:linear-gradient(135deg,#D97706,#F59E0B)">LA</div>
-      </div>
-      <span>Utilisé par Groupe Saveurs &amp; Co · 847 collaborateurs · 5 sites</span>
-    </div>
+  <div class="hero-eyebrow">
+    🎉 Solution tout-en-1 pour piloter le pouls de vos équipes
   </div>
 
-  <!-- Ligne de pulse animée en bas -->
-  <div class="pulse-line">
-    <svg viewBox="0 0 800 80" preserveAspectRatio="none">
-      <polyline points="0,40 80,40 110,10 130,70 150,20 170,60 190,40 800,40" fill="none" stroke="rgba(20,194,224,.6)" stroke-width="2"/>
-      <polyline points="0,40 80,40 110,10 130,70 150,20 170,60 190,40 800,40" fill="none" stroke="rgba(20,194,224,.6)" stroke-width="2" transform="translate(400,0)"/>
-    </svg>
-  </div>
-</section>
+  <h1>
+    Gérer vos équipes,<br>c'est un <span class="underline-teal">jeu d'enfant</span>.
+  </h1>
 
-<!-- ── "JEU D'ENFANT" ── -->
-<section class="easy-section" id="pourquoi">
-  <div class="tag tag-blue">✨ Pourquoi Pulsiia</div>
-  <h2 class="big">La RH, c'est un<br>jeu d'enfant.</h2>
-  <p class="section-desc">
-    On a réinventé la gestion RH pour qu'elle soit aussi fluide que naturelle.
-    Pas de formation de 3 jours, pas de manuel de 200 pages.
+  <p class="hero-sub">
+    Planning, absences, pré-paie, bien-être et communication —
+    tout en un seul outil. Conçu pour les RH du secteur HCR.
   </p>
 
-  <div class="easy-cards">
-    <div class="easy-card">
-      <div class="easy-card-accent" style="background:var(--blue)"></div>
-      <span class="easy-card-emoji">🗓️</span>
-      <h3>Planning en 2 clics</h3>
-      <p>Créez et publiez la semaine de vos équipes en quelques secondes. Les conflits se détectent tout seuls.</p>
+  <div class="hero-btns">
+    <a href="/app" class="btn-hero-yellow">
+      Accéder à la démo
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path fill-rule="evenodd" d="M4 8a.5.5 0 0 1 .5-.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5A.5.5 0 0 1 4 8z"/></svg>
+    </a>
+    <a href="#pourquoi" class="btn-hero-outline">Découvrir les fonctionnalités</a>
+  </div>
+
+  <div class="hero-proof">
+    <div class="proof-avs">
+      <div class="proof-av" style="background:#3B82F6">ML</div>
+      <div class="proof-av" style="background:#059669">TM</div>
+      <div class="proof-av" style="background:#7C3AED">CR</div>
+      <div class="proof-av" style="background:#D97706">LA</div>
     </div>
-    <div class="easy-card">
-      <div class="easy-card-accent" style="background:var(--teal)"></div>
-      <span class="easy-card-emoji">✅</span>
-      <h3>Absences validées en 1 tap</h3>
-      <p>Demande, notification, validation, mise à jour du planning — tout en automatique. Zéro paperasse.</p>
-    </div>
-    <div class="easy-card">
-      <div class="easy-card-accent" style="background:var(--amber)"></div>
-      <span class="easy-card-emoji">💸</span>
-      <h3>Pré-paie sans prise de tête</h3>
-      <p>Les heures supplémentaires, les absences et les primes se calculent et s'exportent tout seuls. Prêt pour votre cabinet.</p>
-    </div>
-    <div class="easy-card">
-      <div class="easy-card-accent" style="background:var(--pink)"></div>
-      <span class="easy-card-emoji">💚</span>
-      <h3>Bien-être : sentez le pouls</h3>
-      <p>Sondages express chaque semaine. Vous savez en temps réel si vos équipes sont au top ou en difficulté.</p>
-    </div>
-    <div class="easy-card">
-      <div class="easy-card-accent" style="background:var(--purple)"></div>
-      <span class="easy-card-emoji">💬</span>
-      <h3>Communication fluide</h3>
-      <p>Annonces, messagerie par équipe et par site. Tout le monde est au courant, même les noctambules.</p>
-    </div>
-    <div class="easy-card">
-      <div class="easy-card-accent" style="background:var(--green)"></div>
-      <span class="easy-card-emoji">📊</span>
-      <h3>Tout sur un écran</h3>
-      <p>Un dashboard qui dit l'essentiel. KPIs, alertes, actions prioritaires — vous pilotez, Pulsiia s'occupe du reste.</p>
+    <div>
+      <div class="proof-stars">★★★★★</div>
+      <div>Utilisé par <strong>Groupe Saveurs &amp; Co</strong> · 847 collaborateurs · 5 sites</div>
     </div>
   </div>
 </section>
 
-<!-- ── APP MOCKUP ── -->
-<section class="preview-section" id="demo">
-  <div class="mockup-wrap">
-    <div class="mockup-shadow">
-      <div class="mockup-bar">
-        <div class="mockup-dot" style="background:#FF5F57"></div>
-        <div class="mockup-dot" style="background:#FEBC2E"></div>
-        <div class="mockup-dot" style="background:#28C840"></div>
-        <div class="mockup-url">
-          <svg width="10" height="10" viewBox="0 0 16 16" fill="#059669"><path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2zm3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/></svg>
-          pulsiia.app/app
+<!-- ── LOGOS ── -->
+<div class="logos-section">
+  <span class="logos-label">Ils nous font confiance</span>
+  <div class="client-logo">Saveurs &amp; Co</div>
+  <div class="client-logo">Paris 11</div>
+  <div class="client-logo">Lyon Centre</div>
+  <div class="client-logo">Bordeaux</div>
+  <div class="client-logo">Marseille</div>
+</div>
+
+<!-- ── GAINS ── -->
+<section class="gain-section" id="pourquoi">
+  <div class="section-kicker">Pourquoi Pulsiia</div>
+  <h2 class="section-h2">Des résultats concrets,<br>dès le premier jour</h2>
+  <p class="section-p">Plus de tableurs Excel, plus de mails en cascade. Pulsiia automatise ce qui peut l'être pour que vous vous concentriez sur l'essentiel : vos équipes.</p>
+
+  <div class="gain-cards">
+    <div class="gain-card">
+      <span class="gain-icon">⏱️</span>
+      <div class="gain-num" style="color:var(--teal)">−70%</div>
+      <h3>de temps admin</h3>
+      <p>La saisie manuelle, les relances, les copier-coller — tout ça, c'est terminé. Pulsiia calcule, notifie et met à jour automatiquement.</p>
+    </div>
+    <div class="gain-card">
+      <span class="gain-icon">💸</span>
+      <div class="gain-num" style="color:var(--yellow-dark)">−50%</div>
+      <h3>d'erreurs de paie</h3>
+      <p>Les heures supplémentaires, les absences et les primes se synchronisent en temps réel avec votre pré-paie. Fini les oublis.</p>
+    </div>
+    <div class="gain-card">
+      <span class="gain-icon">❤️</span>
+      <div class="gain-num" style="color:var(--purple)">+40%</div>
+      <h3>de satisfaction équipes</h3>
+      <p>Quand les plannings sont clairs, les demandes traitées vite et le bien-être suivi, vos collaborateurs le ressentent.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── FEATURES ── -->
+<section class="features-section">
+
+  <!-- Planning -->
+  <div class="feat-row">
+    <div class="feat-text">
+      <span class="kicker" style="color:var(--blue)">🗓️ Planning</span>
+      <h3>Le planning de la semaine en 2 minutes chrono</h3>
+      <p>Assignez les shifts, détectez les conflits légaux, publiez — et votre équipe reçoit une notification. Convention CHR intégrée (amplitude, heures de nuit, 48h/semaine).</p>
+      <ul class="feat-bullets">
+        <li>Détection automatique des dépassements légaux</li>
+        <li>Shifts matin, après-midi, nuit en un clic</li>
+        <li>Publication par site ou globale</li>
+        <li>Synchronisation instantanée avec la pré-paie</li>
+      </ul>
+    </div>
+    <div class="feat-visual">
+      <div class="feat-mock">
+        <div class="feat-mock-bar">
+          <span class="fmb-label">Semaine du 5 au 11 mai 2026</span>
+          <span class="fmb-badge" style="background:#ECFDF5;color:#059669">✓ Publié</span>
         </div>
-      </div>
-      <div class="mockup-body">
-        <!-- Sidebar -->
-        <div class="m-sidebar">
-          <div class="m-logo">
-            <div class="m-logo-mark"></div>
-            <span class="m-logo-text">Pulsiia</span>
+        <div class="feat-mock-grid">
+          <div class="fmg-row">
+            <div class="fmg-name">Thomas M.</div>
+            <div class="fmg-cell shift-m">6h–14h</div>
+            <div class="fmg-cell shift-m">6h–14h</div>
+            <div class="fmg-cell shift-o">Repos</div>
+            <div class="fmg-cell shift-a">14h–22h</div>
+            <div class="fmg-cell shift-a">14h–22h</div>
           </div>
-          <div class="m-nav active">
-            <svg class="m-nav-icon" viewBox="0 0 16 16" fill="currentColor"><path d="M2 2h5v5H2V2zm0 7h5v5H2V9zm7-7h5v5H9V2zm0 7h5v5H9V9z"/></svg>
-            Tableau de bord
+          <div class="fmg-row">
+            <div class="fmg-name">Léa A.</div>
+            <div class="fmg-cell shift-a">14h–22h</div>
+            <div class="fmg-cell shift-abs">Absent</div>
+            <div class="fmg-cell shift-abs">Absent</div>
+            <div class="fmg-cell shift-a">14h–22h</div>
+            <div class="fmg-cell shift-o">Repos</div>
           </div>
-          <div class="m-nav">
-            <svg class="m-nav-icon" viewBox="0 0 16 16" fill="currentColor"><path d="M4 1a1 1 0 0 0-1 1v1H2a1 1 0 0 0-1 1v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1h-1V2a1 1 0 0 0-2 0v1H5V2a1 1 0 0 0-1-1zM3 6h10v7H3V6z"/></svg>
-            Planning
+          <div class="fmg-row">
+            <div class="fmg-name">Camille R.</div>
+            <div class="fmg-cell shift-m">6h–14h</div>
+            <div class="fmg-cell shift-m">6h–14h</div>
+            <div class="fmg-cell shift-m">6h–14h</div>
+            <div class="fmg-cell shift-m">6h–14h</div>
+            <div class="fmg-cell shift-o">Repos</div>
           </div>
-          <div class="m-nav">
-            <svg class="m-nav-icon" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0zm.5 4.5v4.25l2.75 1.65-.5.85-3.25-1.95V4.5h1z"/></svg>
-            Absences
-            <span class="m-badge">3</span>
-          </div>
-          <div class="m-nav">
-            <svg class="m-nav-icon" viewBox="0 0 16 16" fill="currentColor"><path d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1zm.75 3.5v1h.5a1.75 1.75 0 0 1 0 3.5H8.75v.5a.75.75 0 0 1-1.5 0V9H6.5a.75.75 0 0 1 0-1.5h2.25a.25.25 0 0 0 0-.5h-.5a1.75 1.75 0 1 1 0-3.5h.5V3.5a.75.75 0 0 1 1.5 0v1h-.5z"/></svg>
-            Pré-paie
-            <span class="m-badge">7</span>
-          </div>
-          <div class="m-nav">
-            <svg class="m-nav-icon" viewBox="0 0 16 16" fill="currentColor"><path d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/></svg>
-            Bien-être
-          </div>
-          <div class="m-nav">
-            <svg class="m-nav-icon" viewBox="0 0 16 16" fill="currentColor"><path d="M14 1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4.414A2 2 0 0 0 3 11.586l-2 2V2a1 1 0 0 1 1-1h12z"/></svg>
-            Communication
+          <div class="fmg-row">
+            <div class="fmg-name">Hugo B.</div>
+            <div class="fmg-cell shift-n">22h–6h</div>
+            <div class="fmg-cell shift-n">22h–6h</div>
+            <div class="fmg-cell shift-o">Repos</div>
+            <div class="fmg-cell shift-o">Repos</div>
+            <div class="fmg-cell shift-n">22h–6h</div>
           </div>
         </div>
-        <!-- Main -->
-        <div class="m-main">
-          <div class="m-topbar">
-            <div class="m-title">Tableau de bord</div>
-            <div class="m-btn">+ Shift</div>
-          </div>
-          <div class="m-kpis">
-            <div class="m-kpi"><div class="m-kpi-l">Collaborateurs</div><div class="m-kpi-v">847</div></div>
-            <div class="m-kpi"><div class="m-kpi-l">En attente</div><div class="m-kpi-v" style="color:#D97706">3</div></div>
-            <div class="m-kpi"><div class="m-kpi-l">Pré-paie</div><div class="m-kpi-v">47</div></div>
-            <div class="m-kpi"><div class="m-kpi-l">Bien-être</div><div class="m-kpi-v" style="color:#10B981">8.4</div></div>
-          </div>
-          <div class="m-grid">
-            <div class="m-card">
-              <div class="m-card-t">Activité récente</div>
-              <div class="m-row"><div class="m-av" style="background:#3B82F6">ML</div><div class="m-row-t">Planning S+1 publié</div><div class="m-b" style="background:#ECFDF5;color:#059669">✓</div></div>
-              <div class="m-row"><div class="m-av" style="background:#059669">TM</div><div class="m-row-t">Congé payé approuvé</div><div class="m-b" style="background:#ECFDF5;color:#059669">✓</div></div>
-              <div class="m-row"><div class="m-av" style="background:#7C3AED">LA</div><div class="m-row-t">Absence demandée</div><div class="m-b" style="background:#FFF7ED;color:#D97706">En att.</div></div>
-              <div class="m-row"><div class="m-av" style="background:#D97706">CR</div><div class="m-row-t">Variable HS validée</div><div class="m-b" style="background:#EFF6FF;color:#2563EB">Validé</div></div>
-            </div>
-            <div class="m-card">
-              <div class="m-card-t">Pouls équipes</div>
-              <div class="m-pulse">
-                <div class="m-pulse-score">8.4</div>
-                <div class="m-pulse-label">Score moyen<br>ce mois</div>
-              </div>
-              <div class="m-bars">
-                <div class="m-bar" style="height:30px"></div>
-                <div class="m-bar" style="height:38px"></div>
-                <div class="m-bar" style="height:28px"></div>
-                <div class="m-bar" style="height:42px"></div>
-                <div class="m-bar" style="height:35px"></div>
-                <div class="m-bar hi" style="height:50px"></div>
-                <div class="m-bar hi" style="height:50px"></div>
-                <div class="m-bar hi" style="height:48px"></div>
-              </div>
-            </div>
-          </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:4px">
+          <span style="font-size:10px;background:#EFF6FF;color:#1D4ED8;padding:3px 9px;border-radius:8px;font-weight:600">🌅 Matin</span>
+          <span style="font-size:10px;background:#ECFDF5;color:#065F46;padding:3px 9px;border-radius:8px;font-weight:600">☀️ Après-midi</span>
+          <span style="font-size:10px;background:#1E1B4B;color:#A5B4FC;padding:3px 9px;border-radius:8px;font-weight:600">🌙 Nuit</span>
+          <span style="font-size:10px;background:#FEF2F2;color:#DC2626;padding:3px 9px;border-radius:8px;font-weight:600">🤒 Absent</span>
         </div>
       </div>
     </div>
   </div>
+
+  <!-- Absences -->
+  <div class="feat-row reverse">
+    <div class="feat-text">
+      <span class="kicker" style="color:var(--green)">✈️ Absences & Congés</span>
+      <h3>Demande, validation, c'est réglé.</h3>
+      <p>Vos collaborateurs font leurs demandes en ligne. Vous validez en un clic. Le planning se met à jour tout seul, et la pré-paie aussi.</p>
+      <ul class="feat-bullets">
+        <li>11 types d'absences (CP, RTT, maladie, maternité…)</li>
+        <li>Workflow approbation Manager → RH → DRH</li>
+        <li>Notifications push en temps réel</li>
+        <li>Suivi des compteurs CP et RTT</li>
+      </ul>
+    </div>
+    <div class="feat-visual">
+      <div class="feat-mock" style="gap:10px">
+        <div style="display:flex;align-items:center;justify-content:space-between;background:white;border-radius:10px;padding:12px 16px;border:1px solid #E5E7EB">
+          <div>
+            <div style="font-size:12px;font-weight:700;color:var(--text)">Léa Arnaud — Congé payé</div>
+            <div style="font-size:11px;color:var(--text-2);margin-top:2px">14 mai → 21 mai · 6 jours ouvrés</div>
+          </div>
+          <div style="display:flex;gap:6px">
+            <div style="background:#ECFDF5;color:#059669;font-size:10px;font-weight:700;padding:4px 10px;border-radius:8px;cursor:pointer">✓ Valider</div>
+            <div style="background:#FEF2F2;color:#DC2626;font-size:10px;font-weight:700;padding:4px 10px;border-radius:8px;cursor:pointer">✕</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;background:white;border-radius:10px;padding:12px 16px;border:1px solid #E5E7EB">
+          <div>
+            <div style="font-size:12px;font-weight:700;color:var(--text)">Hugo Bernard — RTT</div>
+            <div style="font-size:11px;color:var(--text-2);margin-top:2px">28 mai · 1 jour</div>
+          </div>
+          <div style="background:#FFF7ED;color:#D97706;font-size:10px;font-weight:700;padding:4px 10px;border-radius:8px">En attente</div>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;background:#ECFDF5;border-radius:10px;padding:12px 16px;border:1px solid #A7F3D0">
+          <div>
+            <div style="font-size:12px;font-weight:700;color:#065F46">Thomas Martin — CP approuvé ✓</div>
+            <div style="font-size:11px;color:#059669;margin-top:2px">21–25 mai · Validé par Marie Lambert</div>
+          </div>
+          <div style="background:#059669;color:white;font-size:10px;font-weight:700;padding:4px 10px;border-radius:8px">Approuvé</div>
+        </div>
+        <div style="background:#EFF6FF;border:1px solid #BFCFFE;border-radius:10px;padding:10px 14px;font-size:11.5px;color:#1D4ED8;font-weight:500">
+          ⚡ Le planning et la pré-paie sont mis à jour automatiquement
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bien-être -->
+  <div class="feat-row">
+    <div class="feat-text">
+      <span class="kicker" style="color:#EC4899">❤️ Bien-être</span>
+      <h3>Sentez le pouls de vos équipes avant que ça dérape.</h3>
+      <p>Un sondage express chaque semaine. Un score de bien-être par équipe. Des alertes avant que la situation empire. Simple, anonyme, efficace.</p>
+      <ul class="feat-bullets">
+        <li>QCM hebdomadaire anonyme (2 minutes max)</li>
+        <li>Score de bien-être par équipe et par site</li>
+        <li>Tendances sur 8 semaines</li>
+        <li>Alertes automatiques en cas de baisse</li>
+      </ul>
+    </div>
+    <div class="feat-visual">
+      <div class="feat-mock" style="gap:14px">
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <div style="font-size:12px;font-weight:700;color:var(--text)">Score bien-être — Mai 2026</div>
+          <div style="font-size:11px;background:#ECFDF5;color:#059669;padding:2px 8px;border-radius:8px;font-weight:600">▲ +0.4 pts</div>
+        </div>
+        <div style="display:flex;align-items:flex-end;gap:6px;height:80px">
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px">
+            <div style="width:100%;background:#BFCFFE;border-radius:4px 4px 0 0;height:50px"></div>
+            <div style="font-size:9px;color:var(--text-2)">S1</div>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px">
+            <div style="width:100%;background:#BFCFFE;border-radius:4px 4px 0 0;height:44px"></div>
+            <div style="font-size:9px;color:var(--text-2)">S2</div>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px">
+            <div style="width:100%;background:#BFCFFE;border-radius:4px 4px 0 0;height:38px"></div>
+            <div style="font-size:9px;color:var(--text-2)">S3</div>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px">
+            <div style="width:100%;background:#BFCFFE;border-radius:4px 4px 0 0;height:56px"></div>
+            <div style="font-size:9px;color:var(--text-2)">S4</div>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px">
+            <div style="width:100%;background:#2563EB;border-radius:4px 4px 0 0;height:64px"></div>
+            <div style="font-size:9px;color:var(--blue);font-weight:700">S5</div>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px">
+            <div style="width:100%;background:#2563EB;border-radius:4px 4px 0 0;height:68px"></div>
+            <div style="font-size:9px;color:var(--blue);font-weight:700">S6</div>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px">
+            <div style="width:100%;background:#2563EB;border-radius:4px 4px 0 0;height:72px"></div>
+            <div style="font-size:9px;color:var(--blue);font-weight:700">S7</div>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px">
+            <div style="width:100%;background:#14C2E0;border-radius:4px 4px 0 0;height:76px"></div>
+            <div style="font-size:9px;color:var(--teal);font-weight:700">S8</div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+          <div style="background:white;border:1px solid #E5E7EB;border-radius:10px;padding:12px;text-align:center">
+            <div style="font-size:26px;font-weight:900;color:#10B981;letter-spacing:-1px">8.4</div>
+            <div style="font-size:10px;color:var(--text-2);margin-top:2px">Score moyen /10</div>
+          </div>
+          <div style="background:white;border:1px solid #E5E7EB;border-radius:10px;padding:12px;text-align:center">
+            <div style="font-size:26px;font-weight:900;color:var(--blue);letter-spacing:-1px">87%</div>
+            <div style="font-size:10px;color:var(--text-2);margin-top:2px">Taux de réponse</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </section>
 
-<!-- ── BENTO FEATURES ── -->
-<section class="bento-section" id="modules">
-  <div style="text-align:center;margin-bottom:60px">
-    <div class="tag tag-purple" style="margin-bottom:14px">🧩 6 modules intégrés</div>
-    <h2 class="big" style="margin:0 auto 16px">Un OS RH complet,<br>pas un patchwork d'outils</h2>
-    <p class="section-desc" style="margin:0 auto">Chaque module parle aux autres. Un changement de planning met à jour la paie. Une absence met à jour le planning.</p>
-  </div>
+<!-- ── TÉMOIGNAGES ── -->
+<section class="testi-section" id="temoignages">
+  <div class="section-kicker">Témoignages</div>
+  <h2 class="section-h2" style="margin-bottom:16px">Ils pilotent leurs équipes<br>avec Pulsiia</h2>
+  <p class="section-p" style="margin-bottom:52px">Des RH terrain qui ont retrouvé du temps pour ce qui compte vraiment.</p>
 
-  <div class="bento-grid">
-    <div class="bento bento-blue bento-wide">
-      <div class="bento-tag">Planning</div>
-      <span class="bento-icon">🗓️</span>
-      <h3>Planning hebdomadaire CHR</h3>
-      <p>Grille claire, shifts matin/après-midi/nuit, détection automatique des conflits légaux (amplitude, 48h/semaine), publication en un clic. Convention CHR intégrée.</p>
+  <div class="testi-grid">
+    <div class="testi-card">
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-quote">"Avant, je passais 2h par jour sur les plannings et les absences. Avec Pulsiia, c'est 20 minutes. Je ne reviendrai jamais en arrière."</p>
+      <div class="testi-author">
+        <div class="testi-av" style="background:linear-gradient(135deg,#3B82F6,#6366F1)">ML</div>
+        <div>
+          <div class="testi-name">Marie Lambert</div>
+          <div class="testi-role">DRH — Groupe Saveurs &amp; Co</div>
+        </div>
+      </div>
     </div>
-    <div class="bento bento-teal">
-      <div class="bento-tag">Absences</div>
-      <span class="bento-icon">✈️</span>
-      <h3>Congés & absences</h3>
-      <p>11 types d'absences, workflow d'approbation, mise à jour automatique du planning et de la pré-paie.</p>
+    <div class="testi-card">
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-quote">"La pré-paie se génère toute seule à partir du planning. Mon cabinet comptable reçoit le CSV directement. C'est bluffant de simplicité."</p>
+      <div class="testi-author">
+        <div class="testi-av" style="background:linear-gradient(135deg,#7C3AED,#8B5CF6)">CR</div>
+        <div>
+          <div class="testi-name">Camille Rey</div>
+          <div class="testi-role">Chargée RH — Siège Paris</div>
+        </div>
+      </div>
     </div>
-    <div class="bento bento-amber">
-      <div class="bento-tag">Pré-paie</div>
-      <span class="bento-icon">💰</span>
-      <h3>Variables de paie auto</h3>
-      <p>HS ×1.25, nuit ×1.20, primes — calculées et prêtes à exporter. Zéro ressaisie.</p>
-    </div>
-    <div class="bento bento-pink">
-      <div class="bento-tag">Bien-être</div>
-      <span class="bento-icon">❤️</span>
-      <h3>Le pouls de vos équipes</h3>
-      <p>QCM hebdomadaire, score par équipe, alertes burn-out. Vous le sentez avant que ça dérape.</p>
-    </div>
-    <div class="bento bento-purple">
-      <div class="bento-tag">Communication</div>
-      <span class="bento-icon">💬</span>
-      <h3>Messagerie interne</h3>
-      <p>Canaux par site, annonces RH, fils de discussion. Tout le monde dans la boucle.</p>
-    </div>
-    <div class="bento bento-green">
-      <div class="bento-tag">RH & Collaborateurs</div>
-      <span class="bento-icon">👥</span>
-      <h3>Fiches & historique</h3>
-      <p>Profils, organigramme, audit log complet. Conformité RGPD intégrée dès le départ.</p>
+    <div class="testi-card">
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-quote">"En tant que manager, je valide les demandes de congé depuis mon téléphone en 10 secondes. L'équipe est prévenue en temps réel. Parfait."</p>
+      <div class="testi-author">
+        <div class="testi-av" style="background:linear-gradient(135deg,#059669,#10B981)">TM</div>
+        <div>
+          <div class="testi-name">Thomas Martin</div>
+          <div class="testi-role">Responsable site — Paris 11</div>
+        </div>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- ── CITATION ── -->
-<section class="quote-section">
-  <div class="quote-text">
-    "Gérer 847 collaborateurs sur 5 sites, c'est devenu aussi simple que de lire un tableau de bord."
+<!-- ── CHIFFRES ── -->
+<div class="stats-section">
+  <div class="stats-inner">
+    <div class="stat-item">
+      <div class="stat-n">847</div>
+      <div class="stat-l">Collaborateurs gérés</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-n">5</div>
+      <div class="stat-l">Établissements</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-n">−70%</div>
+      <div class="stat-l">Temps admin RH</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-n">8.4</div>
+      <div class="stat-l">Score bien-être /10</div>
+    </div>
   </div>
-  <div class="quote-sub">Marie Lambert, DRH — Groupe Saveurs &amp; Co</div>
+</div>
+
+<!-- ── FAQ ── -->
+<section class="faq-section" id="faq">
+  <div class="section-kicker">FAQ</div>
+  <h2 class="section-h2" style="margin-bottom:52px">Les questions qu'on nous pose<br>tout le temps</h2>
+
+  <div class="faq-list">
+    <div class="faq-item open">
+      <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">
+        Est-ce que Pulsiia est adapté au secteur HCR (hôtellerie-restauration) ?
+        <div class="faq-arrow">+</div>
+      </div>
+      <div class="faq-a">Oui, Pulsiia a été conçu spécifiquement pour le secteur HCR. La convention collective CHR est intégrée : calcul automatique des heures de nuit (×1.20), heures supplémentaires (×1.25), amplitude maximale, repos obligatoires. Tout est précalibré pour votre secteur.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">
+        Combien de temps faut-il pour prendre en main Pulsiia ?
+        <div class="faq-arrow">+</div>
+      </div>
+      <div class="faq-a">La plupart de nos utilisateurs sont opérationnels en moins d'une heure. L'interface a été pensée pour être intuitive sans formation préalable. Un manager peut créer et publier son premier planning en moins de 10 minutes.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">
+        La pré-paie se synchronise-t-elle automatiquement avec notre logiciel de paie ?
+        <div class="faq-arrow">+</div>
+      </div>
+      <div class="faq-a">Pulsiia génère un export CSV avec BOM UTF-8 compatible avec la majorité des logiciels de paie et des cabinets comptables. Les variables (HS, absences, primes, avantages nature) sont calculées automatiquement à partir du planning et des absences validées.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">
+        Nos données sont-elles sécurisées et conformes RGPD ?
+        <div class="faq-arrow">+</div>
+      </div>
+      <div class="faq-a">Absolument. Pulsiia est conforme RGPD dès la conception (privacy by design). Les données sont hébergées en France, chiffrées en transit et au repos. JWT RS256 pour l'authentification, audit log complet, gestion des droits à 5 niveaux (DRH → Collaborateur).</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">
+        Peut-on gérer plusieurs établissements depuis une seule interface ?
+        <div class="faq-arrow">+</div>
+      </div>
+      <div class="faq-a">Oui, c'est même l'une des forces de Pulsiia. Vous gérez tous vos sites depuis un seul tableau de bord. Vous pouvez voir une vue consolidée ou filtrer par établissement. Chaque manager de site n'a accès qu'à ses propres équipes.</div>
+    </div>
+  </div>
 </section>
 
 <!-- ── CTA FINAL ── -->
 <section class="cta-section">
-  <div class="cta-blob cta-blob-1"></div>
-  <div class="cta-blob cta-blob-2"></div>
-  <div class="cta-pill">🎉 Accès démo immédiat</div>
-  <h2>Prêt à sentir le<br>pouls de vos équipes ?</h2>
-  <p>Aucune installation. Aucune carte bancaire. Juste l'app.</p>
-  <a href="/app" class="btn btn-cta">Accéder à l'application →</a>
-  <div class="cta-hint">Démo avec données réelles · Groupe Saveurs &amp; Co · 847 collaborateurs</div>
+  <div class="cta-box">
+    <h2>Prêt à reprendre<br>le contrôle ?</h2>
+    <p>Accédez à l'application de démonstration avec des données réelles.<br>Aucune installation, aucune carte bancaire.</p>
+    <a href="/app" class="btn-hero-yellow">
+      Accéder à l'app gratuitement →
+    </a>
+    <p class="cta-hint">Démo · Groupe Saveurs &amp; Co · 847 collaborateurs · 5 sites</p>
+  </div>
 </section>
 
 <!-- ── FOOTER ── -->
 <footer>
-  <div class="footer-top">
-    <div class="footer-brand">
-      <div class="footer-logo">
+  <div class="footer-cols">
+    <div>
+      <div class="footer-brand-logo">
         <div class="footer-logo-mark">
-          <svg viewBox="45 37 280 280"><path d="M 57.984375 305.449219 C 57.433594 305.394531 56.824219 305.171875 56.601562 304.921875 C 56.296875 304.5625 56.242188 287.652344 56.242188 207.589844 L 56.242188 110.699219 L 56.878906 107.101562 C 57.984375 100.792969 59.007812 96.226562 59.671875 94.371094 C 68.558594 72.398438 77.054688 62.269531 90.28125 53.773438 C 93.214844 51.890625 95.125 50.839844 98.140625 49.234375 C 100.9375 48.015625 104.148438 46.632812 106.96875 45.554688 C 108.355469 44.832031 112.144531 43.589844 116.933594 42.371094 C 123.269531 40.628906 130.273438 39.6875 136.777344 38.996094 C 141.425781 38.273438 159.609375 38.273438 164.035156 38.996094 C 170.816406 39.714844 178.289062 40.515625 187.835938 42.011719 C 194.894531 43.449219 201.121094 45.082031 209.285156 47.433594 C 219.773438 51.335938 229.015625 54.964844 235.160156 58.5625 C 244.097656 63.792969 255.390625 73.78125 262.558594 81.640625 C 266.628906 88.007812 270.167969 95.339844 272.355469 101.707031 C 273.710938 106.632812 274.542969 118.171875 273.492188 130.15625 C 272.660156 133.585938 271 140.339844 268.261719 146.898438 C 266.875 150.054688 262.753906 157.445312 250.242188 172.996094 C 246.535156 176.707031 240.695312 181.492188 234.027344 186.199219 C 229.488281 188.910156 225.03125 191.457031 216.976562 195.246094 C 211.082031 197.570312 204.027344 200.230469 196.71875 202.304688 C 191.988281 203.714844 185.621094 205.070312 180.144531 206.011719 C 175.246094 206.734375 168.710938 207.757812 152.328125 208.394531 C 147.761719 208.394531 147.707031 208.367188 147.707031 204.351562 C 147.707031 200.476562 152.992188 199.8125 156.980469 199.234375 C 160.300781 198.347656 165.75 195.910156 174.441406 189.628906 C 179.839844 183.679688 184.265625 176.152344 186.285156 171.03125 C 187.976562 165.800781 189.578125 156.308594 189.578125 150.691406 C 189.578125 145.820312 188.527344 138.789062 186.976562 131.871094 C 183.824219 122.128906 177.789062 109.425781 156.148438 82.859375 C 148.484375 76.742188 140.953125 71.789062 131.488281 67.113281 C 124.875 64.59375 115.1875 62.101562 102.875 62.101562 C 94.292969 64.152344 87.734375 68.441406 84.441406 73.921875 C 83.640625 80.394531 84.277344 86.070312 88.152344 92.65625 C 95.539062 99.90625 105.558594 105.773438 112.007812 109.511719 C 122.082031 116.347656 131.820312 126.335938 138.160156 137.960938 C 140.621094 148.613281 141.675781 230.257812 141.507812 304.480469 C 141.121094 305.144531 60.089844 305.644531 57.984375 305.449219 Z"/></svg>
+          <svg viewBox="45 37 280 280"><path d="M57.984375 305.449219C57.433594 305.394531 56.824219 305.171875 56.601562 304.921875C56.296875 304.5625 56.242188 287.652344 56.242188 207.589844L56.242188 110.699219L56.878906 107.101562C57.984375 100.792969 59.007812 96.226562 59.671875 94.371094C68.558594 72.398438 77.054688 62.269531 90.28125 53.773438C93.214844 51.890625 95.125 50.839844 98.140625 49.234375C100.9375 48.015625 104.148438 46.632812 106.96875 45.554688C108.355469 44.832031 112.144531 43.589844 116.933594 42.371094C123.269531 40.628906 130.273438 39.6875 136.777344 38.996094C141.425781 38.273438 159.609375 38.273438 164.035156 38.996094C170.816406 39.714844 178.289062 40.515625 187.835938 42.011719C194.894531 43.449219 201.121094 45.082031 209.285156 47.433594C219.773438 51.335938 229.015625 54.964844 235.160156 58.5625C244.097656 63.792969 255.390625 73.78125 262.558594 81.640625C266.628906 88.007812 270.167969 95.339844 272.355469 101.707031C273.710938 106.632812 274.542969 118.171875 273.492188 130.15625C272.660156 133.585938 271 140.339844 268.261719 146.898438C266.875 150.054688 262.753906 157.445312 250.242188 172.996094C246.535156 176.707031 240.695312 181.492188 234.027344 186.199219C229.488281 188.910156 225.03125 191.457031 216.976562 195.246094C211.082031 197.570312 204.027344 200.230469 196.71875 202.304688C191.988281 203.714844 185.621094 205.070312 180.144531 206.011719C175.246094 206.734375 168.710938 207.757812 152.328125 208.394531C147.761719 208.394531 147.707031 208.367188 147.707031 204.351562C147.707031 200.476562 152.992188 199.8125 156.980469 199.234375C160.300781 198.347656 165.75 195.910156 174.441406 189.628906C179.839844 183.679688 184.265625 176.152344 186.285156 171.03125C187.976562 165.800781 189.578125 156.308594 189.578125 150.691406C189.578125 145.820312 188.527344 138.789062 186.976562 131.871094C183.824219 122.128906 177.789062 109.425781 156.148438 82.859375C148.484375 76.742188 140.953125 71.789062 131.488281 67.113281C124.875 64.59375 115.1875 62.101562 102.875 62.101562C94.292969 64.152344 87.734375 68.441406 84.441406 73.921875C83.640625 80.394531 84.277344 86.070312 88.152344 92.65625C95.539062 99.90625 105.558594 105.773438 112.007812 109.511719C122.082031 116.347656 131.820312 126.335938 138.160156 137.960938C140.621094 148.613281 141.675781 230.257812 141.507812 304.480469C141.121094 305.144531 60.089844 305.644531 57.984375 305.449219Z"/></svg>
         </div>
-        <span class="footer-logo-text">Pulsiia</span>
+        <span class="footer-brand-name">Pulsiia</span>
       </div>
-      <p class="footer-tagline">L'OS RH qui garde le pouls<br>de vos équipes en temps réel.<br>Conçu pour le secteur HCR français.</p>
+      <p class="footer-tagline">Solution tout-en-1 pour piloter le pouls de vos équipes. Conçu pour les RH du secteur HCR.</p>
     </div>
     <div class="footer-col">
       <h5>Produit</h5>
       <a href="#pourquoi">Fonctionnalités</a>
-      <a href="#modules">Modules</a>
-      <a href="#demo">Aperçu</a>
+      <a href="#temoignages">Témoignages</a>
+      <a href="#faq">FAQ</a>
       <a href="/app">Démo live</a>
+    </div>
+    <div class="footer-col">
+      <h5>Modules</h5>
+      <a href="/app">Planning</a>
+      <a href="/app">Absences</a>
+      <a href="/app">Pré-paie</a>
+      <a href="/app">Bien-être</a>
+      <a href="/app">Communication</a>
     </div>
     <div class="footer-col">
       <h5>Légal</h5>
@@ -782,12 +857,20 @@ footer {
   </div>
   <div class="footer-bottom">
     <p>© 2026 Pulsiia — Tous droits réservés</p>
-    <div class="footer-rgpd">
-      <div class="rgpd-dot"></div>
-      100% conforme RGPD · Données hébergées en France
+    <div class="footer-trust">
+      <div class="trust-badge"><div class="trust-dot"></div>Données hébergées en France</div>
+      <div class="trust-badge"><div class="trust-dot"></div>Conforme RGPD</div>
     </div>
   </div>
 </footer>
+
+<script>
+document.querySelectorAll('.faq-item').forEach(item => {
+  item.querySelector('.faq-q').addEventListener('click', () => {
+    item.classList.toggle('open');
+  });
+});
+</script>
 
 </body>
 </html>
