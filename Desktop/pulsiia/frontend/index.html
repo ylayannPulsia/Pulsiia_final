@@ -3,22 +3,25 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pulsiia — OS Organisationnel RH</title>
+<title>Pulsiia — Gardez le pouls de vos équipes</title>
 <link rel="manifest" href="/manifest.json">
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
   --blue: #2563EB;
   --blue-dark: #1D4ED8;
-  --blue-light: #EFF4FF;
+  --teal: #14C2E0;
+  --purple: #8B5CF6;
+  --pink: #EC4899;
+  --amber: #F59E0B;
+  --green: #10B981;
   --dark: #0F1117;
-  --dark-2: #1A1D27;
-  --text: #111827;
+  --text: #1E1B2E;
   --text-2: #6B7280;
   --border: #E5E7EB;
-  --bg: #F7F8FA;
+  --bg: #F8F7FF;
 }
 
 html { scroll-behavior: smooth; }
@@ -26,265 +29,452 @@ body { font-family: 'DM Sans', sans-serif; color: var(--text); background: white
 
 /* ── NAV ── */
 nav {
-  position: fixed; top: 0; left: 0; right: 0;
-  height: 64px;
-  background: rgba(255,255,255,.9);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  height: 68px;
+  background: rgba(255,255,255,.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border-bottom: 1px solid rgba(0,0,0,.06);
   display: flex; align-items: center;
-  padding: 0 5vw;
-  z-index: 100;
-  gap: 32px;
+  padding: 0 6vw; gap: 32px;
 }
 
-.nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+.nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; flex-shrink: 0; }
 .nav-logo-mark {
-  width: 36px; height: 36px;
-  background: var(--blue);
-  border-radius: 9px;
+  width: 38px; height: 38px;
+  background: linear-gradient(135deg, var(--blue), var(--teal));
+  border-radius: 10px;
   display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 4px 12px rgba(37,99,235,.3);
 }
 .nav-logo-mark svg { width: 20px; height: 20px; fill: white; }
-.nav-logo-text { font-size: 18px; font-weight: 700; color: var(--text); letter-spacing: -.4px; }
+.nav-logo-name { font-size: 19px; font-weight: 800; color: var(--text); letter-spacing: -.5px; }
 
-.nav-links { display: flex; align-items: center; gap: 28px; margin-left: 20px; }
-.nav-links a { font-size: 14px; color: var(--text-2); text-decoration: none; font-weight: 500; transition: color .15s; }
-.nav-links a:hover { color: var(--text); }
+.nav-links { display: flex; align-items: center; gap: 8px; }
+.nav-link {
+  font-size: 14px; font-weight: 500; color: var(--text-2);
+  text-decoration: none; padding: 6px 14px; border-radius: 8px;
+  transition: all .15s;
+}
+.nav-link:hover { color: var(--text); background: #F3F4F6; }
 
 .nav-cta { margin-left: auto; display: flex; align-items: center; gap: 10px; }
-.btn { display: inline-flex; align-items: center; gap: 6px; padding: 9px 18px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all .15s; border: none; font-family: inherit; text-decoration: none; }
-.btn-outline { background: transparent; color: var(--text); border: 1.5px solid var(--border); }
-.btn-outline:hover { border-color: var(--text); }
-.btn-primary { background: var(--blue); color: white; }
-.btn-primary:hover { background: var(--blue-dark); transform: translateY(-1px); box-shadow: 0 4px 14px rgba(37,99,235,.35); }
+
+.btn {
+  display: inline-flex; align-items: center; gap: 7px;
+  font-family: inherit; font-weight: 600; font-size: 14px;
+  border: none; cursor: pointer; transition: all .2s; text-decoration: none;
+  border-radius: 10px; white-space: nowrap;
+}
+.btn-nav {
+  padding: 9px 20px;
+  background: var(--blue); color: white;
+  box-shadow: 0 2px 8px rgba(37,99,235,.3);
+}
+.btn-nav:hover { background: var(--blue-dark); transform: translateY(-1px); box-shadow: 0 4px 16px rgba(37,99,235,.4); }
 
 /* ── HERO ── */
 .hero {
   min-height: 100vh;
-  background: var(--dark);
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  padding: 120px 5vw 80px;
-  position: relative;
-  overflow: hidden;
+  background: linear-gradient(160deg, #0F1117 0%, #1a1035 50%, #0F1117 100%);
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; padding: 120px 6vw 80px;
+  position: relative; overflow: hidden;
 }
 
+/* Orbs de couleur en arrière-plan */
 .hero::before {
   content: '';
-  position: absolute; inset: 0;
-  background: radial-gradient(ellipse 80% 60% at 50% -10%, rgba(37,99,235,.3) 0%, transparent 60%);
+  position: absolute; top: -100px; left: 50%; transform: translateX(-50%);
+  width: 900px; height: 600px;
+  background: radial-gradient(ellipse, rgba(20,194,224,.18) 0%, transparent 60%);
   pointer-events: none;
 }
-
-.hero-badge {
-  display: inline-flex; align-items: center; gap: 8px;
-  background: rgba(37,99,235,.15);
-  border: 1px solid rgba(37,99,235,.3);
-  color: #93C5FD;
-  font-size: 12.5px; font-weight: 600;
-  padding: 5px 14px;
-  border-radius: 20px;
-  margin-bottom: 28px;
-  letter-spacing: .3px;
+.orb {
+  position: absolute; border-radius: 50%; filter: blur(80px); pointer-events: none;
 }
+.orb-1 { width: 400px; height: 400px; background: rgba(37,99,235,.2); top: 10%; left: -5%; }
+.orb-2 { width: 300px; height: 300px; background: rgba(139,92,246,.2); bottom: 10%; right: 0%; }
+.orb-3 { width: 250px; height: 250px; background: rgba(20,194,224,.15); bottom: 20%; left: 30%; }
 
-.hero-badge::before { content: '●'; font-size: 8px; animation: blink 2s infinite; }
-@keyframes blink { 0%,100% { opacity:1; } 50% { opacity:.3; } }
+/* Pulse line animée */
+.pulse-line {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  height: 80px; overflow: hidden; opacity: .25;
+}
+.pulse-line svg { width: 200%; height: 100%; animation: slidePulse 4s linear infinite; }
+@keyframes slidePulse { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+.hero-content { position: relative; z-index: 2; text-align: center; max-width: 820px; }
+
+.hero-pill {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(255,255,255,.08);
+  border: 1px solid rgba(255,255,255,.14);
+  color: rgba(255,255,255,.75);
+  font-size: 13px; font-weight: 600; padding: 6px 16px;
+  border-radius: 100px; margin-bottom: 32px;
+}
+.hero-pill-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--teal);
+  box-shadow: 0 0 8px var(--teal);
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+@keyframes pulse-dot {
+  0%,100% { opacity:1; transform:scale(1); }
+  50% { opacity:.5; transform:scale(.7); }
+}
 
 .hero h1 {
-  font-size: clamp(36px, 6vw, 72px);
-  font-weight: 700;
+  font-size: clamp(40px, 6.5vw, 78px);
+  font-weight: 800;
   color: white;
-  text-align: center;
-  line-height: 1.08;
-  letter-spacing: -2px;
-  max-width: 900px;
-  margin-bottom: 24px;
+  line-height: 1.05;
+  letter-spacing: -2.5px;
+  margin-bottom: 10px;
 }
 
-.hero h1 span { color: #60A5FA; }
-
-.hero p {
-  font-size: clamp(16px, 2vw, 20px);
-  color: rgba(255,255,255,.5);
-  text-align: center;
-  max-width: 600px;
-  line-height: 1.65;
-  margin-bottom: 40px;
-  font-weight: 400;
+.hero h1 .highlight {
+  background: linear-gradient(90deg, var(--teal), var(--blue) 60%, var(--purple));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
-.hero-actions { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; justify-content: center; }
+.hero-sub {
+  font-size: clamp(16px, 2vw, 22px);
+  color: rgba(255,255,255,.45);
+  font-weight: 400; line-height: 1.6; margin: 20px 0 40px;
+  max-width: 580px; margin-left: auto; margin-right: auto;
+}
+
+.hero-actions { display: flex; align-items: center; gap: 14px; justify-content: center; flex-wrap: wrap; margin-bottom: 60px; }
 
 .btn-hero {
-  padding: 14px 28px;
-  font-size: 15px;
-  border-radius: 10px;
+  padding: 16px 32px; font-size: 16px; border-radius: 14px;
+  background: linear-gradient(135deg, var(--blue), var(--teal));
+  color: white;
+  box-shadow: 0 8px 28px rgba(37,99,235,.4);
 }
+.btn-hero:hover { transform: translateY(-2px); box-shadow: 0 12px 36px rgba(37,99,235,.5); }
 
 .btn-hero-ghost {
-  background: rgba(255,255,255,.06);
-  color: rgba(255,255,255,.7);
-  border: 1px solid rgba(255,255,255,.12);
-  padding: 14px 24px;
-  font-size: 15px;
-  border-radius: 10px;
+  padding: 16px 28px; font-size: 16px; border-radius: 14px;
+  background: rgba(255,255,255,.07);
+  color: rgba(255,255,255,.75);
+  border: 1px solid rgba(255,255,255,.15);
 }
-.btn-hero-ghost:hover { background: rgba(255,255,255,.1); color: white; }
+.btn-hero-ghost:hover { background: rgba(255,255,255,.12); color: white; }
 
-.hero-stats {
-  display: flex; align-items: center; gap: 40px;
-  margin-top: 64px;
-  padding-top: 40px;
-  border-top: 1px solid rgba(255,255,255,.08);
-  flex-wrap: wrap; justify-content: center;
+/* Social proof */
+.hero-proof {
+  display: flex; align-items: center; gap: 12px;
+  color: rgba(255,255,255,.35); font-size: 13px;
+  justify-content: center;
 }
-
-.stat { text-align: center; }
-.stat-val { font-size: 32px; font-weight: 700; color: white; letter-spacing: -1px; }
-.stat-label { font-size: 12px; color: rgba(255,255,255,.35); margin-top: 4px; text-transform: uppercase; letter-spacing: .6px; font-weight: 500; }
-
-/* ── APP PREVIEW ── */
-.preview-section {
-  background: var(--dark-2);
-  padding: 0 5vw 80px;
-  display: flex; justify-content: center;
-}
-
-.app-preview {
-  width: 100%; max-width: 1100px;
-  background: var(--dark);
-  border: 1px solid rgba(255,255,255,.08);
-  border-radius: 16px;
-  overflow: hidden;
-  box-shadow: 0 40px 80px rgba(0,0,0,.5), 0 0 0 1px rgba(255,255,255,.04);
-  transform: translateY(-40px);
-}
-
-.preview-bar {
-  background: rgba(255,255,255,.04);
-  padding: 12px 16px;
-  display: flex; align-items: center; gap: 8px;
-  border-bottom: 1px solid rgba(255,255,255,.06);
-}
-.preview-dot { width: 10px; height: 10px; border-radius: 50%; }
-
-.preview-body {
-  display: flex;
-  height: 420px;
-}
-
-.preview-sidebar {
-  width: 200px;
-  background: #0F1117;
-  padding: 20px 12px;
-  flex-shrink: 0;
-  border-right: 1px solid rgba(255,255,255,.05);
-}
-
-.preview-logo { display: flex; align-items: center; gap: 8px; margin-bottom: 24px; padding: 0 6px; }
-.preview-logo-mark { width: 24px; height: 24px; background: var(--blue); border-radius: 6px; flex-shrink: 0; }
-.preview-logo-text { font-size: 13px; font-weight: 600; color: white; }
-
-.p-nav { display: flex; align-items: center; gap: 8px; padding: 7px 8px; border-radius: 6px; margin-bottom: 2px; font-size: 12px; color: rgba(255,255,255,.4); }
-.p-nav.active { background: rgba(37,99,235,.2); color: white; font-weight: 500; }
-.p-nav-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; opacity: .7; flex-shrink: 0; }
-
-.preview-main { flex: 1; padding: 20px; background: #F7F8FA; overflow: hidden; }
-.preview-title { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 16px; }
-
-.p-kpis { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; margin-bottom: 14px; }
-.p-kpi { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; }
-.p-kpi-label { font-size: 9px; color: var(--text-2); font-weight: 600; text-transform: uppercase; letter-spacing: .5px; margin-bottom: 6px; }
-.p-kpi-val { font-size: 22px; font-weight: 700; color: var(--text); letter-spacing: -1px; }
-
-.p-cards { display: grid; grid-template-columns: 3fr 2fr; gap: 10px; }
-.p-card { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; }
-.p-card-title { font-size: 10px; font-weight: 700; color: var(--text); margin-bottom: 8px; }
-.p-row { display: flex; align-items: center; gap: 8px; padding: 5px 0; border-bottom: 1px solid #F3F4F6; }
-.p-row:last-child { border: none; }
-.p-avatar { width: 20px; height: 20px; border-radius: 50%; flex-shrink: 0; }
-.p-row-text { font-size: 10px; color: var(--text); flex: 1; }
-.p-badge { font-size: 9px; font-weight: 600; padding: 1px 6px; border-radius: 10px; white-space: nowrap; }
-
-/* ── FEATURES ── */
-.features { padding: 100px 5vw; background: white; }
-.section-label { font-size: 12px; font-weight: 700; color: var(--blue); text-transform: uppercase; letter-spacing: 1.2px; margin-bottom: 12px; }
-.section-title { font-size: clamp(28px, 4vw, 44px); font-weight: 700; color: var(--text); letter-spacing: -1.2px; line-height: 1.15; margin-bottom: 16px; }
-.section-sub { font-size: 17px; color: var(--text-2); max-width: 520px; line-height: 1.65; margin-bottom: 60px; }
-
-.features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; }
-@media (max-width: 900px) { .features-grid { grid-template-columns: 1fr 1fr; } }
-@media (max-width: 600px) { .features-grid { grid-template-columns: 1fr; } }
-
-.feature-card {
-  padding: 28px;
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  transition: box-shadow .2s, border-color .2s;
-}
-.feature-card:hover { box-shadow: 0 8px 32px rgba(0,0,0,.08); border-color: #BFCFFE; }
-
-.feature-icon {
-  width: 44px; height: 44px;
-  background: var(--blue-light);
-  border-radius: 10px;
+.proof-avatars { display: flex; }
+.proof-av {
+  width: 32px; height: 32px; border-radius: 50%;
+  border: 2px solid rgba(255,255,255,.15);
+  margin-left: -8px; font-size: 11px; font-weight: 700; color: white;
   display: flex; align-items: center; justify-content: center;
+}
+.proof-av:first-child { margin-left: 0; }
+
+/* ── JEU D'ENFANT SECTION ── */
+.easy-section {
+  background: var(--bg);
+  padding: 100px 6vw;
+  display: flex; flex-direction: column; align-items: center;
+}
+
+.tag {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 12px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 1.2px; padding: 5px 14px; border-radius: 100px;
   margin-bottom: 16px;
 }
-.feature-icon svg { width: 20px; height: 20px; fill: var(--blue); }
-.feature-title { font-size: 16px; font-weight: 700; color: var(--text); margin-bottom: 8px; }
-.feature-desc { font-size: 14px; color: var(--text-2); line-height: 1.6; }
+.tag-blue { background: #EFF4FF; color: var(--blue); }
+.tag-purple { background: #F3EEFF; color: var(--purple); }
+.tag-teal { background: #E8FAFA; color: #0891B2; }
+.tag-green { background: #ECFDF5; color: var(--green); }
 
-/* ── MODULES ── */
-.modules { padding: 100px 5vw; background: var(--bg); }
-
-.modules-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; max-width: 900px; }
-@media (max-width: 700px) { .modules-grid { grid-template-columns: 1fr; } }
-
-.module-item {
-  background: white;
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 24px 28px;
-  display: flex; gap: 16px; align-items: flex-start;
-  transition: box-shadow .2s;
+h2.big {
+  font-size: clamp(28px, 4.5vw, 52px);
+  font-weight: 800; color: var(--text);
+  letter-spacing: -1.5px; line-height: 1.1;
+  text-align: center; max-width: 700px; margin-bottom: 16px;
 }
-.module-item:hover { box-shadow: 0 4px 20px rgba(0,0,0,.07); }
-.module-num { font-size: 11px; font-weight: 700; color: var(--blue); background: var(--blue-light); padding: 2px 8px; border-radius: 10px; flex-shrink: 0; font-family: monospace; }
-.module-title { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
-.module-desc { font-size: 13px; color: var(--text-2); line-height: 1.5; }
+.section-desc {
+  font-size: 18px; color: var(--text-2); text-align: center;
+  max-width: 520px; line-height: 1.65; margin-bottom: 64px;
+}
 
-/* ── CTA ── */
-.cta-section {
-  background: var(--dark);
-  padding: 100px 5vw;
+/* Cards "jeu d'enfant" */
+.easy-cards { display: grid; grid-template-columns: repeat(3,1fr); gap: 24px; width: 100%; max-width: 1100px; }
+@media(max-width:900px){ .easy-cards { grid-template-columns:1fr 1fr; } }
+@media(max-width:600px){ .easy-cards { grid-template-columns:1fr; } }
+
+.easy-card {
+  background: white; border-radius: 20px;
+  padding: 32px 28px;
+  border: 1.5px solid #F0EFF8;
+  transition: transform .2s, box-shadow .2s;
+  position: relative; overflow: hidden;
+}
+.easy-card:hover { transform: translateY(-4px); box-shadow: 0 16px 48px rgba(0,0,0,.09); }
+
+.easy-card-emoji {
+  font-size: 42px; margin-bottom: 16px; display: block;
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,.1));
+}
+.easy-card h3 { font-size: 17px; font-weight: 700; color: var(--text); margin-bottom: 8px; letter-spacing: -.3px; }
+.easy-card p { font-size: 14px; color: var(--text-2); line-height: 1.65; }
+
+.easy-card-accent {
+  position: absolute; top: 0; right: 0;
+  width: 80px; height: 80px; border-radius: 0 20px 0 80px;
+  opacity: .08;
+}
+
+/* ── APP PREVIEW (screenshot mockup) ── */
+.preview-section {
+  padding: 0 6vw 100px;
+  display: flex; justify-content: center;
+  background: var(--bg);
+}
+
+.mockup-wrap {
+  width: 100%; max-width: 1060px; position: relative;
+}
+
+.mockup-shadow {
+  background: white;
+  border: 1.5px solid #E8E5F8;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 32px 80px rgba(30,27,46,.12), 0 0 0 1px rgba(139,92,246,.06);
+}
+
+.mockup-bar {
+  background: #F7F6FF;
+  padding: 12px 20px;
+  display: flex; align-items: center; gap: 8px;
+  border-bottom: 1px solid #EDE9FF;
+}
+.mockup-dot { width: 11px; height: 11px; border-radius: 50%; }
+.mockup-url {
+  flex: 1; background: white; border: 1px solid #E5E7EB;
+  border-radius: 8px; padding: 5px 14px;
+  font-size: 12px; color: var(--text-2);
+  display: flex; align-items: center; gap: 6px; max-width: 280px; margin: 0 auto;
+}
+
+.mockup-body { display: flex; height: 460px; }
+
+/* Sidebar mockup */
+.m-sidebar {
+  width: 210px; flex-shrink: 0;
+  background: #0F1117;
+  padding: 20px 12px 20px;
+  display: flex; flex-direction: column; gap: 2px;
+  border-right: 1px solid rgba(255,255,255,.05);
+}
+.m-logo { display: flex; align-items: center; gap: 8px; padding: 4px 8px 20px; }
+.m-logo-mark {
+  width: 26px; height: 26px; border-radius: 7px;
+  background: linear-gradient(135deg, var(--blue), var(--teal));
+  flex-shrink: 0;
+}
+.m-logo-text { font-size: 14px; font-weight: 700; color: white; }
+.m-nav { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border-radius: 7px; font-size: 12.5px; color: rgba(255,255,255,.4); }
+.m-nav.active { background: rgba(37,99,235,.2); color: white; font-weight: 600; }
+.m-nav-icon { width: 14px; height: 14px; flex-shrink: 0; opacity: .7; }
+.m-nav.active .m-nav-icon { opacity: 1; }
+.m-badge { margin-left: auto; background: #D97706; color: white; font-size: 9px; font-weight: 700; padding: 1px 5px; border-radius: 10px; }
+
+/* Main mockup */
+.m-main { flex: 1; background: #F7F8FA; padding: 22px 24px; overflow: hidden; }
+.m-topbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+.m-title { font-size: 16px; font-weight: 700; color: var(--text); }
+.m-btn { background: var(--blue); color: white; font-size: 11px; font-weight: 600; padding: 5px 12px; border-radius: 7px; }
+
+.m-kpis { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; margin-bottom: 16px; }
+.m-kpi { background: white; border: 1px solid #E5E7EB; border-radius: 10px; padding: 14px; }
+.m-kpi-l { font-size: 9.5px; font-weight: 600; color: var(--text-2); text-transform: uppercase; letter-spacing: .4px; margin-bottom: 8px; }
+.m-kpi-v { font-size: 24px; font-weight: 800; letter-spacing: -1px; }
+
+.m-grid { display: grid; grid-template-columns: 3fr 2fr; gap: 12px; }
+.m-card { background: white; border: 1px solid #E5E7EB; border-radius: 10px; padding: 14px; }
+.m-card-t { font-size: 11px; font-weight: 700; color: var(--text); margin-bottom: 10px; }
+.m-row { display: flex; align-items: center; gap: 8px; padding: 5px 0; border-bottom: 1px solid #F9FAFB; }
+.m-row:last-child { border: none; }
+.m-av { width: 22px; height: 22px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 8px; font-weight: 700; color: white; }
+.m-row-t { font-size: 11px; color: var(--text); flex: 1; }
+.m-b { font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 8px; white-space: nowrap; }
+.m-pulse { display: flex; align-items: center; gap: 6px; margin-bottom: 8px; }
+.m-pulse-score { font-size: 30px; font-weight: 800; letter-spacing: -1px; color: var(--green); }
+.m-pulse-label { font-size: 10px; color: var(--text-2); line-height: 1.4; }
+.m-bars { display: flex; align-items: flex-end; gap: 3px; height: 50px; }
+.m-bar { width: 8px; border-radius: 2px 2px 0 0; background: #BFCFFE; }
+.m-bar.hi { background: var(--blue); }
+
+/* ── FEATURES BENTO ── */
+.bento-section { padding: 100px 6vw; background: white; }
+
+.bento-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: auto auto;
+  gap: 20px;
+  max-width: 1100px; margin: 0 auto;
+}
+@media(max-width:900px){ .bento-grid { grid-template-columns:1fr 1fr; } }
+@media(max-width:600px){ .bento-grid { grid-template-columns:1fr; } }
+
+.bento {
+  border-radius: 20px; padding: 32px 28px;
+  position: relative; overflow: hidden;
+  transition: transform .2s, box-shadow .2s;
+}
+.bento:hover { transform: translateY(-3px); box-shadow: 0 12px 40px rgba(0,0,0,.1); }
+
+.bento-wide { grid-column: span 2; }
+@media(max-width:900px){ .bento-wide { grid-column: span 2; } }
+@media(max-width:600px){ .bento-wide { grid-column: span 1; } }
+
+.bento-blue  { background: linear-gradient(135deg, #EFF4FF, #E0E7FF); border: 1.5px solid #C7D2FE; }
+.bento-teal  { background: linear-gradient(135deg, #E8FAFA, #CFFAFE); border: 1.5px solid #A5F3FC; }
+.bento-purple{ background: linear-gradient(135deg, #F3EEFF, #EDE9FE); border: 1.5px solid #DDD6FE; }
+.bento-amber { background: linear-gradient(135deg, #FFFBEB, #FEF3C7); border: 1.5px solid #FDE68A; }
+.bento-pink  { background: linear-gradient(135deg, #FDF2F8, #FCE7F3); border: 1.5px solid #FBCFE8; }
+.bento-green { background: linear-gradient(135deg, #ECFDF5, #D1FAE5); border: 1.5px solid #A7F3D0; }
+
+.bento-icon { font-size: 36px; margin-bottom: 16px; display: block; }
+.bento h3 { font-size: 18px; font-weight: 800; color: var(--text); margin-bottom: 8px; letter-spacing: -.4px; }
+.bento p { font-size: 14px; color: #4B5563; line-height: 1.65; max-width: 340px; }
+
+.bento-tag {
+  position: absolute; top: 24px; right: 24px;
+  font-size: 10px; font-weight: 700; padding: 3px 10px;
+  border-radius: 100px; background: rgba(255,255,255,.6);
+  color: var(--text-2); text-transform: uppercase; letter-spacing: .6px;
+}
+
+/* ── QUOTE ── */
+.quote-section {
+  background: linear-gradient(135deg, var(--blue) 0%, #7C3AED 100%);
+  padding: 80px 6vw;
   display: flex; flex-direction: column; align-items: center;
   position: relative; overflow: hidden;
 }
-.cta-section::before {
-  content: '';
-  position: absolute; inset: 0;
-  background: radial-gradient(ellipse 60% 80% at 50% 100%, rgba(37,99,235,.25) 0%, transparent 60%);
-  pointer-events: none;
+.quote-section::before {
+  content: '❝';
+  position: absolute; top: -20px; left: 50%; transform: translateX(-50%);
+  font-size: 200px; color: rgba(255,255,255,.04); line-height: 1;
+  pointer-events: none; user-select: none;
 }
-.cta-section h2 { font-size: clamp(28px, 4vw, 48px); font-weight: 700; color: white; text-align: center; letter-spacing: -1.2px; margin-bottom: 16px; position: relative; }
-.cta-section p { font-size: 17px; color: rgba(255,255,255,.4); text-align: center; margin-bottom: 40px; position: relative; }
-.cta-section .btn-primary { position: relative; padding: 16px 36px; font-size: 16px; border-radius: 10px; }
+.quote-text {
+  font-size: clamp(22px, 3.5vw, 38px); font-weight: 800;
+  color: white; text-align: center; letter-spacing: -1px;
+  line-height: 1.2; max-width: 800px; margin-bottom: 20px;
+  position: relative;
+}
+.quote-sub { font-size: 16px; color: rgba(255,255,255,.55); text-align: center; }
+
+/* ── MODULES ── */
+.modules-section { padding: 100px 6vw; background: var(--bg); }
+
+.modules-header { text-align: center; max-width: 600px; margin: 0 auto 60px; }
+
+.modules-list {
+  display: grid; grid-template-columns: repeat(2, 1fr);
+  gap: 16px; max-width: 900px; margin: 0 auto;
+}
+@media(max-width:700px){ .modules-list { grid-template-columns:1fr; } }
+
+.module-card {
+  background: white; border-radius: 16px;
+  padding: 24px 26px;
+  border: 1.5px solid #F0EFF8;
+  display: flex; align-items: flex-start; gap: 16px;
+  transition: transform .2s, box-shadow .2s;
+}
+.module-card:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(0,0,0,.07); }
+
+.module-num-badge {
+  width: 36px; height: 36px; border-radius: 10px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 800; color: white;
+}
+.module-content h4 { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+.module-content p { font-size: 13px; color: var(--text-2); line-height: 1.55; }
+
+/* ── CTA FINAL ── */
+.cta-section {
+  padding: 120px 6vw;
+  background: white;
+  display: flex; flex-direction: column; align-items: center;
+  position: relative; overflow: hidden;
+}
+.cta-blob {
+  position: absolute; border-radius: 50%; filter: blur(100px); pointer-events: none;
+}
+.cta-blob-1 { width: 500px; height: 500px; background: rgba(37,99,235,.06); top: -100px; left: -100px; }
+.cta-blob-2 { width: 400px; height: 400px; background: rgba(139,92,246,.07); bottom: -100px; right: -100px; }
+
+.cta-pill {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: #FFF7ED; color: #D97706; border: 1px solid #FDE68A;
+  font-size: 13px; font-weight: 700; padding: 5px 14px;
+  border-radius: 100px; margin-bottom: 20px;
+}
+.cta-section h2 {
+  font-size: clamp(32px, 5vw, 60px); font-weight: 800;
+  color: var(--text); letter-spacing: -2px; text-align: center;
+  line-height: 1.1; margin-bottom: 16px; position: relative;
+}
+.cta-section p {
+  font-size: 18px; color: var(--text-2); text-align: center;
+  margin-bottom: 44px; position: relative;
+}
+.btn-cta {
+  padding: 18px 44px; font-size: 17px; border-radius: 14px;
+  background: linear-gradient(135deg, var(--blue), var(--teal));
+  color: white; position: relative;
+  box-shadow: 0 8px 32px rgba(37,99,235,.35);
+}
+.btn-cta:hover { transform: translateY(-2px); box-shadow: 0 14px 40px rgba(37,99,235,.45); }
+
+.cta-hint { margin-top: 16px; font-size: 13px; color: var(--text-2); }
 
 /* ── FOOTER ── */
 footer {
   background: var(--dark);
   border-top: 1px solid rgba(255,255,255,.06);
-  padding: 40px 5vw;
-  display: flex; align-items: center; justify-content: space-between;
-  flex-wrap: wrap; gap: 16px;
+  padding: 48px 6vw 32px;
 }
-.footer-logo { display: flex; align-items: center; gap: 8px; }
-.footer-logo-mark { width: 28px; height: 28px; background: var(--blue); border-radius: 7px; display: flex; align-items: center; justify-content: center; }
-.footer-logo-mark svg { width: 16px; height: 16px; fill: white; }
-.footer-logo-text { font-size: 14px; font-weight: 600; color: rgba(255,255,255,.7); }
-footer p { font-size: 13px; color: rgba(255,255,255,.25); }
+.footer-top { display: flex; gap: 60px; margin-bottom: 48px; flex-wrap: wrap; }
+.footer-brand { flex: 1; min-width: 220px; }
+.footer-logo { display: flex; align-items: center; gap: 9px; margin-bottom: 12px; }
+.footer-logo-mark {
+  width: 32px; height: 32px; border-radius: 8px;
+  background: linear-gradient(135deg, var(--blue), var(--teal));
+  display: flex; align-items: center; justify-content: center;
+}
+.footer-logo-mark svg { width: 17px; height: 17px; fill: white; }
+.footer-logo-text { font-size: 15px; font-weight: 700; color: white; }
+.footer-tagline { font-size: 13px; color: rgba(255,255,255,.3); line-height: 1.6; }
+
+.footer-col h5 { font-size: 11px; font-weight: 700; color: rgba(255,255,255,.3); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; }
+.footer-col a { display: block; font-size: 13.5px; color: rgba(255,255,255,.5); text-decoration: none; margin-bottom: 10px; transition: color .15s; }
+.footer-col a:hover { color: rgba(255,255,255,.85); }
+
+.footer-bottom { display: flex; align-items: center; justify-content: space-between; padding-top: 24px; border-top: 1px solid rgba(255,255,255,.06); flex-wrap: wrap; gap: 12px; }
+.footer-bottom p { font-size: 12.5px; color: rgba(255,255,255,.2); }
+.footer-rgpd { display: flex; align-items: center; gap: 6px; font-size: 12px; color: rgba(255,255,255,.2); }
+.rgpd-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); }
 </style>
 </head>
 <body>
@@ -295,92 +485,200 @@ footer p { font-size: 13px; color: rgba(255,255,255,.25); }
     <div class="nav-logo-mark">
       <svg viewBox="45 37 280 280"><path d="M 57.984375 305.449219 C 57.433594 305.394531 56.824219 305.171875 56.601562 304.921875 C 56.296875 304.5625 56.242188 287.652344 56.242188 207.589844 L 56.242188 110.699219 L 56.878906 107.101562 C 57.984375 100.792969 59.007812 96.226562 59.671875 94.371094 C 68.558594 72.398438 77.054688 62.269531 90.28125 53.773438 C 93.214844 51.890625 95.125 50.839844 98.140625 49.234375 C 100.9375 48.015625 104.148438 46.632812 106.96875 45.554688 C 108.355469 44.832031 112.144531 43.589844 116.933594 42.371094 C 123.269531 40.628906 130.273438 39.6875 136.777344 38.996094 C 141.425781 38.273438 159.609375 38.273438 164.035156 38.996094 C 170.816406 39.714844 178.289062 40.515625 187.835938 42.011719 C 194.894531 43.449219 201.121094 45.082031 209.285156 47.433594 C 219.773438 51.335938 229.015625 54.964844 235.160156 58.5625 C 244.097656 63.792969 255.390625 73.78125 262.558594 81.640625 C 266.628906 88.007812 270.167969 95.339844 272.355469 101.707031 C 273.710938 106.632812 274.542969 118.171875 273.492188 130.15625 C 272.660156 133.585938 271 140.339844 268.261719 146.898438 C 266.875 150.054688 262.753906 157.445312 250.242188 172.996094 C 246.535156 176.707031 240.695312 181.492188 234.027344 186.199219 C 229.488281 188.910156 225.03125 191.457031 216.976562 195.246094 C 211.082031 197.570312 204.027344 200.230469 196.71875 202.304688 C 191.988281 203.714844 185.621094 205.070312 180.144531 206.011719 C 175.246094 206.734375 168.710938 207.757812 152.328125 208.394531 C 147.761719 208.394531 147.707031 208.367188 147.707031 204.351562 C 147.707031 200.476562 152.992188 199.8125 156.980469 199.234375 C 160.300781 198.347656 165.75 195.910156 174.441406 189.628906 C 179.839844 183.679688 184.265625 176.152344 186.285156 171.03125 C 187.976562 165.800781 189.578125 156.308594 189.578125 150.691406 C 189.578125 145.820312 188.527344 138.789062 186.976562 131.871094 C 183.824219 122.128906 177.789062 109.425781 156.148438 82.859375 C 148.484375 76.742188 140.953125 71.789062 131.488281 67.113281 C 124.875 64.59375 115.1875 62.101562 102.875 62.101562 C 94.292969 64.152344 87.734375 68.441406 84.441406 73.921875 C 83.640625 80.394531 84.277344 86.070312 88.152344 92.65625 C 95.539062 99.90625 105.558594 105.773438 112.007812 109.511719 C 122.082031 116.347656 131.820312 126.335938 138.160156 137.960938 C 140.621094 148.613281 141.675781 230.257812 141.507812 304.480469 C 141.121094 305.144531 60.089844 305.644531 57.984375 305.449219 Z"/></svg>
     </div>
-    <span class="nav-logo-text">Pulsiia</span>
+    <span class="nav-logo-name">Pulsiia</span>
   </a>
   <div class="nav-links">
-    <a href="#fonctionnalites">Fonctionnalités</a>
-    <a href="#modules">Modules</a>
-    <a href="#demo">Démo</a>
+    <a class="nav-link" href="#pourquoi">Pourquoi Pulsiia</a>
+    <a class="nav-link" href="#modules">Modules</a>
+    <a class="nav-link" href="#demo">Aperçu</a>
   </div>
   <div class="nav-cta">
-    <a href="/app" class="btn btn-primary">Connexion →</a>
+    <a href="/app" class="btn btn-nav">Connexion →</a>
   </div>
 </nav>
 
 <!-- ── HERO ── -->
 <section class="hero">
-  <div class="hero-badge">OS RH nouvelle génération — Secteur CHR</div>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
 
-  <h1>
-    Gérez vos équipes<br>
-    <span>sans effort</span>
-  </h1>
+  <div class="hero-content">
+    <div class="hero-pill">
+      <div class="hero-pill-dot"></div>
+      Spécialement conçu pour le secteur HCR
+    </div>
 
-  <p>
-    Planning, absences, pré-paie et bien-être réunis dans un seul outil.
-    Conçu pour les PME françaises du secteur HCR.
+    <h1>
+      Gardez le <span class="highlight">pouls</span><br>de vos équipes
+    </h1>
+
+    <p class="hero-sub">
+      Planning, absences, pré-paie, bien-être — tout en un.
+      Tellement simple, c'est un <strong style="color:rgba(255,255,255,.75);font-weight:700">jeu d'enfant</strong>.
+    </p>
+
+    <div class="hero-actions">
+      <a href="/app" class="btn btn-hero">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/><path d="M6.271 5.055a.5.5 0 0 1 .52.038l3.5 2.5a.5.5 0 0 1 0 .814l-3.5 2.5A.5.5 0 0 1 6 10.5v-5a.5.5 0 0 1 .271-.445z"/></svg>
+        Accéder à l'app
+      </a>
+      <a href="#demo" class="btn btn-hero-ghost">Voir la démo</a>
+    </div>
+
+    <div class="hero-proof">
+      <div class="proof-avatars">
+        <div class="proof-av" style="background:linear-gradient(135deg,#3B82F6,#6366F1)">ML</div>
+        <div class="proof-av" style="background:linear-gradient(135deg,#059669,#10B981)">TM</div>
+        <div class="proof-av" style="background:linear-gradient(135deg,#7C3AED,#8B5CF6)">CR</div>
+        <div class="proof-av" style="background:linear-gradient(135deg,#D97706,#F59E0B)">LA</div>
+      </div>
+      <span>Utilisé par Groupe Saveurs &amp; Co · 847 collaborateurs · 5 sites</span>
+    </div>
+  </div>
+
+  <!-- Ligne de pulse animée en bas -->
+  <div class="pulse-line">
+    <svg viewBox="0 0 800 80" preserveAspectRatio="none">
+      <polyline points="0,40 80,40 110,10 130,70 150,20 170,60 190,40 800,40" fill="none" stroke="rgba(20,194,224,.6)" stroke-width="2"/>
+      <polyline points="0,40 80,40 110,10 130,70 150,20 170,60 190,40 800,40" fill="none" stroke="rgba(20,194,224,.6)" stroke-width="2" transform="translate(400,0)"/>
+    </svg>
+  </div>
+</section>
+
+<!-- ── "JEU D'ENFANT" ── -->
+<section class="easy-section" id="pourquoi">
+  <div class="tag tag-blue">✨ Pourquoi Pulsiia</div>
+  <h2 class="big">La RH, c'est un<br>jeu d'enfant.</h2>
+  <p class="section-desc">
+    On a réinventé la gestion RH pour qu'elle soit aussi fluide que naturelle.
+    Pas de formation de 3 jours, pas de manuel de 200 pages.
   </p>
 
-  <div class="hero-actions">
-    <a href="/app" class="btn btn-primary btn-hero">Connexion →</a>
-    <a href="#demo" class="btn btn-hero-ghost">Voir la démo</a>
-  </div>
-
-  <div class="hero-stats">
-    <div class="stat"><div class="stat-val">847</div><div class="stat-label">Collaborateurs gérés</div></div>
-    <div style="width:1px;height:40px;background:rgba(255,255,255,.08)"></div>
-    <div class="stat"><div class="stat-val">5</div><div class="stat-label">Établissements</div></div>
-    <div style="width:1px;height:40px;background:rgba(255,255,255,.08)"></div>
-    <div class="stat"><div class="stat-val">−70%</div><div class="stat-label">Temps admin RH</div></div>
-    <div style="width:1px;height:40px;background:rgba(255,255,255,.08)"></div>
-    <div class="stat"><div class="stat-val">100%</div><div class="stat-label">Conforme RGPD</div></div>
+  <div class="easy-cards">
+    <div class="easy-card">
+      <div class="easy-card-accent" style="background:var(--blue)"></div>
+      <span class="easy-card-emoji">🗓️</span>
+      <h3>Planning en 2 clics</h3>
+      <p>Créez et publiez la semaine de vos équipes en quelques secondes. Les conflits se détectent tout seuls.</p>
+    </div>
+    <div class="easy-card">
+      <div class="easy-card-accent" style="background:var(--teal)"></div>
+      <span class="easy-card-emoji">✅</span>
+      <h3>Absences validées en 1 tap</h3>
+      <p>Demande, notification, validation, mise à jour du planning — tout en automatique. Zéro paperasse.</p>
+    </div>
+    <div class="easy-card">
+      <div class="easy-card-accent" style="background:var(--amber)"></div>
+      <span class="easy-card-emoji">💸</span>
+      <h3>Pré-paie sans prise de tête</h3>
+      <p>Les heures supplémentaires, les absences et les primes se calculent et s'exportent tout seuls. Prêt pour votre cabinet.</p>
+    </div>
+    <div class="easy-card">
+      <div class="easy-card-accent" style="background:var(--pink)"></div>
+      <span class="easy-card-emoji">💚</span>
+      <h3>Bien-être : sentez le pouls</h3>
+      <p>Sondages express chaque semaine. Vous savez en temps réel si vos équipes sont au top ou en difficulté.</p>
+    </div>
+    <div class="easy-card">
+      <div class="easy-card-accent" style="background:var(--purple)"></div>
+      <span class="easy-card-emoji">💬</span>
+      <h3>Communication fluide</h3>
+      <p>Annonces, messagerie par équipe et par site. Tout le monde est au courant, même les noctambules.</p>
+    </div>
+    <div class="easy-card">
+      <div class="easy-card-accent" style="background:var(--green)"></div>
+      <span class="easy-card-emoji">📊</span>
+      <h3>Tout sur un écran</h3>
+      <p>Un dashboard qui dit l'essentiel. KPIs, alertes, actions prioritaires — vous pilotez, Pulsiia s'occupe du reste.</p>
+    </div>
   </div>
 </section>
 
-<!-- ── APP PREVIEW ── -->
+<!-- ── APP MOCKUP ── -->
 <section class="preview-section" id="demo">
-  <div class="app-preview">
-    <div class="preview-bar">
-      <div class="preview-dot" style="background:#FF5F57"></div>
-      <div class="preview-dot" style="background:#FEBC2E"></div>
-      <div class="preview-dot" style="background:#28C840"></div>
-      <div style="flex:1;text-align:center;font-size:11px;color:rgba(255,255,255,.2);font-family:monospace">pulsiia.app — Groupe Saveurs & Co</div>
-    </div>
-    <div class="preview-body">
-      <!-- Sidebar -->
-      <div class="preview-sidebar">
-        <div class="preview-logo">
-          <div class="preview-logo-mark"></div>
-          <span class="preview-logo-text">Pulsiia</span>
+  <div class="mockup-wrap">
+    <div class="mockup-shadow">
+      <div class="mockup-bar">
+        <div class="mockup-dot" style="background:#FF5F57"></div>
+        <div class="mockup-dot" style="background:#FEBC2E"></div>
+        <div class="mockup-dot" style="background:#28C840"></div>
+        <div class="mockup-url">
+          <svg width="10" height="10" viewBox="0 0 16 16" fill="#059669"><path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2zm3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/></svg>
+          pulsiia.app/app
         </div>
-        <div class="p-nav active"><div class="p-nav-dot"></div>Tableau de bord</div>
-        <div class="p-nav"><div class="p-nav-dot"></div>Planning</div>
-        <div class="p-nav"><div class="p-nav-dot"></div>Absences</div>
-        <div class="p-nav"><div class="p-nav-dot"></div>Pré-paie</div>
-        <div class="p-nav"><div class="p-nav-dot"></div>Bien-être</div>
-        <div class="p-nav"><div class="p-nav-dot"></div>Communication</div>
       </div>
-      <!-- Main -->
-      <div class="preview-main">
-        <div class="preview-title">Tableau de bord</div>
-        <div class="p-kpis">
-          <div class="p-kpi"><div class="p-kpi-label">Actifs</div><div class="p-kpi-val">847</div></div>
-          <div class="p-kpi"><div class="p-kpi-label">En attente</div><div class="p-kpi-val" style="color:#D97706">3</div></div>
-          <div class="p-kpi"><div class="p-kpi-label">Pré-paie</div><div class="p-kpi-val">7</div></div>
-          <div class="p-kpi"><div class="p-kpi-label">Bien-être</div><div class="p-kpi-val" style="color:#059669">8.4</div></div>
-        </div>
-        <div class="p-cards">
-          <div class="p-card">
-            <div class="p-card-title">Activité récente</div>
-            <div class="p-row"><div class="p-avatar" style="background:#3B82F6"></div><div class="p-row-text">Thomas M. — Planning validé</div><div class="p-badge" style="background:#ECFDF5;color:#059669">✓</div></div>
-            <div class="p-row"><div class="p-avatar" style="background:#059669"></div><div class="p-row-text">Léa A. — Congé demandé</div><div class="p-badge" style="background:#FFF7ED;color:#D97706">En att.</div></div>
-            <div class="p-row"><div class="p-avatar" style="background:#7C3AED"></div><div class="p-row-text">Camille R. — Variable RH</div><div class="p-badge" style="background:#EFF6FF;color:#2563EB">Validé</div></div>
+      <div class="mockup-body">
+        <!-- Sidebar -->
+        <div class="m-sidebar">
+          <div class="m-logo">
+            <div class="m-logo-mark"></div>
+            <span class="m-logo-text">Pulsiia</span>
           </div>
-          <div class="p-card">
-            <div class="p-card-title">Alertes</div>
-            <div class="p-row"><div style="width:6px;height:6px;border-radius:50%;background:#DC2626;flex-shrink:0"></div><div class="p-row-text" style="font-size:10px">Poste découvert Sam 8h</div></div>
-            <div class="p-row"><div style="width:6px;height:6px;border-radius:50%;background:#D97706;flex-shrink:0"></div><div class="p-row-text" style="font-size:10px">Clôture paie vendredi</div></div>
-            <div class="p-row"><div style="width:6px;height:6px;border-radius:50%;background:#059669;flex-shrink:0"></div><div class="p-row-text" style="font-size:10px">Planning S+2 généré</div></div>
+          <div class="m-nav active">
+            <svg class="m-nav-icon" viewBox="0 0 16 16" fill="currentColor"><path d="M2 2h5v5H2V2zm0 7h5v5H2V9zm7-7h5v5H9V2zm0 7h5v5H9V9z"/></svg>
+            Tableau de bord
+          </div>
+          <div class="m-nav">
+            <svg class="m-nav-icon" viewBox="0 0 16 16" fill="currentColor"><path d="M4 1a1 1 0 0 0-1 1v1H2a1 1 0 0 0-1 1v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1h-1V2a1 1 0 0 0-2 0v1H5V2a1 1 0 0 0-1-1zM3 6h10v7H3V6z"/></svg>
+            Planning
+          </div>
+          <div class="m-nav">
+            <svg class="m-nav-icon" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0zm.5 4.5v4.25l2.75 1.65-.5.85-3.25-1.95V4.5h1z"/></svg>
+            Absences
+            <span class="m-badge">3</span>
+          </div>
+          <div class="m-nav">
+            <svg class="m-nav-icon" viewBox="0 0 16 16" fill="currentColor"><path d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1zm.75 3.5v1h.5a1.75 1.75 0 0 1 0 3.5H8.75v.5a.75.75 0 0 1-1.5 0V9H6.5a.75.75 0 0 1 0-1.5h2.25a.25.25 0 0 0 0-.5h-.5a1.75 1.75 0 1 1 0-3.5h.5V3.5a.75.75 0 0 1 1.5 0v1h-.5z"/></svg>
+            Pré-paie
+            <span class="m-badge">7</span>
+          </div>
+          <div class="m-nav">
+            <svg class="m-nav-icon" viewBox="0 0 16 16" fill="currentColor"><path d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/></svg>
+            Bien-être
+          </div>
+          <div class="m-nav">
+            <svg class="m-nav-icon" viewBox="0 0 16 16" fill="currentColor"><path d="M14 1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4.414A2 2 0 0 0 3 11.586l-2 2V2a1 1 0 0 1 1-1h12z"/></svg>
+            Communication
+          </div>
+        </div>
+        <!-- Main -->
+        <div class="m-main">
+          <div class="m-topbar">
+            <div class="m-title">Tableau de bord</div>
+            <div class="m-btn">+ Shift</div>
+          </div>
+          <div class="m-kpis">
+            <div class="m-kpi"><div class="m-kpi-l">Collaborateurs</div><div class="m-kpi-v">847</div></div>
+            <div class="m-kpi"><div class="m-kpi-l">En attente</div><div class="m-kpi-v" style="color:#D97706">3</div></div>
+            <div class="m-kpi"><div class="m-kpi-l">Pré-paie</div><div class="m-kpi-v">47</div></div>
+            <div class="m-kpi"><div class="m-kpi-l">Bien-être</div><div class="m-kpi-v" style="color:#10B981">8.4</div></div>
+          </div>
+          <div class="m-grid">
+            <div class="m-card">
+              <div class="m-card-t">Activité récente</div>
+              <div class="m-row"><div class="m-av" style="background:#3B82F6">ML</div><div class="m-row-t">Planning S+1 publié</div><div class="m-b" style="background:#ECFDF5;color:#059669">✓</div></div>
+              <div class="m-row"><div class="m-av" style="background:#059669">TM</div><div class="m-row-t">Congé payé approuvé</div><div class="m-b" style="background:#ECFDF5;color:#059669">✓</div></div>
+              <div class="m-row"><div class="m-av" style="background:#7C3AED">LA</div><div class="m-row-t">Absence demandée</div><div class="m-b" style="background:#FFF7ED;color:#D97706">En att.</div></div>
+              <div class="m-row"><div class="m-av" style="background:#D97706">CR</div><div class="m-row-t">Variable HS validée</div><div class="m-b" style="background:#EFF6FF;color:#2563EB">Validé</div></div>
+            </div>
+            <div class="m-card">
+              <div class="m-card-t">Pouls équipes</div>
+              <div class="m-pulse">
+                <div class="m-pulse-score">8.4</div>
+                <div class="m-pulse-label">Score moyen<br>ce mois</div>
+              </div>
+              <div class="m-bars">
+                <div class="m-bar" style="height:30px"></div>
+                <div class="m-bar" style="height:38px"></div>
+                <div class="m-bar" style="height:28px"></div>
+                <div class="m-bar" style="height:42px"></div>
+                <div class="m-bar" style="height:35px"></div>
+                <div class="m-bar hi" style="height:50px"></div>
+                <div class="m-bar hi" style="height:50px"></div>
+                <div class="m-bar hi" style="height:48px"></div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -388,108 +686,107 @@ footer p { font-size: 13px; color: rgba(255,255,255,.25); }
   </div>
 </section>
 
-<!-- ── FEATURES ── -->
-<section class="features" id="fonctionnalites">
-  <div class="section-label">Fonctionnalités</div>
-  <div class="section-title">Tout ce dont vous avez besoin,<br>rien de superflu</div>
-  <div class="section-sub">Un outil pensé pour les RH terrain — pas pour les DSI.</div>
+<!-- ── BENTO FEATURES ── -->
+<section class="bento-section" id="modules">
+  <div style="text-align:center;margin-bottom:60px">
+    <div class="tag tag-purple" style="margin-bottom:14px">🧩 6 modules intégrés</div>
+    <h2 class="big" style="margin:0 auto 16px">Un OS RH complet,<br>pas un patchwork d'outils</h2>
+    <p class="section-desc" style="margin:0 auto">Chaque module parle aux autres. Un changement de planning met à jour la paie. Une absence met à jour le planning.</p>
+  </div>
 
-  <div class="features-grid">
-    <div class="feature-card">
-      <div class="feature-icon">
-        <svg viewBox="0 0 16 16"><path d="M4 1a1 1 0 0 0-1 1v1H2a1 1 0 0 0-1 1v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1h-1V2a1 1 0 0 0-2 0v1H5V2a1 1 0 0 0-1-1zM3 6h10v7H3V6z"/></svg>
-      </div>
-      <div class="feature-title">Planning intelligent</div>
-      <div class="feature-desc">Créez et publiez les plannings en quelques clics. Détection automatique des conflits et heures supplémentaires selon la convention CHR.</div>
+  <div class="bento-grid">
+    <div class="bento bento-blue bento-wide">
+      <div class="bento-tag">Planning</div>
+      <span class="bento-icon">🗓️</span>
+      <h3>Planning hebdomadaire CHR</h3>
+      <p>Grille claire, shifts matin/après-midi/nuit, détection automatique des conflits légaux (amplitude, 48h/semaine), publication en un clic. Convention CHR intégrée.</p>
     </div>
-    <div class="feature-card">
-      <div class="feature-icon">
-        <svg viewBox="0 0 16 16"><path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0zm.5 4.5v4.25l2.75 1.65-.5.85-3.25-1.95V4.5h1z"/></svg>
-      </div>
-      <div class="feature-title">Gestion des absences</div>
-      <div class="feature-desc">Demandes, validations, suivi des compteurs CP/RTT. Workflow automatisé de validation avec notifications en temps réel.</div>
+    <div class="bento bento-teal">
+      <div class="bento-tag">Absences</div>
+      <span class="bento-icon">✈️</span>
+      <h3>Congés & absences</h3>
+      <p>11 types d'absences, workflow d'approbation, mise à jour automatique du planning et de la pré-paie.</p>
     </div>
-    <div class="feature-card">
-      <div class="feature-icon">
-        <svg viewBox="0 0 16 16"><path d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1zm.75 3.5v1h.5a1.75 1.75 0 0 1 0 3.5H8.75v.5a.75.75 0 0 1-1.5 0V9H6.5a.75.75 0 0 1 0-1.5h2.25a.25.25 0 0 0 0-.5h-.5a1.75 1.75 0 1 1 0-3.5h.5V3.5a.75.75 0 0 1 1.5 0v1h-.5z"/></svg>
-      </div>
-      <div class="feature-title">Pré-paie simplifiée</div>
-      <div class="feature-desc">Variables collectées automatiquement depuis le planning et les absences. Export CSV prêt à envoyer à votre cabinet comptable.</div>
+    <div class="bento bento-amber">
+      <div class="bento-tag">Pré-paie</div>
+      <span class="bento-icon">💰</span>
+      <h3>Variables de paie auto</h3>
+      <p>HS ×1.25, nuit ×1.20, primes — calculées et prêtes à exporter. Zéro ressaisie.</p>
     </div>
-    <div class="feature-card">
-      <div class="feature-icon">
-        <svg viewBox="0 0 16 16"><path d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/></svg>
-      </div>
-      <div class="feature-title">Bien-être des équipes</div>
-      <div class="feature-desc">Sondages hebdomadaires anonymes, score de bien-être par équipe, tendances sur 8 semaines. Anticipez les risques de burnout.</div>
+    <div class="bento bento-pink">
+      <div class="bento-tag">Bien-être</div>
+      <span class="bento-icon">❤️</span>
+      <h3>Le pouls de vos équipes</h3>
+      <p>QCM hebdomadaire, score par équipe, alertes burn-out. Vous le sentez avant que ça dérape.</p>
     </div>
-    <div class="feature-card">
-      <div class="feature-icon">
-        <svg viewBox="0 0 16 16"><path d="M14 1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4.414A2 2 0 0 0 3 11.586l-2 2V2a1 1 0 0 1 1-1h12z"/></svg>
-      </div>
-      <div class="feature-title">Communication interne</div>
-      <div class="feature-desc">Canaux par équipe et par site. Annonces RH, messagerie instantanée, fils de discussion. Tout le monde sur la même longueur d'onde.</div>
+    <div class="bento bento-purple">
+      <div class="bento-tag">Communication</div>
+      <span class="bento-icon">💬</span>
+      <h3>Messagerie interne</h3>
+      <p>Canaux par site, annonces RH, fils de discussion. Tout le monde dans la boucle.</p>
     </div>
-    <div class="feature-card">
-      <div class="feature-icon">
-        <svg viewBox="0 0 16 16"><path d="M6 3.5A1.5 1.5 0 0 1 7.5 2h1A1.5 1.5 0 0 1 10 3.5v1A1.5 1.5 0 0 1 8.5 6v1H11a.5.5 0 0 1 .5.5v1h.5A1.5 1.5 0 0 1 13.5 10v1a1.5 1.5 0 0 1-1.5 1.5h-1A1.5 1.5 0 0 1 9.5 11v-1a1.5 1.5 0 0 1 1.5-1.5h.5v-.5h-5V8.5H7A1.5 1.5 0 0 1 8.5 10v1A1.5 1.5 0 0 1 7 12.5H6A1.5 1.5 0 0 1 4.5 11v-1A1.5 1.5 0 0 1 6 8.5h.5V8H4a.5.5 0 0 1-.5-.5v-1H3A1.5 1.5 0 0 1 1.5 5v-1A1.5 1.5 0 0 1 3 2.5h1A1.5 1.5 0 0 1 5.5 4v1A1.5 1.5 0 0 1 4 6.5H3.5V7H6V6A1.5 1.5 0 0 1 4.5 4.5v-1z"/></svg>
-      </div>
-      <div class="feature-title">Multi-établissements</div>
-      <div class="feature-desc">Gérez tous vos sites depuis une seule interface. Vues consolidées ou filtrées par établissement. RBAC à 5 niveaux (DRH → Collab).</div>
+    <div class="bento bento-green">
+      <div class="bento-tag">RH & Collaborateurs</div>
+      <span class="bento-icon">👥</span>
+      <h3>Fiches & historique</h3>
+      <p>Profils, organigramme, audit log complet. Conformité RGPD intégrée dès le départ.</p>
     </div>
   </div>
 </section>
 
-<!-- ── MODULES ── -->
-<section class="modules" id="modules">
-  <div class="section-label">Architecture</div>
-  <div class="section-title">6 modules intégrés</div>
-  <div class="section-sub">Conçu comme un OS RH — chaque module communique avec les autres.</div>
-
-  <div class="modules-grid">
-    <div class="module-item">
-      <span class="module-num">01</span>
-      <div><div class="module-title">Planning & Shifts</div><div class="module-desc">Grille hebdomadaire, types de shifts CHR (matin/après-midi/nuit), publication, alertes légales.</div></div>
-    </div>
-    <div class="module-item">
-      <span class="module-num">02</span>
-      <div><div class="module-title">Absences & Congés</div><div class="module-desc">11 types d'absences, workflow approbation, synchronisation planning automatique.</div></div>
-    </div>
-    <div class="module-item">
-      <span class="module-num">03</span>
-      <div><div class="module-title">Pré-paie</div><div class="module-desc">Variables calculées auto (HS ×1.25, nuit ×1.20, primes), validation DRH, export CSV/DSN.</div></div>
-    </div>
-    <div class="module-item">
-      <span class="module-num">04</span>
-      <div><div class="module-title">Bien-être</div><div class="module-desc">QCM journalier, score agrégé par équipe, tendances 8 semaines, alertes burn-out.</div></div>
-    </div>
-    <div class="module-item">
-      <span class="module-num">05</span>
-      <div><div class="module-title">Communication</div><div class="module-desc">Canaux par site/équipe, annonces RH, fils de discussion, messages épinglés.</div></div>
-    </div>
-    <div class="module-item">
-      <span class="module-num">06</span>
-      <div><div class="module-title">Collaborateurs & RH</div><div class="module-desc">Fiches collaborateurs, organigramme, documents RH, historique des actions (audit log).</div></div>
-    </div>
+<!-- ── CITATION ── -->
+<section class="quote-section">
+  <div class="quote-text">
+    "Gérer 847 collaborateurs sur 5 sites, c'est devenu aussi simple que de lire un tableau de bord."
   </div>
+  <div class="quote-sub">Marie Lambert, DRH — Groupe Saveurs &amp; Co</div>
 </section>
 
-<!-- ── CTA ── -->
+<!-- ── CTA FINAL ── -->
 <section class="cta-section">
-  <h2>Prêt à transformer votre RH&nbsp;?</h2>
-  <p>Accédez directement à l'application de démonstration.</p>
-  <a href="/app" class="btn btn-primary">Accéder à la démo →</a>
+  <div class="cta-blob cta-blob-1"></div>
+  <div class="cta-blob cta-blob-2"></div>
+  <div class="cta-pill">🎉 Accès démo immédiat</div>
+  <h2>Prêt à sentir le<br>pouls de vos équipes ?</h2>
+  <p>Aucune installation. Aucune carte bancaire. Juste l'app.</p>
+  <a href="/app" class="btn btn-cta">Accéder à l'application →</a>
+  <div class="cta-hint">Démo avec données réelles · Groupe Saveurs &amp; Co · 847 collaborateurs</div>
 </section>
 
 <!-- ── FOOTER ── -->
 <footer>
-  <div class="footer-logo">
-    <div class="footer-logo-mark">
-      <svg viewBox="45 37 280 280"><path d="M 57.984375 305.449219 C 57.433594 305.394531 56.824219 305.171875 56.601562 304.921875 C 56.296875 304.5625 56.242188 287.652344 56.242188 207.589844 L 56.242188 110.699219 L 56.878906 107.101562 C 57.984375 100.792969 59.007812 96.226562 59.671875 94.371094 C 68.558594 72.398438 77.054688 62.269531 90.28125 53.773438 C 93.214844 51.890625 95.125 50.839844 98.140625 49.234375 C 100.9375 48.015625 104.148438 46.632812 106.96875 45.554688 C 108.355469 44.832031 112.144531 43.589844 116.933594 42.371094 C 123.269531 40.628906 130.273438 39.6875 136.777344 38.996094 C 141.425781 38.273438 159.609375 38.273438 164.035156 38.996094 C 170.816406 39.714844 178.289062 40.515625 187.835938 42.011719 C 194.894531 43.449219 201.121094 45.082031 209.285156 47.433594 C 219.773438 51.335938 229.015625 54.964844 235.160156 58.5625 C 244.097656 63.792969 255.390625 73.78125 262.558594 81.640625 C 266.628906 88.007812 270.167969 95.339844 272.355469 101.707031 C 273.710938 106.632812 274.542969 118.171875 273.492188 130.15625 C 272.660156 133.585938 271 140.339844 268.261719 146.898438 C 266.875 150.054688 262.753906 157.445312 250.242188 172.996094 C 246.535156 176.707031 240.695312 181.492188 234.027344 186.199219 C 229.488281 188.910156 225.03125 191.457031 216.976562 195.246094 C 211.082031 197.570312 204.027344 200.230469 196.71875 202.304688 C 191.988281 203.714844 185.621094 205.070312 180.144531 206.011719 C 175.246094 206.734375 168.710938 207.757812 152.328125 208.394531 C 147.761719 208.394531 147.707031 208.367188 147.707031 204.351562 C 147.707031 200.476562 152.992188 199.8125 156.980469 199.234375 C 160.300781 198.347656 165.75 195.910156 174.441406 189.628906 C 179.839844 183.679688 184.265625 176.152344 186.285156 171.03125 C 187.976562 165.800781 189.578125 156.308594 189.578125 150.691406 C 189.578125 145.820312 188.527344 138.789062 186.976562 131.871094 C 183.824219 122.128906 177.789062 109.425781 156.148438 82.859375 C 148.484375 76.742188 140.953125 71.789062 131.488281 67.113281 C 124.875 64.59375 115.1875 62.101562 102.875 62.101562 C 94.292969 64.152344 87.734375 68.441406 84.441406 73.921875 C 83.640625 80.394531 84.277344 86.070312 88.152344 92.65625 C 95.539062 99.90625 105.558594 105.773438 112.007812 109.511719 C 122.082031 116.347656 131.820312 126.335938 138.160156 137.960938 C 140.621094 148.613281 141.675781 230.257812 141.507812 304.480469 C 141.121094 305.144531 60.089844 305.644531 57.984375 305.449219 Z"/></svg>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <div class="footer-logo">
+        <div class="footer-logo-mark">
+          <svg viewBox="45 37 280 280"><path d="M 57.984375 305.449219 C 57.433594 305.394531 56.824219 305.171875 56.601562 304.921875 C 56.296875 304.5625 56.242188 287.652344 56.242188 207.589844 L 56.242188 110.699219 L 56.878906 107.101562 C 57.984375 100.792969 59.007812 96.226562 59.671875 94.371094 C 68.558594 72.398438 77.054688 62.269531 90.28125 53.773438 C 93.214844 51.890625 95.125 50.839844 98.140625 49.234375 C 100.9375 48.015625 104.148438 46.632812 106.96875 45.554688 C 108.355469 44.832031 112.144531 43.589844 116.933594 42.371094 C 123.269531 40.628906 130.273438 39.6875 136.777344 38.996094 C 141.425781 38.273438 159.609375 38.273438 164.035156 38.996094 C 170.816406 39.714844 178.289062 40.515625 187.835938 42.011719 C 194.894531 43.449219 201.121094 45.082031 209.285156 47.433594 C 219.773438 51.335938 229.015625 54.964844 235.160156 58.5625 C 244.097656 63.792969 255.390625 73.78125 262.558594 81.640625 C 266.628906 88.007812 270.167969 95.339844 272.355469 101.707031 C 273.710938 106.632812 274.542969 118.171875 273.492188 130.15625 C 272.660156 133.585938 271 140.339844 268.261719 146.898438 C 266.875 150.054688 262.753906 157.445312 250.242188 172.996094 C 246.535156 176.707031 240.695312 181.492188 234.027344 186.199219 C 229.488281 188.910156 225.03125 191.457031 216.976562 195.246094 C 211.082031 197.570312 204.027344 200.230469 196.71875 202.304688 C 191.988281 203.714844 185.621094 205.070312 180.144531 206.011719 C 175.246094 206.734375 168.710938 207.757812 152.328125 208.394531 C 147.761719 208.394531 147.707031 208.367188 147.707031 204.351562 C 147.707031 200.476562 152.992188 199.8125 156.980469 199.234375 C 160.300781 198.347656 165.75 195.910156 174.441406 189.628906 C 179.839844 183.679688 184.265625 176.152344 186.285156 171.03125 C 187.976562 165.800781 189.578125 156.308594 189.578125 150.691406 C 189.578125 145.820312 188.527344 138.789062 186.976562 131.871094 C 183.824219 122.128906 177.789062 109.425781 156.148438 82.859375 C 148.484375 76.742188 140.953125 71.789062 131.488281 67.113281 C 124.875 64.59375 115.1875 62.101562 102.875 62.101562 C 94.292969 64.152344 87.734375 68.441406 84.441406 73.921875 C 83.640625 80.394531 84.277344 86.070312 88.152344 92.65625 C 95.539062 99.90625 105.558594 105.773438 112.007812 109.511719 C 122.082031 116.347656 131.820312 126.335938 138.160156 137.960938 C 140.621094 148.613281 141.675781 230.257812 141.507812 304.480469 C 141.121094 305.144531 60.089844 305.644531 57.984375 305.449219 Z"/></svg>
+        </div>
+        <span class="footer-logo-text">Pulsiia</span>
+      </div>
+      <p class="footer-tagline">L'OS RH qui garde le pouls<br>de vos équipes en temps réel.<br>Conçu pour le secteur HCR français.</p>
     </div>
-    <span class="footer-logo-text">Pulsiia</span>
+    <div class="footer-col">
+      <h5>Produit</h5>
+      <a href="#pourquoi">Fonctionnalités</a>
+      <a href="#modules">Modules</a>
+      <a href="#demo">Aperçu</a>
+      <a href="/app">Démo live</a>
+    </div>
+    <div class="footer-col">
+      <h5>Légal</h5>
+      <a href="#">Confidentialité</a>
+      <a href="#">CGU</a>
+      <a href="#">RGPD</a>
+      <a href="#">Mentions légales</a>
+    </div>
   </div>
-  <p>© 2026 Pulsiia — OS Organisationnel RH · Groupe Saveurs &amp; Co</p>
+  <div class="footer-bottom">
+    <p>© 2026 Pulsiia — Tous droits réservés</p>
+    <div class="footer-rgpd">
+      <div class="rgpd-dot"></div>
+      100% conforme RGPD · Données hébergées en France
+    </div>
+  </div>
 </footer>
 
 </body>
