@@ -2,10 +2,11 @@
 
 require('dotenv').config();
 
+const path    = require('path');
 const express = require('express');
-const helmet = require('helmet');
-const cors = require('cors');
-const morgan = require('morgan');
+const helmet  = require('helmet');
+const cors    = require('cors');
+const morgan  = require('morgan');
 
 const { authLimiter, apiLimiter } = require('./middleware/rateLimiter');
 const { errorHandler } = require('./middleware/errorHandler');
@@ -23,13 +24,15 @@ const sitesRouter = require('./routes/sites');
 const app = express();
 
 // ─── Sécurité ───────────────────────────────────────────────────────────────
+const FRONTEND = path.resolve(__dirname, '../../frontend');
+
 app.set('trust proxy', 1); // Derrière Nginx
 app.use(helmet({
   contentSecurityPolicy: {
     directives: {
       defaultSrc: ["'self'"],
-      scriptSrc: ["'self'"],
-      styleSrc: ["'self'", 'https://fonts.googleapis.com'],
+      scriptSrc: ["'self'", "'unsafe-inline'"],
+      styleSrc: ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
       fontSrc: ["'self'", 'https://fonts.gstatic.com'],
       imgSrc: ["'self'", 'data:'],
       connectSrc: ["'self'"],
@@ -81,7 +84,14 @@ app.use('/api/dashboard', apiLimiter, dashboardRouter);
 app.use('/api/users', apiLimiter, usersRouter);
 app.use('/api/sites', apiLimiter, sitesRouter);
 
-// ─── 404 ─────────────────────────────────────────────────────────────────────
+// ─── Frontend statique ───────────────────────────────────────────────────────
+app.use(express.static(FRONTEND));
+// SPA fallback : tout ce qui n'est pas /api → index.html
+app.get(/^(?!\/api).*/, (req, res) => {
+  res.sendFile(path.join(FRONTEND, 'index.html'));
+});
+
+// ─── 404 API ─────────────────────────────────────────────────────────────────
 app.use((req, res) => {
   res.status(404).json({ error: 'Route introuvable', code: 'NOT_FOUND' });
 });
