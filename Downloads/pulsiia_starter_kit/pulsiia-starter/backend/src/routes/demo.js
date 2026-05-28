@@ -41,8 +41,9 @@ router.post('/', async (req, res) => {
         auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS },
       });
 
+      const fromAddr = process.env.SMTP_FROM || process.env.DEMO_EMAIL || 'noreply@pulsiia.com';
       await transporter.sendMail({
-        from: `"Pulsiia Demo" <${process.env.SMTP_USER}>`,
+        from: `"Pulsiia Demo" <${fromAddr}>`,
         to,
         replyTo: email,
         subject: `Demande de démo — ${prenom || ''} ${nom || ''} (${societe || email})`.trim(),
