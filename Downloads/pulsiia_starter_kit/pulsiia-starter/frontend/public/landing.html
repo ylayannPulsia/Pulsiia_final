@@ -1,0 +1,1893 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pulsiia — L'OS RH pour vos équipes</title>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --teal:       #1a6b7a;
+  --teal-dark:  #145a67;
+  --teal-light: #e8f5f7;
+  --cyan:       #14c2e0;
+  --cyan-light: #e0f9fd;
+  --dark:       #0F1117;
+  --text:       #111827;
+  --text-2:     #4B5563;
+  --text-3:     #9CA3AF;
+  --border:     #E5E7EB;
+  --bg:         #F7F8FA;
+  --white:      #FFFFFF;
+  --r:          12px;
+  --r-lg:       20px;
+  --shadow:     0 1px 3px rgba(0,0,0,.08);
+  --shadow-md:  0 4px 24px rgba(0,0,0,.10);
+}
+
+html { scroll-behavior: smooth; }
+body { font-family: 'DM Sans', sans-serif; color: var(--text); background: var(--white); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+.container { max-width: 1220px; margin: 0 auto; padding: 0 28px; }
+
+/* ── NAV ── */
+nav {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(255,255,255,.94);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+}
+.nav-inner { display: flex; align-items: center; justify-content: space-between; height: 62px; }
+.nav-logo { display: flex; align-items: center; gap: 9px; text-decoration: none; color: var(--text); }
+.nav-logo svg { width: 28px; height: 28px; }
+.nav-logo-name { font-size: 17px; font-weight: 700; letter-spacing: -.3px; }
+.nav-logo-name em { color: var(--cyan); font-style: normal; }
+.nav-links { display: flex; align-items: center; gap: 28px; list-style: none; }
+.nav-links a { font-size: 14px; font-weight: 500; color: var(--text-2); text-decoration: none; transition: color .2s; }
+.nav-links a:hover { color: var(--teal); }
+.nav-cta { display: flex; align-items: center; gap: 10px; }
+.btn-ghost { font-size: 14px; font-weight: 500; color: var(--text-2); text-decoration: none; padding: 7px 14px; border-radius: var(--r); transition: background .2s; }
+.btn-ghost:hover { background: var(--bg); color: var(--teal); }
+.btn-nav {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--teal); color: white; font-size: 14px; font-weight: 600;
+  padding: 8px 18px; border-radius: var(--r); text-decoration: none;
+  box-shadow: 0 2px 8px rgba(26,107,122,.28); transition: background .2s;
+}
+.btn-nav:hover { background: var(--teal-dark); }
+
+/* ── HERO ── */
+.hero {
+  padding: 96px 0 80px;
+  background: #fff;
+  overflow: hidden; position: relative;
+}
+/* grille de points */
+.hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background-image: radial-gradient(rgba(26,107,122,.12) 1px, transparent 1px);
+  background-size: 28px 28px;
+  mask-image: radial-gradient(ellipse 80% 80% at 70% 50%, black 30%, transparent 80%);
+  -webkit-mask-image: radial-gradient(ellipse 80% 80% at 70% 50%, black 30%, transparent 80%);
+  pointer-events: none;
+}
+.hero::after {
+  content: ''; position: absolute; top: -200px; right: -200px;
+  width: 700px; height: 700px;
+  background: radial-gradient(circle, rgba(20,194,224,.07) 0%, transparent 65%);
+  border-radius: 50%; pointer-events: none;
+}
+.hero-grid { display: flex; flex-direction: column; align-items: center; text-align: center; position: relative; z-index: 1; max-width: 900px; margin: 0 auto; }
+.hero-eyebrow {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 13px; font-weight: 600; color: var(--teal);
+  background: var(--teal-light); padding: 5px 12px; border-radius: 999px;
+  border: 1px solid rgba(26,107,122,.15); margin-bottom: 20px;
+}
+.hero-eyebrow svg { width: 13px; height: 13px; }
+h1 { font-size: clamp(44px, 5.5vw, 72px); font-weight: 700; line-height: 1.06; letter-spacing: -2.5px; color: var(--text); margin-bottom: 20px; white-space: nowrap; }
+h1 span { color: var(--teal); }
+.hero-desc { font-size: 18px; color: var(--text-2); line-height: 1.68; margin-bottom: 32px; max-width: 620px; text-align: center; margin-left: auto; margin-right: auto; }
+.hero-btns { display: flex; align-items: center; justify-content: center; gap: 14px; flex-wrap: wrap; }
+.btn-primary {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--teal); color: white; font-size: 15px; font-weight: 600;
+  padding: 13px 26px; border-radius: var(--r); text-decoration: none;
+  box-shadow: 0 4px 18px rgba(26,107,122,.32); transition: background .2s, transform .15s;
+}
+.btn-primary:hover { background: var(--teal-dark); transform: translateY(-1px); }
+.btn-secondary {
+  display: inline-flex; align-items: center; gap: 7px;
+  color: var(--text-2); font-size: 14px; font-weight: 500;
+  text-decoration: none; padding: 12px 18px; border-radius: var(--r);
+  border: 1.5px solid var(--border); transition: border-color .2s, color .2s;
+}
+.btn-secondary:hover { border-color: var(--teal); color: var(--teal); }
+
+/* ── APP MOCKUP ── */
+.mockup-wrap { position: relative; padding: 44px 72px 20px 0; }
+
+.app-window {
+  background: #0d1018;
+  border-radius: 16px; overflow: hidden;
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,.08),
+    0 32px 80px rgba(0,0,0,.45),
+    0 8px 24px rgba(0,0,0,.3);
+  position: relative;
+}
+/* lueur ambiante verte/cyan dans la fenêtre */
+.app-window::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(20,194,224,.4), transparent);
+  z-index: 2;
+}
+
+.win-bar {
+  background: #131720; padding: 11px 16px;
+  display: flex; align-items: center; gap: 10px;
+  border-bottom: 1px solid rgba(255,255,255,.06);
+}
+.win-dots { display: flex; gap: 6px; }
+.win-dots span { width: 10px; height: 10px; border-radius: 50%; }
+.d-r { background: #ff5f57; box-shadow: 0 0 6px rgba(255,95,87,.5); }
+.d-y { background: #febc2e; }
+.d-g { background: #28c840; box-shadow: 0 0 6px rgba(40,200,64,.4); }
+.win-url {
+  flex: 1; background: rgba(255,255,255,.06); border-radius: 6px;
+  padding: 5px 12px; font-size: 11px; color: rgba(255,255,255,.28); font-family: monospace;
+  margin: 0 12px;
+}
+.win-live {
+  display: flex; align-items: center; gap: 5px;
+  font-size: 10px; font-weight: 600; color: #34d399;
+}
+.win-live-dot {
+  width: 6px; height: 6px; border-radius: 50%; background: #34d399;
+  box-shadow: 0 0 6px rgba(52,211,153,.7);
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: .4; }
+}
+
+.win-body { display: flex; }
+.win-sidebar {
+  width: 60px; background: #0b0e15;
+  padding: 16px 10px; display: flex; flex-direction: column; align-items: center; gap: 6px;
+  border-right: 1px solid rgba(255,255,255,.05);
+}
+.ws-logo {
+  width: 34px; height: 34px; border-radius: 9px;
+  background: linear-gradient(135deg, var(--teal), #0e9eb8);
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 10px;
+  box-shadow: 0 4px 12px rgba(26,107,122,.5);
+}
+.ws-sep { width: 28px; height: 1px; background: rgba(255,255,255,.07); margin: 4px 0; }
+.ws-item {
+  width: 36px; height: 36px; border-radius: 9px;
+  display: flex; align-items: center; justify-content: center;
+  position: relative; cursor: pointer; transition: background .2s;
+}
+.ws-item:hover { background: rgba(255,255,255,.07); }
+.ws-item.on { background: rgba(20,194,224,.12); }
+.ws-item.on::before {
+  content: ''; position: absolute; left: -10px; top: 50%; transform: translateY(-50%);
+  width: 3px; height: 18px; border-radius: 0 2px 2px 0;
+  background: var(--cyan);
+}
+.ws-item svg { width: 16px; height: 16px; color: rgba(255,255,255,.3); }
+.ws-item.on svg { color: var(--cyan); }
+
+.win-main {
+  flex: 1; overflow: hidden;
+  background: linear-gradient(160deg, #0d1018 0%, #0f131c 100%);
+  display: flex;
+}
+.wm-left {
+  flex: 1; padding: 16px 14px 12px; overflow: hidden;
+  border-right: 1px solid rgba(255,255,255,.05);
+}
+.wm-right {
+  width: 158px; padding: 14px 12px; overflow: hidden;
+  display: flex; flex-direction: column;
+}
+.wm-topbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+.wm-greeting { font-size: 13px; font-weight: 600; color: white; }
+.wm-date { font-size: 10px; color: rgba(255,255,255,.3); margin-top: 1px; }
+.wm-avatar {
+  width: 26px; height: 26px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--teal), var(--cyan));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 9px; font-weight: 700; color: white;
+}
+
+/* Today panel */
+.today-head {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 10px;
+}
+.today-title { font-size: 9.5px; font-weight: 700; color: rgba(255,255,255,.35); text-transform: uppercase; letter-spacing: .5px; }
+.emp-row {
+  display: flex; align-items: center; gap: 7px; padding: 5px 6px;
+  border-radius: 6px; margin-bottom: 3px;
+}
+.emp-row:hover { background: rgba(255,255,255,.04); }
+.emp-av {
+  width: 22px; height: 22px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 7.5px; font-weight: 700; color: white; flex-shrink: 0;
+}
+.emp-name { font-size: 10px; color: rgba(255,255,255,.5); flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.emp-badge {
+  font-size: 7.5px; font-weight: 600; padding: 2px 6px;
+  border-radius: 4px; white-space: nowrap; flex-shrink: 0;
+}
+.eb-in  { background: rgba(52,211,153,.12);  color: #34d399; }
+.eb-cp  { background: rgba(251,191,36,.12);  color: #fbbf24; }
+.eb-rem { background: rgba(20,194,224,.1);   color: #14c2e0; }
+.today-footer {
+  margin-top: auto; padding-top: 10px;
+  border-top: 1px solid rgba(255,255,255,.05);
+  font-size: 9.5px; color: rgba(255,255,255,.22);
+  display: flex; align-items: center; gap: 5px;
+}
+.tf-dot {
+  width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0;
+  background: #fbbf24; box-shadow: 0 0 6px rgba(251,191,36,.6);
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+/* KPI cards */
+.kpi-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin-bottom: 12px; }
+.kpi {
+  border-radius: 9px; padding: 10px 12px;
+  border: 1px solid rgba(255,255,255,.07);
+  position: relative; overflow: hidden;
+}
+.kpi-teal  { background: linear-gradient(135deg, rgba(26,107,122,.25), rgba(26,107,122,.1)); border-color: rgba(26,107,122,.3); }
+.kpi-cyan  { background: linear-gradient(135deg, rgba(20,194,224,.15), rgba(20,194,224,.05)); border-color: rgba(20,194,224,.2); }
+.kpi-slate { background: rgba(255,255,255,.04); }
+.kpi-glow {
+  position: absolute; top: -20px; right: -20px;
+  width: 60px; height: 60px; border-radius: 50%;
+  pointer-events: none;
+}
+.kg-teal { background: radial-gradient(circle, rgba(26,107,122,.4), transparent 70%); }
+.kg-cyan  { background: radial-gradient(circle, rgba(20,194,224,.3), transparent 70%); }
+.kpi-icon { display: flex; align-items: center; margin-bottom: 8px; opacity: .7; }
+.kpi-n { font-size: 22px; font-weight: 700; color: white; letter-spacing: -.6px; line-height: 1; }
+.kpi-l { font-size: 10px; color: rgba(255,255,255,.35); margin-top: 3px; }
+.kpi-delta {
+  display: inline-flex; align-items: center; gap: 3px;
+  font-size: 9px; font-weight: 600; margin-top: 6px; padding: 2px 7px;
+  border-radius: 999px;
+}
+.kd-g { background: rgba(52,211,153,.12); color: #34d399; }
+.kd-o { background: rgba(251,191,36,.12); color: #fbbf24; }
+.kd-b { background: rgba(20,194,224,.12); color: var(--cyan); }
+
+/* Chart amélioré */
+.chart-block {
+  border-radius: 10px; padding: 14px;
+  margin-bottom: 12px; background: rgba(255,255,255,.03);
+  border: 1px solid rgba(255,255,255,.05);
+}
+.chart-toprow { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 10px; }
+.chart-title { font-size: 11px; font-weight: 500; color: rgba(255,255,255,.4); }
+.chart-value { font-size: 14px; font-weight: 700; color: white; }
+.chart-value span { font-size: 10px; color: #34d399; margin-left: 4px; font-weight: 500; }
+.bars { display: flex; align-items: flex-end; gap: 4px; height: 44px; }
+.bar {
+  flex: 1; border-radius: 3px 3px 0 0;
+  background: rgba(20,194,224,.12);
+  transition: background .2s;
+}
+.bar.hi { background: linear-gradient(180deg, var(--cyan), rgba(20,194,224,.5)); box-shadow: 0 0 10px rgba(20,194,224,.3); }
+.bar.md { background: rgba(20,194,224,.25); }
+.bar-days { display: flex; justify-content: space-between; padding: 4px 0 0; }
+.bar-day { flex: 1; text-align: center; font-size: 8px; color: rgba(255,255,255,.2); }
+
+/* Activity list */
+.act-list { display: flex; flex-direction: column; gap: 6px; }
+.act-item {
+  border-radius: 8px; padding: 9px 12px;
+  display: flex; align-items: center; gap: 10px;
+  background: rgba(255,255,255,.03);
+  border: 1px solid rgba(255,255,255,.05);
+  transition: background .2s;
+}
+.act-dot {
+  width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0;
+}
+.ad-g { background: #34d399; box-shadow: 0 0 6px rgba(52,211,153,.5); }
+.ad-o { background: #fbbf24; box-shadow: 0 0 6px rgba(251,191,36,.4); }
+.ad-c { background: var(--cyan); box-shadow: 0 0 6px rgba(20,194,224,.4); }
+.act-text { font-size: 10.5px; color: rgba(255,255,255,.55); flex: 1; line-height: 1.3; }
+.act-badge {
+  font-size: 9px; font-weight: 600; padding: 3px 8px; border-radius: 999px;
+  white-space: nowrap;
+}
+.ab-g { background: rgba(52,211,153,.12); color: #34d399; }
+.ab-o { background: rgba(251,191,36,.12); color: #fbbf24; }
+.ab-c { background: rgba(20,194,224,.1); color: var(--cyan); }
+
+/* fade bottom */
+.win-fade {
+  position: absolute; bottom: 0; left: 0; right: 0; height: 48px;
+  background: linear-gradient(to bottom, transparent, rgba(13,16,24,.9));
+  border-radius: 0 0 16px 16px; pointer-events: none;
+}
+
+/* ── WIN TAB BAR ── */
+.win-tabs {
+  background: #0e1117;
+  display: flex; align-items: center; gap: 0;
+  padding: 0 16px;
+  border-bottom: 1px solid rgba(255,255,255,.06);
+}
+.win-tab {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-family: 'DM Sans', sans-serif; font-size: 10.5px; font-weight: 500;
+  color: rgba(255,255,255,.3); padding: 8px 14px; cursor: pointer;
+  background: none; border: none; border-bottom: 2px solid transparent;
+  transition: color .2s, border-color .15s; white-space: nowrap; margin-bottom: -1px;
+}
+.win-tab svg { width: 11px; height: 11px; }
+.win-tab:hover { color: rgba(255,255,255,.6); }
+.win-tab.active { color: white; border-bottom-color: #14c2e0; }
+
+/* ── WIN VIEWS ── */
+.win-views { flex: 1; overflow: hidden; display: flex; }
+.win-view { display: none; flex: 1; }
+.win-view.active { display: flex; }
+
+/* ── PLANNING VIEW ── */
+.plan-view {
+  flex: 1; padding: 14px 16px; overflow: hidden;
+  background: linear-gradient(160deg, #0d1018 0%, #0f131c 100%);
+  display: flex; flex-direction: column;
+}
+.pv-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.pv-nav { display: flex; align-items: center; gap: 8px; }
+.pv-nav-btn {
+  width: 22px; height: 22px; border-radius: 5px;
+  background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.08);
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  color: rgba(255,255,255,.5); font-size: 13px; line-height: 1; transition: all .15s;
+  font-family: 'DM Sans', sans-serif;
+}
+.pv-nav-btn:hover { background: rgba(255,255,255,.14); color: white; }
+.pv-week { font-size: 11px; font-weight: 600; color: rgba(255,255,255,.55); }
+.pv-ai-badge { font-size: 9px; font-weight: 600; background: rgba(20,194,224,.15); color: #14c2e0; padding: 3px 9px; border-radius: 5px; }
+.pv-heads { display: flex; padding: 0 0 6px 94px; gap: 4px; margin-bottom: 2px; }
+.pv-head { flex: 1; text-align: center; font-size: 8px; font-weight: 700; color: rgba(255,255,255,.22); text-transform: uppercase; letter-spacing: .3px; }
+.pv-head.tod { color: #14c2e0; }
+.pv-row {
+  display: flex; align-items: center; gap: 6px;
+  background: rgba(255,255,255,.03); border-radius: 7px;
+  padding: 7px 8px; margin-bottom: 5px;
+  border: 1px solid rgba(255,255,255,.04); cursor: pointer;
+  transition: background .15s, border-color .15s;
+}
+.pv-row:hover { background: rgba(255,255,255,.06); border-color: rgba(20,194,224,.15); }
+.pv-av { width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 8px; font-weight: 700; color: white; flex-shrink: 0; }
+.pv-name { font-size: 10px; color: rgba(255,255,255,.42); flex: 0 0 62px; white-space: nowrap; overflow: hidden; }
+.pv-slots { display: flex; gap: 4px; flex: 1; }
+.pv-slot { height: 22px; border-radius: 4px; font-size: 7.5px; font-weight: 600; display: flex; align-items: center; justify-content: center; color: white; flex: 1; }
+.pvs-m { background: rgba(26,107,122,.65); }
+.pvs-a { background: rgba(20,194,224,.3); }
+.pvs-j { background: rgba(251,191,36,.22); color: #fbbf24; }
+.pvs-o { background: rgba(255,255,255,.05); color: rgba(255,255,255,.18); }
+.pvs-c { background: rgba(239,68,68,.18); color: #f87171; }
+
+/* ── ABSENCES VIEW ── */
+.abs-view {
+  flex: 1; padding: 14px 16px; overflow: hidden;
+  background: linear-gradient(160deg, #0d1018 0%, #0f131c 100%);
+  display: flex; flex-direction: column;
+}
+.abs-summary { display: flex; gap: 8px; margin-bottom: 12px; }
+.abs-stat { flex: 1; text-align: center; padding: 10px 8px; border-radius: 8px; background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.06); }
+.abs-stat-n { font-size: 20px; font-weight: 700; line-height: 1; margin-bottom: 3px; }
+.abs-stat-l { font-size: 8.5px; color: rgba(255,255,255,.28); }
+.asn-g { color: #34d399; } .asn-o { color: #fbbf24; } .asn-r { color: #f87171; }
+.abs-filters { display: flex; gap: 5px; margin-bottom: 10px; }
+.abs-filter {
+  font-size: 9.5px; font-weight: 600; padding: 4px 11px; border-radius: 6px;
+  cursor: pointer; border: none; background: rgba(255,255,255,.05);
+  color: rgba(255,255,255,.3); transition: all .15s; font-family: 'DM Sans', sans-serif;
+}
+.abs-filter.on { background: rgba(20,194,224,.15); color: #14c2e0; }
+.abs-filter:hover { color: rgba(255,255,255,.6); }
+.abs-list { display: flex; flex-direction: column; gap: 5px; }
+.abs-row {
+  display: flex; align-items: center; gap: 9px;
+  background: rgba(255,255,255,.03); border-radius: 8px;
+  padding: 8px 10px; border: 1px solid rgba(255,255,255,.04);
+  cursor: pointer; transition: all .15s;
+}
+.abs-row:hover { background: rgba(255,255,255,.055); border-color: rgba(255,255,255,.09); }
+.abs-av { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 700; color: white; flex-shrink: 0; }
+.abs-info { flex: 1; overflow: hidden; }
+.abs-name { font-size: 11px; font-weight: 600; color: rgba(255,255,255,.65); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.abs-dates { font-size: 9px; color: rgba(255,255,255,.25); margin-top: 1px; }
+.abs-type { font-size: 8.5px; font-weight: 700; padding: 3px 8px; border-radius: 4px; white-space: nowrap; flex-shrink: 0; }
+.at-cp  { background: rgba(26,107,122,.2);  color: rgba(20,194,224,.8); }
+.at-rtt { background: rgba(139,92,246,.15); color: #a78bfa; }
+.abs-status { font-size: 8px; font-weight: 600; padding: 3px 8px; border-radius: 4px; white-space: nowrap; flex-shrink: 0; transition: all .3s; }
+.ast-wait { background: rgba(251,191,36,.12); color: #fbbf24; }
+.ast-ok   { background: rgba(52,211,153,.12); color: #34d399; }
+.ast-no   { background: rgba(239,68,68,.1);   color: #f87171; }
+.abs-actions { display: flex; gap: 4px; flex-shrink: 0; }
+.abs-btn { width: 22px; height: 22px; border-radius: 5px; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 11px; transition: background .15s; font-family: 'DM Sans', sans-serif; }
+.abs-btn-ok { background: rgba(52,211,153,.12); color: #34d399; }
+.abs-btn-ok:hover { background: rgba(52,211,153,.28); }
+.abs-btn-no { background: rgba(239,68,68,.1); color: #f87171; }
+.abs-btn-no:hover { background: rgba(239,68,68,.22); }
+
+/* ── CHIPS EURECIA STYLE ── */
+@keyframes float-bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+.float-chip {
+  position: absolute;
+  background: white; border-radius: 14px; padding: 13px 16px;
+  box-shadow: 0 16px 48px rgba(0,0,0,.12), 0 2px 8px rgba(0,0,0,.06);
+  border: 1px solid rgba(0,0,0,.05);
+  min-width: 200px;
+  animation: float-bob 5s ease-in-out infinite;
+}
+.chip-bottom { bottom: 24px; left: -24px; animation-delay: 0s; }
+.chip-top    { top: 0px; right: 8px; animation-delay: 1.8s; }
+
+.chip-header { display: flex; align-items: center; gap: 6px; margin-bottom: 5px; }
+.chip-status-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.chip-title { font-size: 11.5px; font-weight: 700; color: #111827; }
+.chip-body { font-size: 10.5px; color: #6B7280; line-height: 1.4; }
+.chip-avatars {
+  display: flex; align-items: center; margin-top: 8px;
+}
+.chip-av {
+  width: 20px; height: 20px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 7px; font-weight: 700; color: white;
+  border: 2px solid white; margin-left: -4px;
+}
+.chip-av:first-child { margin-left: 0; }
+.chip-av-label { font-size: 10px; color: #9CA3AF; margin-left: 7px; font-weight: 500; }
+.chip-bar-wrap { height: 4px; background: #F3F4F6; border-radius: 2px; margin-top: 8px; overflow: hidden; }
+.chip-bar-fill { height: 100%; border-radius: 2px; background: linear-gradient(90deg, var(--teal), var(--cyan)); }
+
+/* ── STATS STRIP ── */
+.stats-strip { padding: 72px 0 0; background: var(--white); }
+.stats-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; }
+.stat-item {
+  background: var(--white); border-radius: var(--r-lg); padding: 36px 32px;
+  border: 1.5px solid var(--border); text-align: left; position: relative; overflow: hidden;
+  transition: border-color .25s, box-shadow .25s, transform .2s;
+}
+.stat-item:hover { border-color: rgba(20,194,224,.35); box-shadow: 0 8px 32px rgba(26,107,122,.09); transform: translateY(-3px); }
+.stat-item::after {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, var(--teal), var(--cyan)); opacity: 0; transition: opacity .25s;
+}
+.stat-item:hover::after { opacity: 1; }
+.stat-icon {
+  width: 44px; height: 44px; border-radius: 12px; background: var(--teal-light);
+  display: flex; align-items: center; justify-content: center; margin-bottom: 20px;
+}
+.stat-icon svg { width: 20px; height: 20px; color: var(--teal); }
+.stat-n { font-size: 48px; font-weight: 800; letter-spacing: -2px; line-height: 1; margin-bottom: 6px; }
+.stat-n em { color: var(--teal); font-style: normal; }
+.stat-title { font-size: 16px; font-weight: 700; color: var(--text); margin-bottom: 8px; }
+.stat-l { font-size: 13.5px; color: var(--text-2); line-height: 1.6; }
+
+/* ── MARQUEE ── */
+.marquee-wrap { padding: 32px 0 0; overflow: hidden; }
+.marquee-track { position: relative; }
+.marquee-track::before, .marquee-track::after {
+  content: ''; position: absolute; top: 0; bottom: 0; width: 100px; z-index: 2; pointer-events: none;
+}
+.marquee-track::before { left: 0; background: linear-gradient(90deg, white, transparent); }
+.marquee-track::after  { right: 0; background: linear-gradient(-90deg, white, transparent); }
+@keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+.marquee-inner { display: flex; gap: 10px; width: max-content; animation: marquee 36s linear infinite; }
+.marquee-inner:hover { animation-play-state: paused; }
+.m-badge {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 8px 16px; border-radius: 999px; font-size: 12.5px; font-weight: 500;
+  white-space: nowrap; color: var(--text-2); border: 1.5px solid var(--border); background: var(--white);
+}
+.m-badge-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--teal); flex-shrink: 0; }
+
+/* ── SECTION LABELS ── */
+.sec-label {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 12px; font-weight: 600; color: var(--teal); letter-spacing: .4px; text-transform: uppercase;
+  margin-bottom: 14px;
+}
+.sec-label::before { content: ''; width: 16px; height: 2px; background: var(--cyan); border-radius: 1px; }
+h2 { font-size: 36px; font-weight: 700; letter-spacing: -1px; line-height: 1.15; margin-bottom: 14px; }
+h2 span { color: var(--teal); }
+.sec-sub { font-size: 16px; color: var(--text-2); max-width: 520px; line-height: 1.65; margin-bottom: 44px; }
+
+/* ── STATEMENT BAND ── */
+.statement-band { padding: 72px 0; background: var(--white); border-top: 1px solid var(--border); text-align: center; }
+.statement-band p { font-size: clamp(22px, 3vw, 36px); font-weight: 700; letter-spacing: -.6px; color: var(--text); line-height: 1.3; }
+.statement-band p em { color: var(--teal); font-style: normal; }
+
+/* ── FEATURE TABS ── */
+.ftabs-section { padding: 96px 0 88px; background: var(--white); border-top: 1px solid var(--border); }
+.ftab-nav {
+  display: flex; gap: 6px; background: var(--bg); padding: 6px;
+  border-radius: 16px; width: fit-content; margin-bottom: 56px;
+}
+.ftab-btn {
+  font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; color: var(--text-2);
+  padding: 10px 22px; border-radius: 11px; border: none; background: none;
+  cursor: pointer; transition: all .2s; white-space: nowrap;
+}
+.ftab-btn.active { background: var(--white); color: var(--text); font-weight: 600; box-shadow: 0 1px 6px rgba(0,0,0,.09); }
+.ftab-btn:hover:not(.active) { color: var(--teal); }
+.ftab-panel { display: none; }
+.ftab-panel.active { display: grid; grid-template-columns: 1fr 1fr; gap: 72px; align-items: center; }
+.fp-eyebrow {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 12px; font-weight: 600; color: var(--teal); letter-spacing: .4px;
+  text-transform: uppercase; margin-bottom: 16px;
+}
+.fp-eyebrow::before { content: ''; width: 14px; height: 2px; background: var(--cyan); border-radius: 1px; }
+.fp-title { font-size: 30px; font-weight: 700; letter-spacing: -.8px; line-height: 1.2; margin-bottom: 14px; color: var(--text); }
+.fp-title span { color: var(--teal); }
+.fp-desc { font-size: 15px; color: var(--text-2); line-height: 1.7; margin-bottom: 24px; }
+.fp-bullets { list-style: none; display: flex; flex-direction: column; gap: 10px; margin-bottom: 28px; }
+.fp-bullets li { display: flex; align-items: flex-start; gap: 10px; font-size: 14px; color: var(--text-2); }
+.fp-bullets li::before {
+  content: ''; width: 18px; height: 18px; border-radius: 50%; flex-shrink: 0; margin-top: 1px;
+  background: var(--teal-light) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%231a6b7a'%3E%3Cpath fill-rule='evenodd' d='M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z' clip-rule='evenodd'/%3E%3C/svg%3E") center/11px no-repeat;
+}
+
+/* Feature Visual wrapper */
+.fp-visual {
+  border-radius: var(--r-lg); overflow: hidden; background: #0d1018;
+  box-shadow: 0 24px 64px rgba(0,0,0,.28), 0 0 0 1px rgba(255,255,255,.06);
+}
+.fv-bar {
+  background: #131720; padding: 10px 14px;
+  display: flex; align-items: center; gap: 8px;
+  border-bottom: 1px solid rgba(255,255,255,.06);
+}
+.fv-dots { display: flex; gap: 5px; }
+.fv-dots span { width: 8px; height: 8px; border-radius: 50%; }
+.fv-title-bar { font-size: 10px; font-weight: 500; color: rgba(255,255,255,.3); margin-left: 6px; }
+.fv-badge { font-size: 9px; font-weight: 600; background: rgba(20,194,224,.15); color: #14c2e0; padding: 3px 9px; border-radius: 5px; margin-left: auto; }
+.fv-body { padding: 16px 18px 20px; }
+
+/* planning tab visual */
+.fpv-heads { display: flex; padding: 0 0 6px 80px; gap: 3px; margin-bottom: 4px; }
+.fpv-head { flex: 1; text-align: center; font-size: 8px; font-weight: 700; color: rgba(255,255,255,.22); text-transform: uppercase; }
+.fpv-head.tod { color: #14c2e0; }
+.fpv-row { display: flex; align-items: center; gap: 6px; padding: 7px 8px; background: rgba(255,255,255,.03); border-radius: 7px; margin-bottom: 5px; border: 1px solid rgba(255,255,255,.04); }
+.fpv-av { width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 8px; font-weight: 700; color: white; flex-shrink: 0; }
+.fpv-name { font-size: 10px; color: rgba(255,255,255,.4); flex: 0 0 62px; }
+.fpv-slots { display: flex; gap: 3px; flex: 1; }
+.fpv-slot { height: 20px; border-radius: 3px; font-size: 7.5px; font-weight: 600; display: flex; align-items: center; justify-content: center; color: white; flex: 1; }
+.fps-m { background: rgba(26,107,122,.7); } .fps-a { background: rgba(20,194,224,.3); }
+.fps-o { background: rgba(255,255,255,.06); color: rgba(255,255,255,.2); } .fps-c { background: rgba(239,68,68,.18); color: #f87171; }
+.fv-ai-row { display: flex; align-items: center; gap: 8px; margin-top: 10px; padding: 9px 12px; background: rgba(20,194,224,.07); border-radius: 8px; border: 1px solid rgba(20,194,224,.15); }
+.fv-ai-text { font-size: 10px; color: rgba(20,194,224,.8); flex: 1; }
+.fv-ai-badge { font-size: 9px; font-weight: 700; background: rgba(20,194,224,.18); color: #14c2e0; padding: 3px 8px; border-radius: 4px; }
+
+/* absence tab visual */
+.fv-abs-stats { display: flex; gap: 8px; margin-bottom: 12px; }
+.fv-abs-s { flex: 1; text-align: center; padding: 10px 6px; background: rgba(255,255,255,.03); border-radius: 8px; border: 1px solid rgba(255,255,255,.06); }
+.fv-abs-n { font-size: 20px; font-weight: 700; line-height: 1; margin-bottom: 2px; }
+.fv-abs-l { font-size: 8px; color: rgba(255,255,255,.28); }
+.fv-abs-row { display: flex; align-items: center; gap: 8px; padding: 8px 10px; background: rgba(255,255,255,.03); border-radius: 7px; margin-bottom: 4px; border: 1px solid rgba(255,255,255,.04); }
+.fv-abs-av { width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 8.5px; font-weight: 700; color: white; flex-shrink: 0; }
+.fv-abs-info { flex: 1; }
+.fv-abs-name { font-size: 10.5px; font-weight: 600; color: rgba(255,255,255,.6); }
+.fv-abs-date { font-size: 9px; color: rgba(255,255,255,.25); margin-top: 1px; }
+.fv-status { font-size: 8px; font-weight: 600; padding: 3px 8px; border-radius: 4px; }
+.fvs-wait { background: rgba(251,191,36,.12); color: #fbbf24; }
+.fvs-ok   { background: rgba(52,211,153,.12); color: #34d399; }
+.fv-abs-btns { display: flex; gap: 3px; }
+.fv-abs-btn { width: 20px; height: 20px; border-radius: 4px; border: none; cursor: pointer; font-size: 10px; display: flex; align-items: center; justify-content: center; }
+.fv-abs-btn-ok { background: rgba(52,211,153,.12); color: #34d399; }
+.fv-abs-btn-no { background: rgba(239,68,68,.1); color: #f87171; }
+
+/* prepaie tab visual */
+.fv-pp-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.fv-pp-title { font-size: 12px; font-weight: 600; color: rgba(255,255,255,.6); }
+.fv-pp-badge { font-size: 9px; font-weight: 600; background: rgba(52,211,153,.12); color: #34d399; padding: 3px 9px; border-radius: 5px; }
+.fv-pp-row { display: flex; align-items: center; gap: 10px; padding: 9px 12px; background: rgba(255,255,255,.03); border-radius: 8px; margin-bottom: 5px; border: 1px solid rgba(255,255,255,.04); }
+.fv-pp-label { font-size: 10.5px; color: rgba(255,255,255,.45); flex: 1; }
+.fv-pp-val { font-size: 12px; font-weight: 700; color: white; }
+.fv-pp-export { margin-top: 12px; display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; background: rgba(20,194,224,.08); border-radius: 8px; border: 1px solid rgba(20,194,224,.15); }
+.fv-pp-export-l { font-size: 10px; color: rgba(255,255,255,.5); }
+.fv-pp-export-btn { font-size: 9.5px; font-weight: 600; background: rgba(20,194,224,.2); color: #14c2e0; padding: 5px 12px; border-radius: 5px; border: none; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+
+/* bienetre tab visual */
+.fv-be-score { text-align: center; padding: 16px 12px 12px; }
+.fv-be-n { font-size: 56px; font-weight: 800; letter-spacing: -2px; line-height: 1; color: #34d399; }
+.fv-be-l { font-size: 11px; color: rgba(255,255,255,.35); margin-top: 4px; }
+.fv-be-bar { height: 6px; border-radius: 3px; background: rgba(255,255,255,.07); margin: 12px 0; overflow: hidden; }
+.fv-be-fill { height: 100%; border-radius: 3px; background: linear-gradient(90deg, #f87171, #fbbf24, #34d399); width: 73%; }
+.fv-be-row { display: flex; align-items: center; gap: 9px; padding: 7px 10px; background: rgba(255,255,255,.03); border-radius: 7px; margin-bottom: 4px; border: 1px solid rgba(255,255,255,.04); }
+.fv-be-icon { font-size: 14px; }
+.fv-be-text { font-size: 10px; color: rgba(255,255,255,.5); flex: 1; }
+.fv-be-val { font-size: 11px; font-weight: 600; color: rgba(255,255,255,.7); }
+
+/* ── RESULTS ── */
+.results { padding: 88px 0; background: var(--bg); border-top: 1px solid var(--border); }
+.results-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; margin-top: 52px; }
+.result-card {
+  background: var(--white); border-radius: var(--r-lg); padding: 40px 36px;
+  border: 1.5px solid var(--border); position: relative; overflow: hidden;
+  transition: border-color .25s, box-shadow .25s, transform .25s;
+}
+.result-card:hover { border-color: rgba(20,194,224,.3); box-shadow: 0 8px 32px rgba(26,107,122,.09); transform: translateY(-3px); }
+.result-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--teal), var(--cyan)); }
+.result-n { font-size: 54px; font-weight: 800; letter-spacing: -2px; color: var(--teal); line-height: 1; margin-bottom: 10px; }
+.result-title { font-size: 17px; font-weight: 700; color: var(--text); margin-bottom: 10px; letter-spacing: -.3px; }
+.result-desc { font-size: 14px; color: var(--text-2); line-height: 1.65; }
+
+/* ── FAQ ── */
+.faq { padding: 88px 0; background: var(--white); border-top: 1px solid var(--border); }
+.faq-list { margin-top: 52px; max-width: 760px; }
+.faq-item { border-bottom: 1px solid var(--border); }
+.faq-q {
+  width: 100%; text-align: left; padding: 20px 0; background: none; border: none; cursor: pointer;
+  font-family: 'DM Sans', sans-serif; font-size: 16px; font-weight: 600; color: var(--text);
+  display: flex; align-items: center; justify-content: space-between; gap: 16px; transition: color .2s;
+}
+.faq-q:hover { color: var(--teal); }
+.faq-icon {
+  width: 22px; height: 22px; border-radius: 50%; flex-shrink: 0;
+  background: var(--bg); display: flex; align-items: center; justify-content: center;
+  font-size: 15px; font-weight: 300; color: var(--text-2); transition: transform .25s, background .2s;
+  line-height: 1;
+}
+.faq-item.open .faq-icon { transform: rotate(45deg); background: var(--teal-light); color: var(--teal); }
+.faq-a { max-height: 0; overflow: hidden; transition: max-height .35s cubic-bezier(.22,1,.36,1); }
+.faq-item.open .faq-a { max-height: 240px; }
+.faq-a p { font-size: 14.5px; color: var(--text-2); line-height: 1.75; padding-bottom: 22px; }
+
+/* ── CTA ── */
+.cta-section { padding: 88px 0; }
+.cta-box {
+  background: var(--dark); border-radius: 24px; padding: 80px 64px;
+  text-align: center; position: relative; overflow: hidden;
+}
+.cta-box::before {
+  content: ''; position: absolute; inset: 0;
+  background-image: radial-gradient(rgba(20,194,224,.1) 1px, transparent 1px);
+  background-size: 32px 32px; pointer-events: none;
+}
+.cta-box::after {
+  content: ''; position: absolute; top: 0; left: 20%; right: 20%; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(20,194,224,.5), transparent); pointer-events: none;
+}
+.cta-glow { position: absolute; top: 30%; left: 50%; transform: translateX(-50%); width: 640px; height: 320px; background: radial-gradient(ellipse, rgba(20,194,224,.12) 0%, transparent 65%); pointer-events: none; }
+.cta-box h2 { font-size: 38px; color: white; letter-spacing: -1px; margin-bottom: 14px; line-height: 1.15; }
+.cta-box h2 span { color: var(--cyan); }
+.cta-box > p { font-size: 16px; color: rgba(255,255,255,.5); margin-bottom: 28px; max-width: 440px; margin-left: auto; margin-right: auto; }
+.cta-trust { display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap; margin-bottom: 32px; }
+.cta-chip { display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; font-weight: 500; color: rgba(255,255,255,.5); padding: 6px 14px; border-radius: 999px; border: 1px solid rgba(255,255,255,.1); }
+.cta-chip-dot { width: 5px; height: 5px; border-radius: 50%; background: #34d399; }
+.cta-btns { display: flex; align-items: center; justify-content: center; gap: 14px; flex-wrap: wrap; }
+.btn-cta { display: inline-flex; align-items: center; gap: 8px; background: var(--cyan); color: var(--dark); font-size: 15px; font-weight: 700; padding: 13px 26px; border-radius: var(--r); text-decoration: none; box-shadow: 0 4px 18px rgba(20,194,224,.35); transition: background .2s; }
+.btn-cta:hover { background: #0fb8d4; }
+.btn-cta-ghost { display: inline-flex; align-items: center; gap: 7px; color: rgba(255,255,255,.55); font-size: 14px; font-weight: 500; padding: 12px 22px; border-radius: var(--r); text-decoration: none; border: 1.5px solid rgba(255,255,255,.12); transition: border-color .2s, color .2s; }
+.btn-cta-ghost:hover { border-color: rgba(255,255,255,.3); color: white; }
+
+/* ── FOOTER ── */
+footer { background: var(--dark); padding: 64px 0 28px; border-top: 1px solid rgba(255,255,255,.05); }
+.footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr; gap: 36px; margin-bottom: 48px; }
+.footer-logo { display: flex; align-items: center; gap: 8px; text-decoration: none; color: white; margin-bottom: 12px; }
+.footer-logo svg { width: 24px; height: 24px; }
+.footer-logo span { font-size: 16px; font-weight: 700; }
+.footer-logo span em { color: var(--cyan); font-style: normal; }
+.footer-desc { font-size: 13px; color: rgba(255,255,255,.3); line-height: 1.65; max-width: 220px; margin-bottom: 16px; }
+.footer-col h4 { font-size: 11px; font-weight: 700; color: rgba(255,255,255,.4); text-transform: uppercase; letter-spacing: .7px; margin-bottom: 14px; }
+.footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.footer-col a { font-size: 13px; color: rgba(255,255,255,.35); text-decoration: none; transition: color .2s; }
+.footer-col a:hover { color: rgba(255,255,255,.7); }
+.footer-bottom { border-top: 1px solid rgba(255,255,255,.06); padding-top: 22px; display: flex; align-items: center; justify-content: space-between; }
+.footer-bottom p { font-size: 12px; color: rgba(255,255,255,.2); }
+.footer-links { display: flex; gap: 20px; }
+.footer-links a { font-size: 12px; color: rgba(255,255,255,.2); text-decoration: none; transition: color .2s; }
+.footer-links a:hover { color: rgba(255,255,255,.45); }
+
+/* ── DEMO MODAL ── */
+.demo-overlay {
+  position: fixed; inset: 0; z-index: 999;
+  background: rgba(15,17,23,.7); backdrop-filter: blur(6px);
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px; opacity: 0; pointer-events: none;
+  transition: opacity .25s;
+}
+.demo-overlay.open { opacity: 1; pointer-events: all; }
+.demo-modal {
+  background: white; border-radius: 20px; padding: 40px 44px 36px;
+  width: 100%; max-width: 460px; position: relative;
+  box-shadow: 0 32px 80px rgba(0,0,0,.22);
+  transform: translateY(16px); transition: transform .3s cubic-bezier(.22,1,.36,1);
+}
+.demo-overlay.open .demo-modal { transform: translateY(0); }
+.demo-close {
+  position: absolute; top: 16px; right: 16px;
+  width: 32px; height: 32px; border-radius: 8px; border: none;
+  background: var(--bg); cursor: pointer; font-size: 16px; color: var(--text-2);
+  display: flex; align-items: center; justify-content: center; transition: background .2s;
+}
+.demo-close:hover { background: var(--border); }
+.demo-step { display: none; }
+.demo-step.active { display: block; }
+.demo-logo { display: flex; align-items: center; gap: 8px; margin-bottom: 24px; }
+.demo-logo span { font-size: 16px; font-weight: 700; color: var(--text); }
+.demo-logo span em { color: var(--cyan); font-style: normal; }
+.demo-progress { display: flex; gap: 6px; margin-bottom: 28px; }
+.demo-dot { height: 3px; flex: 1; border-radius: 2px; background: var(--border); transition: background .3s; }
+.demo-dot.done { background: var(--teal); }
+.demo-dot.active { background: var(--cyan); }
+.demo-modal h3 { font-size: 20px; font-weight: 700; letter-spacing: -.4px; color: var(--text); margin-bottom: 6px; }
+.demo-modal p.demo-sub { font-size: 14px; color: var(--text-2); margin-bottom: 24px; line-height: 1.5; }
+.demo-field { margin-bottom: 16px; }
+.demo-field label { display: block; font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+.demo-field input, .demo-field select, .demo-field textarea {
+  width: 100%; padding: 11px 14px; border-radius: 10px;
+  border: 1.5px solid var(--border); font-family: 'DM Sans', sans-serif;
+  font-size: 14px; color: var(--text); background: white; outline: none;
+  transition: border-color .2s, box-shadow .2s;
+}
+.demo-field input:focus, .demo-field select:focus, .demo-field textarea:focus {
+  border-color: var(--teal); box-shadow: 0 0 0 3px rgba(26,107,122,.1);
+}
+.demo-field input.error { border-color: #EF4444; }
+.demo-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.demo-submit {
+  width: 100%; padding: 13px; border-radius: 10px; border: none;
+  background: var(--teal); color: white; font-family: 'DM Sans', sans-serif;
+  font-size: 15px; font-weight: 700; cursor: pointer; margin-top: 6px;
+  transition: background .2s; display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+.demo-submit:hover { background: var(--teal-dark); }
+.demo-submit:disabled { opacity: .6; cursor: not-allowed; }
+.demo-note { font-size: 12px; color: var(--text-3); text-align: center; margin-top: 12px; }
+.demo-success { text-align: center; padding: 12px 0; }
+.demo-success-icon { width: 56px; height: 56px; border-radius: 50%; background: var(--teal-light); display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; }
+.demo-success-icon svg { width: 26px; height: 26px; color: var(--teal); }
+
+/* ── SCROLL REVEAL ── */
+[data-reveal] { opacity: 0; transform: translateY(24px); transition: opacity .6s cubic-bezier(.22,1,.36,1), transform .6s cubic-bezier(.22,1,.36,1); }
+[data-reveal].visible { opacity: 1; transform: none; }
+[data-reveal="delay-1"] { transition-delay: .1s; }
+[data-reveal="delay-2"] { transition-delay: .2s; }
+[data-reveal="delay-3"] { transition-delay: .3s; }
+[data-reveal="delay-4"] { transition-delay: .4s; }
+[data-reveal="delay-5"] { transition-delay: .5s; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 1024px) {
+  h1 { font-size: 38px; }
+  .ftab-panel.active { grid-template-columns: 1fr; }
+  .fp-visual { display: none; }
+  .stats-grid { grid-template-columns: 1fr; }
+  .results-grid { grid-template-columns: 1fr; }
+  .footer-grid { grid-template-columns: 1fr 1fr; gap: 28px; }
+}
+@media (max-width: 768px) {
+  .container { padding: 0 16px; }
+  nav .nav-links { display: none; }
+  nav .btn-ghost { display: none; }
+  nav .btn-nav { font-size: 13px; padding: 8px 14px; }
+  .nav-inner { height: 56px; }
+  h1 { font-size: 30px; white-space: normal; letter-spacing: -1px; line-height: 1.15; }
+  .hero-desc { font-size: 15px; }
+  .hero-btns { flex-direction: column; align-items: stretch; gap: 10px; }
+  .hero-btns .btn-primary,
+  .hero-btns .btn-secondary { text-align: center; justify-content: center; width: 100%; }
+  .ftab-nav { flex-wrap: wrap; width: 100%; }
+  .cta-box { padding: 36px 20px; }
+  .cta-box h2 { font-size: 26px; }
+  .footer-grid { grid-template-columns: 1fr; }
+  .results-grid { grid-template-columns: 1fr; }
+  .faq-list { margin-top: 32px; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="container">
+    <div class="nav-inner">
+      <a href="/landing" class="nav-logo">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="45 37 280 280"><path fill="#14c2e0" d="M57.984 305.45c-.55-.05-1.16-.27-1.38-.53-.3-.36-.36-17.27-.36-97.33V110.7l.64-3.6c1.1-6.31 2.12-10.87 2.79-12.73.28-.75.78-2.24 1.11-3.32.33-1.05.94-2.68 1.33-3.6 6.45-15.05 14.94-25.18 28.17-33.68 2.93-1.88 3.49-2.21 4.84-2.93 3.02-1.6 3.85-2.02 5.81-2.82 1.13-.47 2.57-1.1 3.21-1.38.63-.3 1.3-.55 1.46-.55.19 0 .81-.25 1.36-.52 1.39-.72 4.68-1.97 5.18-1.97.22 0 1.14-.25 1.99-.52.89-.3 2.13-.61 2.8-.69.64-.11 1.96-.41 2.91-.69 3.43-1.05 7.3-1.77 10.43-1.99 1.74-.11 4.68-.42 6.5-.69 4.65-.72 22.83-.72 27.26 0 1.6.27 4.64.58 6.78.72 2.13.16 5.51.49 7.47.8 1.99.3 4.54.66 5.67.8 1.13.14 2.87.44 3.86.69 1.88.44 3.35.75 7.06 1.44 1.21.22 2.76.6 3.46.83.69.22 1.94.58 2.77.8 3.18.83 4.04 1.08 5.25 1.47.69.19 1.99.6 2.91.87.91.3 2.54.86 3.59 1.27 1.08.42 2.49.92 3.18 1.17.69.22 1.49.53 1.77.69.28.14 1.16.51 1.93.78 5.79 2.02 9.25 3.63 15.39 7.23 8.94 5.23 13.98 9.02 20.23 15.22 3.32 3.32 6.31 6.58 7.17 7.85.22.36.86 1.3 1.41 2.1 1.47 2.24 2 3.04 2.67 4.26 1.08 1.94 3.35 6.61 3.54 7.33.11.39.36.94.55 1.27.33.53.55 1.17 1.63 5.1 1.36 4.92 2.3 12 2.19 16.46-.08 3.98-.69 10.73-1.05 11.98-.25.77-.61 2.32-.83 3.43-.5 2.69-1.66 6.75-1.99 7.19-.16.19-.39.8-.5 1.33-.11.52-.47 1.52-.77 2.21-.3.69-.83 1.86-1.16 2.57-1.39 3.16-3.85 7.89-5.51 10.55-3.93 6.36-6.45 9.46-12.51 15.55-3.71 3.71-7.55 7.14-9.54 8.49-.39.25-1.55 1.05-2.6 1.8-.97.72-2.11 1.49-2.44 1.72-.33.22-1.05.74-1.57 1.19-1 .75-2.44 1.6-4.54 2.71-1.47.74-2.44 1.3-4.46 2.54-.94.55-1.77 1.03-1.88 1.03-.08 0-1.47.64-3.07 1.38-1.6.77-2.99 1.38-3.1 1.38-.14 0-.58.19-1.05.44-.77.41-1.49.69-4.84 1.88-.69.25-1.49.58-1.77.74-.61.36-2.85 1.16-5.28 1.91-1.08.27-2.25.7-2.86.94-.61.22-1.33.42-1.63.44-.28 0-1.58.3-2.91.69-1.3.39-3.08.92-3.91 1.17-.83.25-2.46.61-3.6.8-1.13.22-2.77.55-3.6.8-.83.22-1.85.42-2.27.42-.44 0-1.88.25-3.22.52-1.33.28-3.52.61-4.88.72-1.36.08-3.35.36-4.4.58-2.13.44-12.97 1.08-18.48 1.08-4.57 0-4.62-.03-4.62-4.04 0-3.88.39-4.21 5.29-4.54 1.58-.11 3.38-.36 3.99-.58.61-.19 1.6-.47 2.21-.63 1.11-.25 4.68-1.72 6.56-2.69 1.97-1 6.67-4.4 8.69-6.28 2.58-2.38 5.4-5.95 7.42-9.32.88-1.44 1.72-2.83 1.86-3.05.14-.22.39-.72.55-1.11.16-.39.55-1.19.83-1.77.3-.61.83-2.1 1.22-3.32.39-1.22.88-2.82 1.13-3.6.55-1.63.75-2.55 1.55-6.92.55-2.88.64-4.21.61-9.83-.03-4.87-.14-6.94-.47-8.3-.22-1-.5-2.6-.61-3.6-.11-1-.39-2.49-.61-3.32-.25-.83-.64-2.46-.91-3.6-.8-3.46-2.44-8.41-3.16-9.74-.22-.38-.41-.88-.41-1.08 0-.55-4.43-9.71-5.62-11.62-.3-.52-.91-1.57-1.33-2.35-3.73-6.95-13.36-18.41-20.3-24.22-1.52-1.27-3.07-2.57-3.4-2.87-1.27-1.08-1.69-1.41-4.26-3.24-2.8-2.02-6.62-4.54-7.53-4.95-.33-.16-1.19-.63-1.97-1.08-.74-.47-1.63-.94-1.94-1.08-.3-.14-1.64-.74-2.94-1.38-1.3-.63-2.49-1.16-2.6-1.16-.11 0-.72-.25-1.33-.52-1.27-.61-2.88-1.22-5.29-1.99-.91-.28-1.88-.64-2.13-.8-.69-.39-5.28-1.41-7.55-1.69-2.52-.27-10.02-.27-12.32 0-4.07.53-8.58 2.05-11.29 3.82-3.85 2.52-5.78 4.65-7.14 8-1.77 4.18-1.8 4.6-1.8 9-.02 4.21.08 4.64.72 5.69.33.58.61 1.27.61 1.52 0 .22.25.72.55 1.11.3.39.55.83.55 1.03 0 .17.97 1.5 2.16 2.94 3.1 3.82 7.39 7.25 13.2 10.57 1.52.89 3.44 2.03 4.21 2.55.8.53 1.85 1.14 2.35 1.36.5.22 1.47.77 2.16 1.22.69.44 1.55.97 1.94 1.16.74.36 6.22 3.99 7.61 5.02.44.33 1.55 1.16 2.47 1.83 2.52 1.88 7.59 7.08 9.74 9.99 1.91 2.6 5.1 7.97 5.1 8.66 0 .16.25.72.52 1.19.28.47.61 1.27.72 1.77.11.5.44 1.41.72 2.05.28.61.52 1.53.52 2.02 0 .47.25 1.6.52 2.52.28.89.61 2.74.72 4.1.11 1.36.39 3.71.61 5.23.36 2.38.42 12.51.44 76.38.03 40.49-.05 73.89-.16 74.22-.08.3-.39.66-.66.77-.44.19-80.77.39-82.87.19z"/></svg>
+        <span class="nav-logo-name">Pulsi<em>ia</em></span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="#fonctionnalites">Fonctionnalités</a></li>
+        <li><a href="#faq">Tarifs</a></li>
+        <li><a href="#faq">Ressources</a></li>
+      </ul>
+      <div class="nav-cta">
+        <a href="/login" class="btn-ghost">Se connecter</a>
+        <a href="#contact" class="btn-nav">Demander une démo</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-grid">
+      <div>
+        <h1>Gérez vos équipes sans la <span>complexité</span></h1>
+        <p class="hero-desc">Planning, absences, pré-paie et bien-être dans un seul outil. Pensé pour les RH qui veulent avancer, pas pour ceux qui aiment les tableurs.</p>
+        <div class="hero-btns">
+          <button class="btn-primary" id="btn-open-demo" type="button">
+            Réserver une démo
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+          </button>
+          <a href="#fonctionnalites" class="btn-secondary">Voir les fonctionnalités</a>
+        </div>
+      </div>
+
+      <!-- App mockup (hidden) -->
+      <div class="mockup-wrap" style="display:none">
+
+        <div class="app-window">
+          <div class="win-bar">
+            <div class="win-dots">
+              <span class="d-r"></span><span class="d-y"></span><span class="d-g"></span>
+            </div>
+            <div class="win-url">app.pulsiia.com/dashboard</div>
+            <div class="win-live">
+              <span class="win-live-dot"></span>
+              En direct
+            </div>
+          </div>
+
+          <!-- Tab bar -->
+          <div class="win-tabs">
+            <button class="win-tab active" data-view="dashboard">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
+              Dashboard
+            </button>
+            <button class="win-tab" data-view="planning">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+              Planning
+            </button>
+            <button class="win-tab" data-view="absences">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              Absences
+            </button>
+          </div>
+
+          <div class="win-body">
+            <div class="win-sidebar">
+              <div class="ws-logo">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+              </div>
+              <div class="ws-sep"></div>
+              <div class="ws-item on">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
+              </div>
+              <div class="ws-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+              </div>
+              <div class="ws-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+              </div>
+              <div class="ws-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+              </div>
+              <div class="ws-sep"></div>
+              <div class="ws-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6"/><path d="M14 19V5a2 2 0 00-2-2H7"/><path d="M20 19v-4a2 2 0 00-2-2h-2"/></svg>
+              </div>
+            </div>
+
+            <div class="win-views">
+
+              <!-- ── VUE 1 : DASHBOARD ── -->
+              <div class="win-view active" id="view-dashboard">
+              <div class="win-main">
+
+              <!-- Colonne gauche : KPIs + chart + activité -->
+              <div class="wm-left">
+                <div class="wm-topbar">
+                  <div>
+                    <div class="wm-greeting">Bonjour, Sophie 👋</div>
+                    <div class="wm-date">Jeudi 28 mai · Semaine 22</div>
+                  </div>
+                  <div class="wm-avatar">SR</div>
+                </div>
+
+                <div class="kpi-row">
+                  <div class="kpi kpi-teal">
+                    <div class="kpi-glow kg-teal"></div>
+                    <div class="kpi-icon">
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="rgba(20,194,224,.7)" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+                    </div>
+                    <div class="kpi-n">47</div>
+                    <div class="kpi-l">Employés actifs</div>
+                    <div class="kpi-delta kd-g">↑ +2 ce mois</div>
+                  </div>
+                  <div class="kpi kpi-cyan">
+                    <div class="kpi-glow kg-cyan"></div>
+                    <div class="kpi-icon">
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="rgba(20,194,224,.7)" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+                    </div>
+                    <div class="kpi-n">5</div>
+                    <div class="kpi-l">Congés à valider</div>
+                    <div class="kpi-delta kd-o">En attente</div>
+                  </div>
+                  <div class="kpi kpi-slate">
+                    <div class="kpi-icon">
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.3)" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                    </div>
+                    <div class="kpi-n">94<span style="font-size:11px;color:rgba(255,255,255,.4)">%</span></div>
+                    <div class="kpi-l">Présence semaine</div>
+                    <div class="kpi-delta kd-b">Normal</div>
+                  </div>
+                </div>
+
+                <div class="chart-block">
+                  <div class="chart-toprow">
+                    <span class="chart-title">Heures travaillées — S.22</span>
+                    <span class="chart-value">38h moy. <span>↑ +4%</span></span>
+                  </div>
+                  <div class="bars">
+                    <div class="bar md" style="height:58%"></div>
+                    <div class="bar md" style="height:75%"></div>
+                    <div class="bar"    style="height:50%"></div>
+                    <div class="bar hi" style="height:92%"></div>
+                    <div class="bar md" style="height:68%"></div>
+                    <div class="bar"    style="height:40%"></div>
+                    <div class="bar"    style="height:20%"></div>
+                  </div>
+                  <div class="bar-days">
+                    <span class="bar-day">Lun</span>
+                    <span class="bar-day">Mar</span>
+                    <span class="bar-day">Mer</span>
+                    <span class="bar-day" style="color:rgba(20,194,224,.8);font-weight:700">Jeu</span>
+                    <span class="bar-day">Ven</span>
+                    <span class="bar-day" style="opacity:.4">Sam</span>
+                    <span class="bar-day" style="opacity:.4">Dim</span>
+                  </div>
+                </div>
+
+                <div class="act-list">
+                  <div class="act-item">
+                    <span class="act-dot ad-g"></span>
+                    <span class="act-text">Planning S.24 validé — 8 agents</span>
+                    <span class="act-badge ab-g">Fait</span>
+                  </div>
+                  <div class="act-item">
+                    <span class="act-dot ad-c"></span>
+                    <span class="act-text">Export pré-paie mai prêt</span>
+                    <span class="act-badge ab-c">Prêt</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Colonne droite : présence équipe aujourd'hui -->
+              <div class="wm-right">
+                <div class="today-head">
+                  <span class="today-title">Équipe · Aujourd'hui</span>
+                </div>
+
+                <div class="emp-row">
+                  <div class="emp-av" style="background:#1a6b7a">ML</div>
+                  <div class="emp-name">M. Leroy</div>
+                  <div class="emp-badge eb-in">Présent</div>
+                </div>
+                <div class="emp-row">
+                  <div class="emp-av" style="background:#14c2e0">SR</div>
+                  <div class="emp-name">S. Rousseau</div>
+                  <div class="emp-badge eb-in">Présent</div>
+                </div>
+                <div class="emp-row">
+                  <div class="emp-av" style="background:#8B5CF6">AK</div>
+                  <div class="emp-name">A. Karim</div>
+                  <div class="emp-badge eb-cp">Congé</div>
+                </div>
+                <div class="emp-row">
+                  <div class="emp-av" style="background:#F59E0B">PB</div>
+                  <div class="emp-name">P. Bernard</div>
+                  <div class="emp-badge eb-rem">Distant</div>
+                </div>
+                <div class="emp-row">
+                  <div class="emp-av" style="background:#10B981">TM</div>
+                  <div class="emp-name">T. Martin</div>
+                  <div class="emp-badge eb-in">Présent</div>
+                </div>
+                <div class="emp-row">
+                  <div class="emp-av" style="background:#6366F1">JD</div>
+                  <div class="emp-name">J. Dubois</div>
+                  <div class="emp-badge eb-in">Présent</div>
+                </div>
+                <div class="emp-row">
+                  <div class="emp-av" style="background:#EF4444">CL</div>
+                  <div class="emp-name">C. Laurent</div>
+                  <div class="emp-badge eb-cp">Congé</div>
+                </div>
+
+                <div class="today-footer">
+                  <div class="tf-dot"></div>
+                  5 demandes en attente
+                </div>
+              </div>
+              </div>
+              </div><!-- /view-dashboard -->
+
+              <!-- ── VUE 2 : PLANNING ── -->
+              <div class="win-view" id="view-planning">
+                <div class="plan-view">
+                  <div class="pv-header">
+                    <div class="pv-nav">
+                      <button class="pv-nav-btn">&#8249;</button>
+                      <span class="pv-week">Semaine 22 · 25 – 31 mai 2026</span>
+                      <button class="pv-nav-btn">&#8250;</button>
+                    </div>
+                    <span class="pv-ai-badge">✦ IA activée</span>
+                  </div>
+                  <div class="pv-heads">
+                    <div class="pv-head">Lun 25</div>
+                    <div class="pv-head">Mar 26</div>
+                    <div class="pv-head">Mer 27</div>
+                    <div class="pv-head tod">Jeu 28</div>
+                    <div class="pv-head">Ven 29</div>
+                  </div>
+                  <div class="pv-row">
+                    <div class="pv-av" style="background:#1a6b7a">ML</div>
+                    <div class="pv-name">M. Leroy</div>
+                    <div class="pv-slots">
+                      <div class="pv-slot pvs-m">Mat.</div>
+                      <div class="pv-slot pvs-m">Mat.</div>
+                      <div class="pv-slot pvs-o">—</div>
+                      <div class="pv-slot pvs-a">A-M</div>
+                      <div class="pv-slot pvs-m">Mat.</div>
+                    </div>
+                  </div>
+                  <div class="pv-row">
+                    <div class="pv-av" style="background:#14c2e0">SR</div>
+                    <div class="pv-name">S. Rousseau</div>
+                    <div class="pv-slots">
+                      <div class="pv-slot pvs-a">A-M</div>
+                      <div class="pv-slot pvs-o">—</div>
+                      <div class="pv-slot pvs-m">Mat.</div>
+                      <div class="pv-slot pvs-m">Mat.</div>
+                      <div class="pv-slot pvs-a">A-M</div>
+                    </div>
+                  </div>
+                  <div class="pv-row">
+                    <div class="pv-av" style="background:#8B5CF6">AK</div>
+                    <div class="pv-name">A. Karim</div>
+                    <div class="pv-slots">
+                      <div class="pv-slot pvs-c">CP</div>
+                      <div class="pv-slot pvs-c">CP</div>
+                      <div class="pv-slot pvs-c">CP</div>
+                      <div class="pv-slot pvs-c">CP</div>
+                      <div class="pv-slot pvs-c">CP</div>
+                    </div>
+                  </div>
+                  <div class="pv-row">
+                    <div class="pv-av" style="background:#F59E0B">PB</div>
+                    <div class="pv-name">P. Bernard</div>
+                    <div class="pv-slots">
+                      <div class="pv-slot pvs-o">—</div>
+                      <div class="pv-slot pvs-a">A-M</div>
+                      <div class="pv-slot pvs-m">Mat.</div>
+                      <div class="pv-slot pvs-m">Mat.</div>
+                      <div class="pv-slot pvs-o">—</div>
+                    </div>
+                  </div>
+                  <div class="pv-row">
+                    <div class="pv-av" style="background:#10B981">TM</div>
+                    <div class="pv-name">T. Martin</div>
+                    <div class="pv-slots">
+                      <div class="pv-slot pvs-m">Mat.</div>
+                      <div class="pv-slot pvs-m">Mat.</div>
+                      <div class="pv-slot pvs-a">A-M</div>
+                      <div class="pv-slot pvs-j">Jour</div>
+                      <div class="pv-slot pvs-m">Mat.</div>
+                    </div>
+                  </div>
+                  <div class="pv-row">
+                    <div class="pv-av" style="background:#6366F1">JD</div>
+                    <div class="pv-name">J. Dubois</div>
+                    <div class="pv-slots">
+                      <div class="pv-slot pvs-a">A-M</div>
+                      <div class="pv-slot pvs-m">Mat.</div>
+                      <div class="pv-slot pvs-m">Mat.</div>
+                      <div class="pv-slot pvs-o">—</div>
+                      <div class="pv-slot pvs-a">A-M</div>
+                    </div>
+                  </div>
+                </div>
+              </div><!-- /view-planning -->
+
+              <!-- ── VUE 3 : ABSENCES ── -->
+              <div class="win-view" id="view-absences">
+                <div class="abs-view">
+                  <div class="abs-summary">
+                    <div class="abs-stat">
+                      <div class="abs-stat-n asn-g">3</div>
+                      <div class="abs-stat-l">Approuvées</div>
+                    </div>
+                    <div class="abs-stat">
+                      <div class="abs-stat-n asn-o">5</div>
+                      <div class="abs-stat-l">En attente</div>
+                    </div>
+                    <div class="abs-stat">
+                      <div class="abs-stat-n asn-r">1</div>
+                      <div class="abs-stat-l">Refusées</div>
+                    </div>
+                  </div>
+                  <div class="abs-filters">
+                    <button class="abs-filter on">Tout</button>
+                    <button class="abs-filter">En attente</button>
+                    <button class="abs-filter">Approuvées</button>
+                  </div>
+                  <div class="abs-list">
+                    <div class="abs-row" data-status="wait">
+                      <div class="abs-av" style="background:#8B5CF6">AK</div>
+                      <div class="abs-info">
+                        <div class="abs-name">A. Karim</div>
+                        <div class="abs-dates">28 mai – 31 mai · 4 jours</div>
+                      </div>
+                      <div class="abs-type at-cp">CP</div>
+                      <div class="abs-status ast-wait">En attente</div>
+                      <div class="abs-actions">
+                        <button class="abs-btn abs-btn-ok">✓</button>
+                        <button class="abs-btn abs-btn-no">✕</button>
+                      </div>
+                    </div>
+                    <div class="abs-row" data-status="wait">
+                      <div class="abs-av" style="background:#EF4444">CL</div>
+                      <div class="abs-info">
+                        <div class="abs-name">C. Laurent</div>
+                        <div class="abs-dates">1 juin – 6 juin · 5 jours</div>
+                      </div>
+                      <div class="abs-type at-cp">CP</div>
+                      <div class="abs-status ast-wait">En attente</div>
+                      <div class="abs-actions">
+                        <button class="abs-btn abs-btn-ok">✓</button>
+                        <button class="abs-btn abs-btn-no">✕</button>
+                      </div>
+                    </div>
+                    <div class="abs-row" data-status="ok">
+                      <div class="abs-av" style="background:#14c2e0">SR</div>
+                      <div class="abs-info">
+                        <div class="abs-name">S. Rousseau</div>
+                        <div class="abs-dates">10 juin – 14 juin · 5 jours</div>
+                      </div>
+                      <div class="abs-type at-cp">CP</div>
+                      <div class="abs-status ast-ok">Approuvée</div>
+                    </div>
+                    <div class="abs-row" data-status="wait">
+                      <div class="abs-av" style="background:#6366F1">JD</div>
+                      <div class="abs-info">
+                        <div class="abs-name">J. Dubois</div>
+                        <div class="abs-dates">3 juin · 1 jour</div>
+                      </div>
+                      <div class="abs-type at-rtt">RTT</div>
+                      <div class="abs-status ast-wait">En attente</div>
+                      <div class="abs-actions">
+                        <button class="abs-btn abs-btn-ok">✓</button>
+                        <button class="abs-btn abs-btn-no">✕</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div><!-- /view-absences -->
+
+            </div><!-- /win-views -->
+          </div>
+          <div class="win-fade"></div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS + MARQUEE -->
+<div class="stats-strip">
+  <div class="container">
+    <div class="stats-grid">
+      <div class="stat-item" data-reveal="delay-1">
+        <div class="stat-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <div class="stat-n"><em>&lt; 5</em> min</div>
+        <div class="stat-title">Pour démarrer</div>
+        <div class="stat-l">Créez votre espace, invitez vos équipes et commencez à gérer. Aucune installation, aucune formation.</div>
+      </div>
+      <div class="stat-item" data-reveal="delay-2">
+        <div class="stat-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+        </div>
+        <div class="stat-n"><em>0</em> tableur</div>
+        <div class="stat-title">Zéro Excel requis</div>
+        <div class="stat-l">Planning, congés et pré-paie entièrement dans l'outil. Les données circulent seules entre les modules.</div>
+      </div>
+      <div class="stat-item" data-reveal="delay-3">
+        <div class="stat-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="6" height="6" rx="1"/><rect x="9" y="3" width="6" height="6" rx="1"/><rect x="16" y="3" width="6" height="6" rx="1"/><rect x="2" y="15" width="6" height="6" rx="1"/><rect x="9" y="15" width="6" height="6" rx="1"/><rect x="16" y="15" width="6" height="6" rx="1"/></svg>
+        </div>
+        <div class="stat-n"><em>4</em> modules</div>
+        <div class="stat-title">Tout-en-un natif</div>
+        <div class="stat-l">Planning, absences, pré-paie et bien-être dans un seul environnement cohérent — pas d'intégrations à payer.</div>
+      </div>
+    </div>
+  </div>
+  <div class="marquee-wrap">
+    <div class="marquee-track">
+      <div class="marquee-inner">
+        <span class="m-badge"><span class="m-badge-dot"></span>Planning IA</span>
+        <span class="m-badge"><span class="m-badge-dot"></span>Absences & Congés</span>
+        <span class="m-badge"><span class="m-badge-dot"></span>Pré-paie automatique</span>
+        <span class="m-badge"><span class="m-badge-dot"></span>Bien-être & engagement</span>
+        <span class="m-badge"><span class="m-badge-dot"></span>Multi-sites</span>
+        <span class="m-badge"><span class="m-badge-dot"></span>RGPD conforme</span>
+        <span class="m-badge"><span class="m-badge-dot"></span>Application mobile</span>
+        <span class="m-badge"><span class="m-badge-dot"></span>Export Excel & PDF</span>
+        <span class="m-badge"><span class="m-badge-dot"></span>Support inclus</span>
+        <span class="m-badge"><span class="m-badge-dot"></span>Notifications push</span>
+        <span class="m-badge"><span class="m-badge-dot"></span>Accès par rôle</span>
+        <span class="m-badge"><span class="m-badge-dot"></span>Synchro temps réel</span>
+        <span class="m-badge"><span class="m-badge-dot"></span>Planning IA</span>
+        <span class="m-badge"><span class="m-badge-dot"></span>Absences & Congés</span>
+        <span class="m-badge"><span class="m-badge-dot"></span>Pré-paie automatique</span>
+        <span class="m-badge"><span class="m-badge-dot"></span>Bien-être & engagement</span>
+        <span class="m-badge"><span class="m-badge-dot"></span>Multi-sites</span>
+        <span class="m-badge"><span class="m-badge-dot"></span>RGPD conforme</span>
+        <span class="m-badge"><span class="m-badge-dot"></span>Application mobile</span>
+        <span class="m-badge"><span class="m-badge-dot"></span>Export Excel & PDF</span>
+        <span class="m-badge"><span class="m-badge-dot"></span>Support inclus</span>
+        <span class="m-badge"><span class="m-badge-dot"></span>Notifications push</span>
+        <span class="m-badge"><span class="m-badge-dot"></span>Accès par rôle</span>
+        <span class="m-badge"><span class="m-badge-dot"></span>Synchro temps réel</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- STATEMENT BAND -->
+<div class="statement-band" data-reveal>
+  <div class="container">
+    <p>Le logiciel <em>agile</em> qui évolue avec ses clients</p>
+  </div>
+</div>
+
+<!-- FEATURE TABS -->
+<section class="ftabs-section" id="fonctionnalites">
+  <div class="container">
+    <div class="sec-label" data-reveal>Fonctionnalités</div>
+    <h2 data-reveal="delay-1">Tout ce dont une équipe RH<br><span>a vraiment besoin</span></h2>
+    <p class="sec-sub" data-reveal="delay-2">Pas de modules à acheter séparément. Tout est natif, tout communique avec le reste.</p>
+
+    <div class="ftab-nav" data-reveal="delay-3">
+      <button class="ftab-btn active" data-tab="planning">Planning & Horaires</button>
+      <button class="ftab-btn" data-tab="absences">Absences & Congés</button>
+      <button class="ftab-btn" data-tab="prepaie">Pré-paie & Pointage</button>
+      <button class="ftab-btn" data-tab="bienetre">Bien-être & RH</button>
+    </div>
+
+    <!-- Tab 1 : Planning -->
+    <div class="ftab-panel active" id="ftab-planning">
+      <div class="fp-text">
+        <div class="fp-eyebrow">Planning & Horaires</div>
+        <h3 class="fp-title">Un planning qui se génère<br><span>en quelques secondes</span></h3>
+        <p class="fp-desc">Créez, ajustez et diffusez les plannings sans effort. L'IA propose un plan optimisé selon les contrats et disponibilités — vous gardez la main, les conflits sont signalés en temps réel.</p>
+        <ul class="fp-bullets">
+          <li>Génération IA selon contrats, contraintes et règles métier</li>
+          <li>Détection des conflits et alertes instantanées</li>
+          <li>Notifications push automatiques pour toute l'équipe</li>
+        </ul>
+        <a href="/login" class="btn-primary" style="font-size:14px;padding:11px 22px">
+          Essayer le planning
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+        </a>
+      </div>
+      <div class="fp-visual">
+        <div class="fv-bar">
+          <div class="fv-dots"><span style="background:#ff5f57"></span><span style="background:#febc2e"></span><span style="background:#28c840"></span></div>
+          <span class="fv-title-bar">Planning — Semaine 24</span>
+          <span class="fv-badge">✦ IA activée</span>
+        </div>
+        <div class="fv-body">
+          <div class="fpv-heads">
+            <div class="fpv-head">Lun 09</div>
+            <div class="fpv-head">Mar 10</div>
+            <div class="fpv-head tod">Mer 11</div>
+            <div class="fpv-head">Jeu 12</div>
+            <div class="fpv-head">Ven 13</div>
+          </div>
+          <div class="fpv-row">
+            <div class="fpv-av" style="background:#1a6b7a">ML</div>
+            <div class="fpv-name">M. Leroy</div>
+            <div class="fpv-slots"><div class="fpv-slot fps-m">Mat.</div><div class="fpv-slot fps-m">Mat.</div><div class="fpv-slot fps-o">—</div><div class="fpv-slot fps-a">A-M</div><div class="fpv-slot fps-m">Mat.</div></div>
+          </div>
+          <div class="fpv-row">
+            <div class="fpv-av" style="background:#14c2e0">SR</div>
+            <div class="fpv-name">S. Rousseau</div>
+            <div class="fpv-slots"><div class="fpv-slot fps-a">A-M</div><div class="fpv-slot fps-o">—</div><div class="fpv-slot fps-m">Mat.</div><div class="fpv-slot fps-m">Mat.</div><div class="fpv-slot fps-a">A-M</div></div>
+          </div>
+          <div class="fpv-row">
+            <div class="fpv-av" style="background:#8B5CF6">AK</div>
+            <div class="fpv-name">A. Karim</div>
+            <div class="fpv-slots"><div class="fpv-slot fps-c">CP</div><div class="fpv-slot fps-c">CP</div><div class="fpv-slot fps-c">CP</div><div class="fpv-slot fps-c">CP</div><div class="fpv-slot fps-c">CP</div></div>
+          </div>
+          <div class="fpv-row">
+            <div class="fpv-av" style="background:#F59E0B">PB</div>
+            <div class="fpv-name">P. Bernard</div>
+            <div class="fpv-slots"><div class="fpv-slot fps-m">Mat.</div><div class="fpv-slot fps-a">A-M</div><div class="fpv-slot fps-m">Mat.</div><div class="fpv-slot fps-o">—</div><div class="fpv-slot fps-m">Mat.</div></div>
+          </div>
+          <div class="fpv-row">
+            <div class="fpv-av" style="background:#10B981">TM</div>
+            <div class="fpv-name">T. Martin</div>
+            <div class="fpv-slots"><div class="fpv-slot fps-o">—</div><div class="fpv-slot fps-m">Mat.</div><div class="fpv-slot fps-a">A-M</div><div class="fpv-slot fps-m">Mat.</div><div class="fpv-slot fps-o">—</div></div>
+          </div>
+          <div class="fv-ai-row">
+            <span style="font-size:14px">✦</span>
+            <span class="fv-ai-text">Proposition générée · couverture optimale · 0 conflit détecté</span>
+            <span class="fv-ai-badge">Valider</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab 2 : Absences -->
+    <div class="ftab-panel" id="ftab-absences">
+      <div class="fp-text">
+        <div class="fp-eyebrow">Absences & Congés</div>
+        <h3 class="fp-title">Posez, validez, suivez —<br><span>en un clic</span></h3>
+        <p class="fp-desc">Les salariés posent leurs congés depuis l'app ou le mobile. Vous validez d'un tap. Les compteurs se mettent à jour et le planning se synchronise automatiquement.</p>
+        <ul class="fp-bullets">
+          <li>Demandes en ligne 24h/24, depuis mobile ou desktop</li>
+          <li>Compteurs CP, RTT, ancienneté mis à jour en temps réel</li>
+          <li>Synchronisation automatique avec le planning</li>
+        </ul>
+        <a href="/login" class="btn-primary" style="font-size:14px;padding:11px 22px">
+          Gérer les absences
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+        </a>
+      </div>
+      <div class="fp-visual">
+        <div class="fv-bar">
+          <div class="fv-dots"><span style="background:#ff5f57"></span><span style="background:#febc2e"></span><span style="background:#28c840"></span></div>
+          <span class="fv-title-bar">Absences — Mai 2026</span>
+        </div>
+        <div class="fv-body">
+          <div class="fv-abs-stats">
+            <div class="fv-abs-s"><div class="fv-abs-n" style="color:#34d399">3</div><div class="fv-abs-l">Approuvées</div></div>
+            <div class="fv-abs-s"><div class="fv-abs-n" style="color:#fbbf24">5</div><div class="fv-abs-l">En attente</div></div>
+            <div class="fv-abs-s"><div class="fv-abs-n" style="color:#f87171">1</div><div class="fv-abs-l">Refusées</div></div>
+          </div>
+          <div class="fv-abs-row">
+            <div class="fv-abs-av" style="background:#8B5CF6">AK</div>
+            <div class="fv-abs-info"><div class="fv-abs-name">A. Karim</div><div class="fv-abs-date">28 mai – 31 mai · 4 jours</div></div>
+            <div class="fv-status fvs-wait">En attente</div>
+            <div class="fv-abs-btns"><button class="fv-abs-btn fv-abs-btn-ok">✓</button><button class="fv-abs-btn fv-abs-btn-no">✕</button></div>
+          </div>
+          <div class="fv-abs-row">
+            <div class="fv-abs-av" style="background:#EF4444">CL</div>
+            <div class="fv-abs-info"><div class="fv-abs-name">C. Laurent</div><div class="fv-abs-date">1 juin – 6 juin · 5 jours</div></div>
+            <div class="fv-status fvs-wait">En attente</div>
+            <div class="fv-abs-btns"><button class="fv-abs-btn fv-abs-btn-ok">✓</button><button class="fv-abs-btn fv-abs-btn-no">✕</button></div>
+          </div>
+          <div class="fv-abs-row">
+            <div class="fv-abs-av" style="background:#14c2e0">SR</div>
+            <div class="fv-abs-info"><div class="fv-abs-name">S. Rousseau</div><div class="fv-abs-date">10 juin – 14 juin · 5 jours</div></div>
+            <div class="fv-status fvs-ok">Approuvée</div>
+          </div>
+          <div class="fv-abs-row">
+            <div class="fv-abs-av" style="background:#6366F1">JD</div>
+            <div class="fv-abs-info"><div class="fv-abs-name">J. Dubois</div><div class="fv-abs-date">3 juin · 1 jour · RTT</div></div>
+            <div class="fv-status fvs-wait">En attente</div>
+            <div class="fv-abs-btns"><button class="fv-abs-btn fv-abs-btn-ok">✓</button><button class="fv-abs-btn fv-abs-btn-no">✕</button></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab 3 : Pré-paie -->
+    <div class="ftab-panel" id="ftab-prepaie">
+      <div class="fp-text">
+        <div class="fp-eyebrow">Pré-paie & Pointage</div>
+        <h3 class="fp-title">De la pointeuse à la paie<br><span>sans ressaisie</span></h3>
+        <p class="fp-desc">Les heures travaillées, les absences et les éléments variables alimentent automatiquement la pré-paie. Vous obtenez un export propre, directement compatible avec votre logiciel de paie.</p>
+        <ul class="fp-bullets">
+          <li>Calcul automatique des heures, majorations et éléments variables</li>
+          <li>Export compatible Silae, Sage, Cegid et formats personnalisés</li>
+          <li>Historique d'audit complet et traçabilité RGPD</li>
+        </ul>
+        <a href="/login" class="btn-primary" style="font-size:14px;padding:11px 22px">
+          Voir la pré-paie
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+        </a>
+      </div>
+      <div class="fp-visual">
+        <div class="fv-bar">
+          <div class="fv-dots"><span style="background:#ff5f57"></span><span style="background:#febc2e"></span><span style="background:#28c840"></span></div>
+          <span class="fv-title-bar">Pré-paie — Mai 2026</span>
+        </div>
+        <div class="fv-body">
+          <div class="fv-pp-head">
+            <span class="fv-pp-title">Récapitulatif mensuel</span>
+            <span class="fv-pp-badge">47 salariés</span>
+          </div>
+          <div class="fv-pp-row"><span class="fv-pp-label">Heures normales</span><span class="fv-pp-val">1 786 h</span></div>
+          <div class="fv-pp-row"><span class="fv-pp-label">Heures supplémentaires</span><span class="fv-pp-val">42 h</span></div>
+          <div class="fv-pp-row"><span class="fv-pp-label">Jours d'absence (CP)</span><span class="fv-pp-val">18 j</span></div>
+          <div class="fv-pp-row"><span class="fv-pp-label">RTT consommés</span><span class="fv-pp-val">6 j</span></div>
+          <div class="fv-pp-row"><span class="fv-pp-label">Primes variables</span><span class="fv-pp-val">3 agents</span></div>
+          <div class="fv-pp-export">
+            <span class="fv-pp-export-l">Export Silae · prêt · 47 lignes</span>
+            <button class="fv-pp-export-btn">↓ Télécharger</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab 4 : Bien-être -->
+    <div class="ftab-panel" id="ftab-bienetre">
+      <div class="fp-text">
+        <div class="fp-eyebrow">Bien-être & RH</div>
+        <h3 class="fp-title">Prenez le pouls<br><span>de votre équipe</span></h3>
+        <p class="fp-desc">Micro-sondages anonymes, score de moral en temps réel, alertes préventives. Détectez les signaux faibles avant qu'ils ne deviennent des problèmes RH.</p>
+        <ul class="fp-bullets">
+          <li>Score de moral mis à jour chaque semaine</li>
+          <li>Sondages 100% anonymes, 1 à 2 questions max</li>
+          <li>Alertes RH automatiques en cas de baisse détectée</li>
+        </ul>
+        <a href="/login" class="btn-primary" style="font-size:14px;padding:11px 22px">
+          Voir le bien-être
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+        </a>
+      </div>
+      <div class="fp-visual">
+        <div class="fv-bar">
+          <div class="fv-dots"><span style="background:#ff5f57"></span><span style="background:#febc2e"></span><span style="background:#28c840"></span></div>
+          <span class="fv-title-bar">Bien-être — Semaine 22</span>
+        </div>
+        <div class="fv-body">
+          <div class="fv-be-score">
+            <div class="fv-be-n">7,3</div>
+            <div class="fv-be-l">Score de moral · sur 10 · équipe de 47</div>
+          </div>
+          <div class="fv-be-bar"><div class="fv-be-fill"></div></div>
+          <div class="fv-be-row"><span class="fv-be-icon">😊</span><span class="fv-be-text">Ambiance générale</span><span class="fv-be-val">8,1 / 10</span></div>
+          <div class="fv-be-row"><span class="fv-be-icon">⚡</span><span class="fv-be-text">Charge de travail perçue</span><span class="fv-be-val">6,4 / 10</span></div>
+          <div class="fv-be-row"><span class="fv-be-icon">🤝</span><span class="fv-be-text">Relation manager</span><span class="fv-be-val">7,8 / 10</span></div>
+          <div class="fv-be-row" style="border-color:rgba(251,191,36,.2);background:rgba(251,191,36,.06)"><span class="fv-be-icon">⚠️</span><span class="fv-be-text" style="color:rgba(251,191,36,.8)">Charge en hausse — à surveiller</span></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- RÉSULTATS -->
+<section class="results">
+  <div class="container">
+    <div class="sec-label" data-reveal>Ce que ça change</div>
+    <h2 data-reveal="delay-1">Conçu pour <span>gagner du temps</span>,<br>pas en perdre</h2>
+    <p class="sec-sub" data-reveal="delay-2">Pulsiia remplace les outils disparates par un seul environnement cohérent.</p>
+    <div class="results-grid">
+      <div class="result-card" data-reveal="delay-1">
+        <div class="result-n">Tout</div>
+        <div class="result-title">en-un</div>
+        <p class="result-desc">Planning, absences, pré-paie et bien-être dans un seul outil. Les données circulent automatiquement — plus de double saisie, plus d'écart entre les modules.</p>
+      </div>
+      <div class="result-card" data-reveal="delay-2">
+        <div class="result-n">&lt; 5</div>
+        <div class="result-title">minutes pour démarrer</div>
+        <p class="result-desc">Créez votre espace, invitez vos collaborateurs et commencez à gérer. Pas d'installation, pas de formation, pas de configuration complexe.</p>
+      </div>
+      <div class="result-card" data-reveal="delay-3">
+        <div class="result-n">Zéro</div>
+        <div class="result-title">tableur nécessaire</div>
+        <p class="result-desc">Plus besoin d'Excel pour suivre les plannings, les congés ou préparer la paie. Tout est centralisé, traçable et exportable en un clic.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq" id="faq">
+  <div class="container">
+    <div class="sec-label" data-reveal>Questions fréquentes</div>
+    <h2 data-reveal="delay-1">Tout ce que vous voulez <span>savoir sur Pulsiia</span></h2>
+    <div class="faq-list" data-reveal="delay-2">
+
+      <div class="faq-item">
+        <button class="faq-q">Pulsiia convient-il à mon secteur d'activité ?<span class="faq-icon">+</span></button>
+        <div class="faq-a"><p>Pulsiia est conçu pour toute organisation ayant des équipes à planifier : commerce de détail, services, logistique, hôtellerie, santé, associations. L'outil s'adapte à vos règles métier — rotations, temps partiels, multi-sites, horaires atypiques.</p></div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q">Combien de temps faut-il pour démarrer ?<span class="faq-icon">+</span></button>
+        <div class="faq-a"><p>Moins de 5 minutes. Vous créez votre espace, renseignez le nom de votre organisation, invitez vos collaborateurs par e-mail et vous commencez. Aucune installation, aucune configuration complexe.</p></div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q">Les données sont-elles sécurisées ? Est-ce conforme RGPD ?<span class="faq-icon">+</span></button>
+        <div class="faq-a"><p>Oui. Les données sont hébergées en Europe, les accès sont journalisés et l'ensemble de la plateforme respecte les exigences RGPD. Vous pouvez exporter ou supprimer les données à tout moment depuis votre espace.</p></div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q">Peut-on gérer plusieurs sites ou établissements ?<span class="faq-icon">+</span></button>
+        <div class="faq-a"><p>Oui, Pulsiia est multi-sites nativement. Chaque site dispose de ses propres plannings, règles et droits d'accès — le tout visible depuis un tableau de bord central pour les responsables multi-sites.</p></div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q">Les absences et le planning sont-ils vraiment synchronisés ?<span class="faq-icon">+</span></button>
+        <div class="faq-a"><p>Oui. Quand un congé est validé, il apparaît automatiquement dans le planning. L'IA peut également tenir compte des absences pour générer de nouvelles propositions. Il n'y a jamais de double saisie ni d'écart possible.</p></div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q">Comment fonctionne la pré-paie ?<span class="faq-icon">+</span></button>
+        <div class="faq-a"><p>Pulsiia collecte automatiquement les heures travaillées, les absences et les éléments variables. Tout est agrégé dans un récapitulatif mensuel exportable, compatible avec les principaux logiciels de paie (Silae, Sage, Cegid et formats personnalisés).</p></div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q">Y a-t-il une application mobile ?<span class="faq-icon">+</span></button>
+        <div class="faq-a"><p>Oui. Les collaborateurs peuvent poser des congés, consulter leur planning et recevoir des notifications push depuis leur smartphone. L'accès manager — validation d'absences, vue planning — est aussi disponible en mobile.</p></div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q">Quel support est disponible ?<span class="faq-icon">+</span></button>
+        <div class="faq-a"><p>Le support est inclus dans tous les accès. Vous pouvez contacter l'équipe par e-mail ou via le chat intégré. Nous répondons généralement sous quelques heures en jours ouvrés.</p></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section" id="contact">
+  <div class="container">
+    <div class="cta-box">
+      <div class="cta-glow"></div>
+      <h2>Prêt à simplifier<br><span>votre gestion RH ?</span></h2>
+      <p>Accédez à l'application et explorez toutes les fonctionnalités directement.</p>
+      <div class="cta-trust">
+        <span class="cta-chip"><span class="cta-chip-dot"></span>Sans engagement</span>
+        <span class="cta-chip"><span class="cta-chip-dot"></span>Support inclus</span>
+        <span class="cta-chip"><span class="cta-chip-dot"></span>RGPD conforme</span>
+      </div>
+      <div class="cta-btns">
+        <a href="/login" class="btn-cta">
+          Accéder à l'application
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+        </a>
+        <a href="#fonctionnalites" class="btn-cta-ghost">Voir les fonctionnalités</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <a href="/landing" class="footer-logo">
+          <svg viewBox="0 0 32 32" width="24" height="24" fill="none">
+            <rect width="32" height="32" rx="7" fill="#1a6b7a"/>
+            <path d="M10 22V10" stroke="#14c2e0" stroke-width="2.5" stroke-linecap="round"/>
+            <path d="M10 10c0 0 10-4 12 4s-8 10-8 10" stroke="white" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+          </svg>
+          <span>Pulsi<em>ia</em></span>
+        </a>
+        <p class="footer-desc">OS Organisationnel RH — Planning, absences, pré-paie et bien-être pour les équipes modernes.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Solution</h4>
+        <ul>
+          <li><a href="#fonctionnalites">Fonctionnalités</a></li>
+          <li><a href="#fonctionnalites">Planning & Horaires</a></li>
+          <li><a href="#fonctionnalites">Absences & Congés</a></li>
+          <li><a href="#fonctionnalites">Pré-paie & Pointage</a></li>
+          <li><a href="#fonctionnalites">Bien-être & RH</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Ressources</h4>
+        <ul>
+          <li><a href="#">Documentation</a></li>
+          <li><a href="#">Centre d'aide</a></li>
+          <li><a href="#">API</a></li>
+          <li><a href="#">Changelog</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>À propos</h4>
+        <ul>
+          <li><a href="#">Notre mission</a></li>
+          <li><a href="#">Blog</a></li>
+          <li><a href="#">Carrières</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Légal</h4>
+        <ul>
+          <li><a href="#">Mentions légales</a></li>
+          <li><a href="#">Confidentialité</a></li>
+          <li><a href="#">RGPD</a></li>
+          <li><a href="#">CGU</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 Pulsiia · L'OS RH pour vos équipes</p>
+      <div class="footer-links">
+        <a href="#">Politique de confidentialité</a>
+        <a href="#">CGU</a>
+        <a href="#">RGPD</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ── Scroll reveal ───────────────────────────────────────────────
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(el => {
+    if (el.isIntersecting) { el.target.classList.add('visible'); observer.unobserve(el.target); }
+  });
+}, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+document.querySelectorAll('[data-reveal]').forEach(el => observer.observe(el));
+
+// Active nav link on scroll
+const sections = document.querySelectorAll('section[id]');
+const navLinks = document.querySelectorAll('.nav-links a[href^="#"]');
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) navLinks.forEach(a => { a.style.color = a.getAttribute('href') === '#'+e.target.id ? 'var(--teal)' : ''; });
+  });
+}, { rootMargin: '-40% 0px -55% 0px' });
+sections.forEach(s => io.observe(s));
+
+// ── Hero mockup tab switching ───────────────────────────────────
+const heroTabs = document.querySelectorAll('.win-tab');
+const heroViews = document.querySelectorAll('.win-view');
+const sidebar = document.querySelectorAll('.ws-item');
+const sidebarMap = { dashboard: 0, planning: 1, absences: 3 };
+
+heroTabs.forEach(tab => {
+  tab.addEventListener('click', () => {
+    const v = tab.dataset.view;
+    heroTabs.forEach(t => t.classList.remove('active'));
+    heroViews.forEach(vv => vv.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById('view-' + v)?.classList.add('active');
+    sidebar.forEach(s => s.classList.remove('on'));
+    if (sidebarMap[v] !== undefined) sidebar[sidebarMap[v]]?.classList.add('on');
+  });
+});
+
+// ── Absence filter tabs (hero mockup) ──────────────────────────
+document.querySelectorAll('.abs-filter').forEach(f => {
+  f.addEventListener('click', () => {
+    document.querySelectorAll('.abs-filter').forEach(ff => ff.classList.remove('on'));
+    f.classList.add('on');
+    const filter = f.textContent.trim();
+    document.querySelectorAll('.abs-row').forEach(row => {
+      const status = row.dataset.status;
+      if (filter === 'Tout') { row.style.display = ''; }
+      else if (filter === 'En attente') { row.style.display = status === 'wait' ? '' : 'none'; }
+      else if (filter === 'Approuvées') { row.style.display = status === 'ok' ? '' : 'none'; }
+    });
+  });
+});
+
+// ── Approve / reject (hero mockup) ─────────────────────────────
+document.addEventListener('click', e => {
+  if (e.target.classList.contains('abs-btn-ok')) {
+    const row = e.target.closest('.abs-row');
+    const s = row?.querySelector('.abs-status');
+    if (s) { s.textContent = 'Approuvée'; s.className = 'abs-status ast-ok'; }
+    row?.querySelector('.abs-actions')?.remove();
+    row?.setAttribute('data-status', 'ok');
+  }
+  if (e.target.classList.contains('abs-btn-no')) {
+    const row = e.target.closest('.abs-row');
+    const s = row?.querySelector('.abs-status');
+    if (s) { s.textContent = 'Refusée'; s.className = 'abs-status ast-no'; }
+    row?.querySelector('.abs-actions')?.remove();
+    row?.setAttribute('data-status', 'no');
+    if (row) row.style.opacity = '.45';
+  }
+});
+
+// ── Feature section tabs ────────────────────────────────────────
+document.querySelectorAll('.ftab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const tab = btn.dataset.tab;
+    document.querySelectorAll('.ftab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.ftab-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('ftab-' + tab)?.classList.add('active');
+  });
+});
+
+// ── FAQ accordion ───────────────────────────────────────────────
+document.querySelectorAll('.faq-q').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const item = btn.parentElement;
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+    if (!isOpen) item.classList.add('open');
+  });
+});
+
+// ── Demo modal ──────────────────────────────────────────────────
+const overlay  = document.getElementById('demo-overlay');
+const openBtns = document.querySelectorAll('#btn-open-demo, [href="#contact"]');
+
+function openDemo() { overlay.classList.add('open'); document.body.style.overflow = 'hidden'; }
+function closeDemo() { overlay.classList.remove('open'); document.body.style.overflow = ''; }
+
+openBtns.forEach(b => b.addEventListener('click', e => { e.preventDefault(); openDemo(); }));
+document.getElementById('demo-close').addEventListener('click', closeDemo);
+document.getElementById('btn-step3-close').addEventListener('click', closeDemo);
+overlay.addEventListener('click', e => { if (e.target === overlay) closeDemo(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDemo(); });
+
+function setStep(n) {
+  document.querySelectorAll('.demo-step').forEach(s => s.classList.remove('active'));
+  document.getElementById('step-' + n).classList.add('active');
+  ['dot-1','dot-2','dot-3'].forEach((id, i) => {
+    const dot = document.getElementById(id);
+    dot.className = 'demo-dot' + (i + 1 < n ? ' done' : i + 1 === n ? ' active' : '');
+  });
+}
+
+// Étape 1 → 2
+document.getElementById('btn-step1-next').addEventListener('click', () => {
+  const input = document.getElementById('demo-email');
+  const val = input.value.trim();
+  if (!val || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)) {
+    input.classList.add('error');
+    input.focus();
+    return;
+  }
+  input.classList.remove('error');
+  setStep(2);
+});
+document.getElementById('demo-email').addEventListener('input', function() { this.classList.remove('error'); });
+
+// Étape 2 → 3 (envoi)
+document.getElementById('btn-step2-next').addEventListener('click', async () => {
+  const btn = document.getElementById('btn-step2-next');
+  btn.disabled = true;
+  btn.textContent = 'Envoi en cours…';
+
+  const payload = {
+    email:   document.getElementById('demo-email').value.trim(),
+    prenom:  document.getElementById('demo-prenom').value.trim(),
+    nom:     document.getElementById('demo-nom').value.trim(),
+    societe: document.getElementById('demo-societe').value.trim(),
+    taille:  document.getElementById('demo-taille').value,
+  };
+
+  try {
+    const res = await fetch('/api/demo', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    if (!res.ok) throw new Error();
+    setStep(3);
+  } catch {
+    btn.disabled = false;
+    btn.textContent = 'Réessayer';
+    btn.innerHTML = 'Réessayer — une erreur est survenue';
+  }
+});
+</script>
+<!-- DEMO MODAL -->
+<div class="demo-overlay" id="demo-overlay" role="dialog" aria-modal="true">
+  <div class="demo-modal">
+    <button class="demo-close" id="demo-close" aria-label="Fermer">✕</button>
+
+    <div class="demo-logo">
+      <svg viewBox="0 0 32 32" width="24" height="24" fill="none">
+        <rect width="32" height="32" rx="7" fill="#1a6b7a"/>
+        <path d="M10 22V10" stroke="#14c2e0" stroke-width="2.5" stroke-linecap="round"/>
+        <path d="M10 10c0 0 10-4 12 4s-8 10-8 10" stroke="white" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+      </svg>
+      <span>Pulsi<em>ia</em></span>
+    </div>
+
+    <div class="demo-progress">
+      <div class="demo-dot active" id="dot-1"></div>
+      <div class="demo-dot" id="dot-2"></div>
+      <div class="demo-dot" id="dot-3"></div>
+    </div>
+
+    <!-- Étape 1 : Email -->
+    <div class="demo-step active" id="step-1">
+      <h3>Réservez votre démo</h3>
+      <p class="demo-sub">Commencez par votre adresse e-mail. On vous recontacte sous 24h.</p>
+      <div class="demo-field">
+        <label for="demo-email">Adresse e-mail professionnelle</label>
+        <input type="email" id="demo-email" placeholder="vous@votre-societe.com" autocomplete="email">
+      </div>
+      <button class="demo-submit" id="btn-step1-next">
+        Continuer
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+      </button>
+      <p class="demo-note">Pas de spam. Jamais. Vous pouvez vous désinscrire à tout moment.</p>
+    </div>
+
+    <!-- Étape 2 : Infos -->
+    <div class="demo-step" id="step-2">
+      <h3>Dites-nous en plus</h3>
+      <p class="demo-sub">Pour personnaliser votre démo selon votre contexte.</p>
+      <div class="demo-row">
+        <div class="demo-field">
+          <label for="demo-prenom">Prénom</label>
+          <input type="text" id="demo-prenom" placeholder="Marie" autocomplete="given-name">
+        </div>
+        <div class="demo-field">
+          <label for="demo-nom">Nom</label>
+          <input type="text" id="demo-nom" placeholder="Dupont" autocomplete="family-name">
+        </div>
+      </div>
+      <div class="demo-field">
+        <label for="demo-societe">Nom de l'entreprise</label>
+        <input type="text" id="demo-societe" placeholder="Acme SAS" autocomplete="organization">
+      </div>
+      <div class="demo-field">
+        <label for="demo-taille">Taille de votre équipe</label>
+        <select id="demo-taille">
+          <option value="">Sélectionner…</option>
+          <option value="1-10">1 – 10 personnes</option>
+          <option value="11-50">11 – 50 personnes</option>
+          <option value="51-200">51 – 200 personnes</option>
+          <option value="200+">Plus de 200 personnes</option>
+        </select>
+      </div>
+      <button class="demo-submit" id="btn-step2-next">
+        Envoyer ma demande
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+      </button>
+      <p class="demo-note">RGPD conforme · vos données ne sont pas revendues</p>
+    </div>
+
+    <!-- Étape 3 : Succès -->
+    <div class="demo-step" id="step-3">
+      <div class="demo-success">
+        <div class="demo-success-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <h3>Demande envoyée !</h3>
+        <p class="demo-sub">On vous recontacte sous 24h pour planifier votre démo. Vérifiez votre boîte mail.</p>
+        <button class="demo-submit" id="btn-step3-close" style="margin-top:8px">Fermer</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>
