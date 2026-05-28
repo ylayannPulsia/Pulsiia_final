@@ -572,19 +572,40 @@ h2 span { color: var(--teal); }
 .fv-body { padding: 16px 18px 20px; }
 
 /* planning tab visual */
-.fpv-heads { display: flex; padding: 0 0 6px 80px; gap: 3px; margin-bottom: 4px; }
-.fpv-head { flex: 1; text-align: center; font-size: 8px; font-weight: 700; color: rgba(255,255,255,.22); text-transform: uppercase; }
-.fpv-head.tod { color: #14c2e0; }
-.fpv-row { display: flex; align-items: center; gap: 6px; padding: 7px 8px; background: rgba(255,255,255,.03); border-radius: 7px; margin-bottom: 5px; border: 1px solid rgba(255,255,255,.04); }
-.fpv-av { width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 8px; font-weight: 700; color: white; flex-shrink: 0; }
-.fpv-name { font-size: 10px; color: rgba(255,255,255,.4); flex: 0 0 62px; }
-.fpv-slots { display: flex; gap: 3px; flex: 1; }
-.fpv-slot { height: 20px; border-radius: 3px; font-size: 7.5px; font-weight: 600; display: flex; align-items: center; justify-content: center; color: white; flex: 1; }
-.fps-m { background: rgba(26,107,122,.7); } .fps-a { background: rgba(20,194,224,.3); }
-.fps-o { background: rgba(255,255,255,.06); color: rgba(255,255,255,.2); } .fps-c { background: rgba(239,68,68,.18); color: #f87171; }
-.fv-ai-row { display: flex; align-items: center; gap: 8px; margin-top: 10px; padding: 9px 12px; background: rgba(20,194,224,.07); border-radius: 8px; border: 1px solid rgba(20,194,224,.15); }
-.fv-ai-text { font-size: 10px; color: rgba(20,194,224,.8); flex: 1; }
-.fv-ai-badge { font-size: 9px; font-weight: 700; background: rgba(20,194,224,.18); color: #14c2e0; padding: 3px 8px; border-radius: 4px; }
+.plan-vis { background: #0c0f18; border-radius: 16px; overflow: hidden; box-shadow: 0 28px 72px rgba(0,0,0,.35), 0 0 0 1px rgba(255,255,255,.07); }
+.plan-vis-bar { background: #131720; padding: 11px 16px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid rgba(255,255,255,.06); }
+.plan-vis-nav { display: flex; align-items: center; gap: 8px; }
+.plan-vis-btn { width: 24px; height: 24px; border-radius: 6px; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.08); color: rgba(255,255,255,.45); font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-family: sans-serif; }
+.plan-vis-btn:hover { background: rgba(255,255,255,.12); color: white; }
+.plan-vis-week { font-size: 11.5px; font-weight: 600; color: rgba(255,255,255,.6); }
+.plan-vis-ai { margin-left: auto; display: flex; align-items: center; gap: 5px; font-size: 10px; font-weight: 700; color: #14c2e0; background: rgba(20,194,224,.1); border: 1px solid rgba(20,194,224,.2); padding: 4px 11px; border-radius: 6px; }
+.plan-vis-body { padding: 14px 16px 16px; }
+.plan-vis-stats { display: flex; gap: 16px; margin-bottom: 12px; padding-left: 104px; }
+.pvs-stat { font-size: 9.5px; color: rgba(255,255,255,.28); }
+.pvs-stat strong { font-weight: 600; }
+.plan-vis-heads { display: grid; grid-template-columns: 100px repeat(5, 1fr); gap: 4px; margin-bottom: 5px; }
+.plan-vis-head { text-align: center; padding: 4px 0; }
+.pvh-day { font-size: 8.5px; font-weight: 700; color: rgba(255,255,255,.22); text-transform: uppercase; letter-spacing: .5px; }
+.pvh-date { font-size: 16px; font-weight: 700; color: rgba(255,255,255,.35); line-height: 1.1; margin-top: 1px; }
+.plan-vis-head.tod .pvh-day { color: #14c2e0; }
+.plan-vis-head.tod .pvh-date { color: white; }
+.plan-vis-row { display: grid; grid-template-columns: 100px repeat(5, 1fr); gap: 4px; margin-bottom: 4px; align-items: center; }
+.plan-vis-emp { display: flex; align-items: center; gap: 8px; padding-right: 6px; }
+.plan-vis-av { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 700; color: white; flex-shrink: 0; }
+.plan-vis-name { font-size: 10px; font-weight: 500; color: rgba(255,255,255,.45); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pvc { height: 40px; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px; cursor: default; transition: filter .15s; }
+.pvc:hover { filter: brightness(1.18); }
+.pvc-shift { font-size: 8px; font-weight: 700; line-height: 1; }
+.pvc-time { font-size: 7px; opacity: .7; }
+.pvc-m { background: linear-gradient(145deg, rgba(26,107,122,.75), rgba(14,142,163,.5)); color: rgba(255,255,255,.88); border: 1px solid rgba(26,107,122,.45); }
+.pvc-a { background: linear-gradient(145deg, rgba(20,194,224,.28), rgba(6,182,212,.16)); color: rgba(20,194,224,.92); border: 1px solid rgba(20,194,224,.22); }
+.pvc-j { background: linear-gradient(145deg, rgba(16,185,129,.28), rgba(5,150,105,.16)); color: rgba(52,211,153,.92); border: 1px solid rgba(16,185,129,.2); }
+.pvc-o { background: transparent; border: 1px solid rgba(255,255,255,.06); color: rgba(255,255,255,.15); }
+.pvc-c { background: rgba(239,68,68,.1); color: rgba(248,113,113,.8); border: 1px solid rgba(239,68,68,.14); }
+.plan-vis-footer { margin-top: 10px; padding: 10px 14px; background: rgba(20,194,224,.06); border: 1px solid rgba(20,194,224,.14); border-radius: 10px; display: flex; align-items: center; gap: 10px; }
+.pvf-text { font-size: 9.5px; color: rgba(20,194,224,.7); flex: 1; }
+.pvf-btn { font-size: 9.5px; font-weight: 700; background: rgba(20,194,224,.18); color: #14c2e0; padding: 6px 14px; border-radius: 6px; border: none; cursor: pointer; font-family: 'DM Sans', sans-serif; white-space: nowrap; transition: background .15s; }
+.pvf-btn:hover { background: rgba(20,194,224,.3); }
 
 /* absence tab visual */
 .fv-abs-stats { display: flex; gap: 8px; margin-bottom: 12px; }
@@ -639,6 +660,68 @@ h2 span { color: var(--teal); }
 .result-n { font-size: 54px; font-weight: 800; letter-spacing: -2px; color: var(--teal); line-height: 1; margin-bottom: 10px; }
 .result-title { font-size: 17px; font-weight: 700; color: var(--text); margin-bottom: 10px; letter-spacing: -.3px; }
 .result-desc { font-size: 14px; color: var(--text-2); line-height: 1.65; }
+
+/* ── PRICING ── */
+.pricing { padding: 96px 0; background: var(--bg); border-top: 1px solid var(--border); }
+.pricing-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: start; margin-top: 52px; }
+.pricing-card {
+  background: var(--dark); border-radius: 24px; padding: 44px 40px;
+  position: relative; overflow: hidden;
+  box-shadow: 0 24px 64px rgba(0,0,0,.18);
+}
+.pricing-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(20,194,224,.5), transparent);
+}
+.pricing-card::after {
+  content: ''; position: absolute; inset: 0;
+  background-image: radial-gradient(rgba(20,194,224,.06) 1px, transparent 1px);
+  background-size: 28px 28px; pointer-events: none;
+}
+.pricing-glow { position: absolute; top: -60px; right: -60px; width: 260px; height: 260px; background: radial-gradient(circle, rgba(20,194,224,.08) 0%, transparent 65%); pointer-events: none; }
+.pricing-tag { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 700; color: #34d399; background: rgba(52,211,153,.1); border: 1px solid rgba(52,211,153,.2); padding: 5px 12px; border-radius: 999px; margin-bottom: 24px; position: relative; z-index: 1; }
+.pricing-tag-dot { width: 5px; height: 5px; border-radius: 50%; background: #34d399; }
+.pricing-amount { display: flex; align-items: flex-end; gap: 6px; margin-bottom: 4px; position: relative; z-index: 1; }
+.pricing-num { font-size: 72px; font-weight: 800; letter-spacing: -3px; color: white; line-height: 1; }
+.pricing-num em { color: var(--cyan); font-style: normal; }
+.pricing-unit { font-size: 15px; color: rgba(255,255,255,.4); padding-bottom: 10px; line-height: 1.4; }
+.pricing-lot { font-size: 13px; color: rgba(255,255,255,.35); margin-bottom: 28px; position: relative; z-index: 1; }
+.pricing-lot strong { color: rgba(255,255,255,.6); }
+
+/* Lot calculator */
+.lot-calc { background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.08); border-radius: 14px; padding: 20px 22px; margin-bottom: 28px; position: relative; z-index: 1; }
+.lot-calc-label { font-size: 11px; font-weight: 600; color: rgba(255,255,255,.35); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 14px; }
+.lot-stepper { display: flex; align-items: center; gap: 0; margin-bottom: 14px; }
+.lot-btn { width: 36px; height: 36px; border-radius: 9px; border: 1px solid rgba(255,255,255,.1); background: rgba(255,255,255,.07); color: rgba(255,255,255,.6); font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all .15s; font-family: sans-serif; }
+.lot-btn:hover { background: rgba(255,255,255,.14); color: white; }
+.lot-display { flex: 1; text-align: center; }
+.lot-display-n { font-size: 28px; font-weight: 800; color: white; letter-spacing: -1px; }
+.lot-display-l { font-size: 10px; color: rgba(255,255,255,.3); margin-top: 1px; }
+.lot-result { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; background: rgba(20,194,224,.08); border: 1px solid rgba(20,194,224,.15); border-radius: 9px; }
+.lot-result-l { font-size: 11px; color: rgba(255,255,255,.4); }
+.lot-result-price { font-size: 22px; font-weight: 800; color: var(--cyan); letter-spacing: -.5px; }
+.lot-result-sub { font-size: 10px; color: rgba(255,255,255,.25); margin-top: 1px; text-align: right; }
+
+.pricing-btn { width: 100%; padding: 14px; border-radius: 12px; border: none; background: var(--cyan); color: var(--dark); font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 700; cursor: pointer; transition: background .2s; position: relative; z-index: 1; }
+.pricing-btn:hover { background: #0fb8d4; }
+.pricing-note { font-size: 11.5px; color: rgba(255,255,255,.2); text-align: center; margin-top: 12px; position: relative; z-index: 1; }
+
+/* Pricing right column */
+.pricing-right { padding-top: 8px; }
+.pricing-includes { margin-bottom: 36px; }
+.pricing-includes h3 { font-size: 18px; font-weight: 700; color: var(--text); margin-bottom: 20px; letter-spacing: -.3px; }
+.pricing-feature { display: flex; align-items: flex-start; gap: 12px; padding: 14px 0; border-bottom: 1px solid var(--border); }
+.pricing-feature:first-of-type { border-top: 1px solid var(--border); }
+.pricing-feature-icon { width: 36px; height: 36px; border-radius: 9px; background: var(--teal-light); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.pricing-feature-icon svg { width: 16px; height: 16px; color: var(--teal); }
+.pricing-feature-text h4 { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 2px; }
+.pricing-feature-text p { font-size: 12.5px; color: var(--text-2); line-height: 1.5; }
+.pricing-cta-note { font-size: 13px; color: var(--text-2); line-height: 1.6; }
+.pricing-cta-note a { color: var(--teal); text-decoration: none; font-weight: 600; }
+
+@media (max-width: 1024px) {
+  .pricing-layout { grid-template-columns: 1fr; }
+}
 
 /* ── FAQ ── */
 .faq { padding: 88px 0; background: var(--white); border-top: 1px solid var(--border); }
@@ -1304,49 +1387,73 @@ footer { background: var(--dark); padding: 64px 0 28px; border-top: 1px solid rg
           <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
         </a>
       </div>
-      <div class="fp-visual">
-        <div class="fv-bar">
-          <div class="fv-dots"><span style="background:#ff5f57"></span><span style="background:#febc2e"></span><span style="background:#28c840"></span></div>
-          <span class="fv-title-bar">Planning — Semaine 24</span>
-          <span class="fv-badge">✦ IA activée</span>
+      <div class="plan-vis">
+        <div class="plan-vis-bar">
+          <div class="plan-vis-nav">
+            <button class="plan-vis-btn">‹</button>
+            <span class="plan-vis-week">Semaine 24 · 9 – 13 juin 2026</span>
+            <button class="plan-vis-btn">›</button>
+          </div>
+          <div class="plan-vis-ai">✦ IA activée</div>
         </div>
-        <div class="fv-body">
-          <div class="fpv-heads">
-            <div class="fpv-head">Lun 09</div>
-            <div class="fpv-head">Mar 10</div>
-            <div class="fpv-head tod">Mer 11</div>
-            <div class="fpv-head">Jeu 12</div>
-            <div class="fpv-head">Ven 13</div>
+        <div class="plan-vis-body">
+          <div class="plan-vis-stats">
+            <span class="pvs-stat">6 agents</span>
+            <span class="pvs-stat">Couverture <strong style="color:#34d399">100 %</strong></span>
+            <span class="pvs-stat">Conflits <strong style="color:#34d399">0</strong></span>
           </div>
-          <div class="fpv-row">
-            <div class="fpv-av" style="background:#1a6b7a">ML</div>
-            <div class="fpv-name">M. Leroy</div>
-            <div class="fpv-slots"><div class="fpv-slot fps-m">Mat.</div><div class="fpv-slot fps-m">Mat.</div><div class="fpv-slot fps-o">—</div><div class="fpv-slot fps-a">A-M</div><div class="fpv-slot fps-m">Mat.</div></div>
+          <div class="plan-vis-heads">
+            <div></div>
+            <div class="plan-vis-head"><div class="pvh-day">Lun</div><div class="pvh-date">09</div></div>
+            <div class="plan-vis-head"><div class="pvh-day">Mar</div><div class="pvh-date">10</div></div>
+            <div class="plan-vis-head tod"><div class="pvh-day">Mer ●</div><div class="pvh-date">11</div></div>
+            <div class="plan-vis-head"><div class="pvh-day">Jeu</div><div class="pvh-date">12</div></div>
+            <div class="plan-vis-head"><div class="pvh-day">Ven</div><div class="pvh-date">13</div></div>
           </div>
-          <div class="fpv-row">
-            <div class="fpv-av" style="background:#14c2e0">SR</div>
-            <div class="fpv-name">S. Rousseau</div>
-            <div class="fpv-slots"><div class="fpv-slot fps-a">A-M</div><div class="fpv-slot fps-o">—</div><div class="fpv-slot fps-m">Mat.</div><div class="fpv-slot fps-m">Mat.</div><div class="fpv-slot fps-a">A-M</div></div>
+          <div class="plan-vis-row">
+            <div class="plan-vis-emp"><div class="plan-vis-av" style="background:linear-gradient(135deg,#1a6b7a,#0e9eb8)">ML</div><span class="plan-vis-name">M. Leroy</span></div>
+            <div class="pvc pvc-m"><span class="pvc-shift">Matin</span><span class="pvc-time">8h – 12h</span></div>
+            <div class="pvc pvc-m"><span class="pvc-shift">Matin</span><span class="pvc-time">8h – 12h</span></div>
+            <div class="pvc pvc-o"><span class="pvc-shift">—</span></div>
+            <div class="pvc pvc-a"><span class="pvc-shift">Après-midi</span><span class="pvc-time">13h – 17h</span></div>
+            <div class="pvc pvc-m"><span class="pvc-shift">Matin</span><span class="pvc-time">8h – 12h</span></div>
           </div>
-          <div class="fpv-row">
-            <div class="fpv-av" style="background:#8B5CF6">AK</div>
-            <div class="fpv-name">A. Karim</div>
-            <div class="fpv-slots"><div class="fpv-slot fps-c">CP</div><div class="fpv-slot fps-c">CP</div><div class="fpv-slot fps-c">CP</div><div class="fpv-slot fps-c">CP</div><div class="fpv-slot fps-c">CP</div></div>
+          <div class="plan-vis-row">
+            <div class="plan-vis-emp"><div class="plan-vis-av" style="background:linear-gradient(135deg,#0891b2,#14c2e0)">SR</div><span class="plan-vis-name">S. Rousseau</span></div>
+            <div class="pvc pvc-a"><span class="pvc-shift">Après-midi</span><span class="pvc-time">13h – 17h</span></div>
+            <div class="pvc pvc-o"><span class="pvc-shift">—</span></div>
+            <div class="pvc pvc-m"><span class="pvc-shift">Matin</span><span class="pvc-time">8h – 12h</span></div>
+            <div class="pvc pvc-m"><span class="pvc-shift">Matin</span><span class="pvc-time">8h – 12h</span></div>
+            <div class="pvc pvc-a"><span class="pvc-shift">Après-midi</span><span class="pvc-time">13h – 17h</span></div>
           </div>
-          <div class="fpv-row">
-            <div class="fpv-av" style="background:#F59E0B">PB</div>
-            <div class="fpv-name">P. Bernard</div>
-            <div class="fpv-slots"><div class="fpv-slot fps-m">Mat.</div><div class="fpv-slot fps-a">A-M</div><div class="fpv-slot fps-m">Mat.</div><div class="fpv-slot fps-o">—</div><div class="fpv-slot fps-m">Mat.</div></div>
+          <div class="plan-vis-row">
+            <div class="plan-vis-emp"><div class="plan-vis-av" style="background:linear-gradient(135deg,#7c3aed,#8B5CF6)">AK</div><span class="plan-vis-name">A. Karim</span></div>
+            <div class="pvc pvc-c"><span class="pvc-shift">Congé</span><span class="pvc-time">CP</span></div>
+            <div class="pvc pvc-c"><span class="pvc-shift">Congé</span><span class="pvc-time">CP</span></div>
+            <div class="pvc pvc-c"><span class="pvc-shift">Congé</span><span class="pvc-time">CP</span></div>
+            <div class="pvc pvc-c"><span class="pvc-shift">Congé</span><span class="pvc-time">CP</span></div>
+            <div class="pvc pvc-c"><span class="pvc-shift">Congé</span><span class="pvc-time">CP</span></div>
           </div>
-          <div class="fpv-row">
-            <div class="fpv-av" style="background:#10B981">TM</div>
-            <div class="fpv-name">T. Martin</div>
-            <div class="fpv-slots"><div class="fpv-slot fps-o">—</div><div class="fpv-slot fps-m">Mat.</div><div class="fpv-slot fps-a">A-M</div><div class="fpv-slot fps-m">Mat.</div><div class="fpv-slot fps-o">—</div></div>
+          <div class="plan-vis-row">
+            <div class="plan-vis-emp"><div class="plan-vis-av" style="background:linear-gradient(135deg,#d97706,#F59E0B)">PB</div><span class="plan-vis-name">P. Bernard</span></div>
+            <div class="pvc pvc-j"><span class="pvc-shift">Journée</span><span class="pvc-time">8h – 18h</span></div>
+            <div class="pvc pvc-a"><span class="pvc-shift">Après-midi</span><span class="pvc-time">13h – 17h</span></div>
+            <div class="pvc pvc-m"><span class="pvc-shift">Matin</span><span class="pvc-time">8h – 12h</span></div>
+            <div class="pvc pvc-o"><span class="pvc-shift">—</span></div>
+            <div class="pvc pvc-m"><span class="pvc-shift">Matin</span><span class="pvc-time">8h – 12h</span></div>
           </div>
-          <div class="fv-ai-row">
-            <span style="font-size:14px">✦</span>
-            <span class="fv-ai-text">Proposition générée · couverture optimale · 0 conflit détecté</span>
-            <span class="fv-ai-badge">Valider</span>
+          <div class="plan-vis-row">
+            <div class="plan-vis-emp"><div class="plan-vis-av" style="background:linear-gradient(135deg,#059669,#10B981)">TM</div><span class="plan-vis-name">T. Martin</span></div>
+            <div class="pvc pvc-m"><span class="pvc-shift">Matin</span><span class="pvc-time">8h – 12h</span></div>
+            <div class="pvc pvc-j"><span class="pvc-shift">Journée</span><span class="pvc-time">8h – 18h</span></div>
+            <div class="pvc pvc-a"><span class="pvc-shift">Après-midi</span><span class="pvc-time">13h – 17h</span></div>
+            <div class="pvc pvc-j"><span class="pvc-shift">Journée</span><span class="pvc-time">8h – 18h</span></div>
+            <div class="pvc pvc-o"><span class="pvc-shift">—</span></div>
+          </div>
+          <div class="plan-vis-footer">
+            <span style="color:#14c2e0;font-size:13px">✦</span>
+            <span class="pvf-text">Planning généré par l'IA · couverture optimale · 0 conflit détecté</span>
+            <button class="pvf-btn">Valider le planning</button>
           </div>
         </div>
       </div>
@@ -1505,6 +1612,115 @@ footer { background: var(--dark); padding: 64px 0 28px; border-top: 1px solid rg
         <div class="result-title">tableur nécessaire</div>
         <p class="result-desc">Plus besoin d'Excel pour suivre les plannings, les congés ou préparer la paie. Tout est centralisé, traçable et exportable en un clic.</p>
       </div>
+    </div>
+  </div>
+</section>
+
+<!-- TARIFS -->
+<section class="pricing" id="tarifs">
+  <div class="container">
+    <div class="sec-label" data-reveal>Tarifs</div>
+    <h2 data-reveal="delay-1">Un prix simple,<br><span>sans mauvaise surprise</span></h2>
+    <p class="sec-sub" data-reveal="delay-2">Tout est inclus — aucun module à payer en supplément, aucun engagement minimum.</p>
+
+    <div class="pricing-layout">
+
+      <!-- Carte prix -->
+      <div class="pricing-card" data-reveal="delay-1">
+        <div class="pricing-glow"></div>
+        <div class="pricing-tag"><span class="pricing-tag-dot"></span>Tout inclus</div>
+        <div class="pricing-amount">
+          <span class="pricing-num"><em>8</em> €</span>
+          <span class="pricing-unit">/ employé<br>/ mois</span>
+        </div>
+        <p class="pricing-lot">Vendu par <strong>lots de 10 employés</strong> · facturation mensuelle</p>
+
+        <div class="lot-calc">
+          <div class="lot-calc-label">Calculez votre tarif</div>
+          <div class="lot-stepper">
+            <button class="lot-btn" id="lot-minus">−</button>
+            <div class="lot-display">
+              <div class="lot-display-n" id="lot-count">1</div>
+              <div class="lot-display-l" id="lot-employees">lot · 10 employés</div>
+            </div>
+            <button class="lot-btn" id="lot-plus">+</button>
+          </div>
+          <div class="lot-result">
+            <div>
+              <div class="lot-result-l">Total mensuel</div>
+            </div>
+            <div style="text-align:right">
+              <div class="lot-result-price" id="lot-price">80 €</div>
+              <div class="lot-result-sub" id="lot-per">8 € × 10 employés</div>
+            </div>
+          </div>
+        </div>
+
+        <button class="pricing-btn" id="btn-pricing-demo">
+          Réserver ma démo gratuite →
+        </button>
+        <p class="pricing-note">Sans engagement · Annulation à tout moment · Support inclus</p>
+      </div>
+
+      <!-- Ce qui est inclus -->
+      <div class="pricing-right" data-reveal="delay-2">
+        <div class="pricing-includes">
+          <h3>Tout est inclus dans ce prix</h3>
+
+          <div class="pricing-feature">
+            <div class="pricing-feature-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+            </div>
+            <div class="pricing-feature-text">
+              <h4>Planning & Horaires IA</h4>
+              <p>Génération automatique, détection des conflits, notifications push.</p>
+            </div>
+          </div>
+
+          <div class="pricing-feature">
+            <div class="pricing-feature-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+            <div class="pricing-feature-text">
+              <h4>Absences & Congés</h4>
+              <p>Demandes en ligne, compteurs CP/RTT, synchronisation planning.</p>
+            </div>
+          </div>
+
+          <div class="pricing-feature">
+            <div class="pricing-feature-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
+            </div>
+            <div class="pricing-feature-text">
+              <h4>Pré-paie & Pointage</h4>
+              <p>Export compatible Silae, Sage, Cegid. Zéro ressaisie.</p>
+            </div>
+          </div>
+
+          <div class="pricing-feature">
+            <div class="pricing-feature-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+            </div>
+            <div class="pricing-feature-text">
+              <h4>Bien-être & RH</h4>
+              <p>Sondages anonymes, score de moral, alertes préventives.</p>
+            </div>
+          </div>
+
+          <div class="pricing-feature">
+            <div class="pricing-feature-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+            </div>
+            <div class="pricing-feature-text">
+              <h4>Support & multi-sites</h4>
+              <p>Support inclus, accès par rôle, gestion multi-établissements.</p>
+            </div>
+          </div>
+        </div>
+
+        <p class="pricing-cta-note">Une équipe de plus de 200 personnes ou un besoin spécifique ? <a href="#contact" id="btn-pricing-contact">Contactez-nous</a> pour un devis sur mesure.</p>
+      </div>
+
     </div>
   </div>
 </section>
@@ -1803,6 +2019,29 @@ document.getElementById('btn-step2-next').addEventListener('click', async () => 
     btn.innerHTML = 'Réessayer — une erreur est survenue';
   }
 });
+
+// ── Lot calculator ────────────────────────────────────────────
+(function() {
+  let lots = 1;
+  const MIN = 1, MAX = 50, PRICE_PER = 8, EMP_PER_LOT = 10;
+
+  function updateLot() {
+    const emp = lots * EMP_PER_LOT;
+    const total = lots * EMP_PER_LOT * PRICE_PER;
+    document.getElementById('lot-count').textContent = lots;
+    document.getElementById('lot-employees').textContent =
+      lots === 1 ? `lot · ${emp} employés` : `lots · ${emp} employés`;
+    document.getElementById('lot-price').textContent = `${total} €`;
+    document.getElementById('lot-per').textContent = `8 € × ${emp} employés`;
+    document.getElementById('lot-minus').disabled = lots <= MIN;
+    document.getElementById('lot-plus').disabled = lots >= MAX;
+  }
+
+  document.getElementById('lot-minus').addEventListener('click', () => { if (lots > MIN) { lots--; updateLot(); } });
+  document.getElementById('lot-plus').addEventListener('click', () => { if (lots < MAX) { lots++; updateLot(); } });
+  document.getElementById('btn-pricing-demo').addEventListener('click', () => openDemo());
+  updateLot();
+})();
 </script>
 <!-- DEMO MODAL -->
 <div class="demo-overlay" id="demo-overlay" role="dialog" aria-modal="true">
