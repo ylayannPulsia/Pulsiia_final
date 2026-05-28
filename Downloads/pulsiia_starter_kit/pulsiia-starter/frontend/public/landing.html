@@ -1967,16 +1967,23 @@ document.querySelectorAll('.faq-q').forEach(btn => {
 });
 
 // ── Demo modal ──────────────────────────────────────────────────
-const overlay  = document.getElementById('demo-overlay');
-const openBtns = document.querySelectorAll('#btn-open-demo, [href="#contact"]');
+// Lookup lazily — le modal HTML est après ce script dans le DOM
+function openDemo() {
+  const ov = document.getElementById('demo-overlay');
+  if (ov) { ov.classList.add('open'); document.body.style.overflow = 'hidden'; }
+}
+function closeDemo() {
+  const ov = document.getElementById('demo-overlay');
+  if (ov) { ov.classList.remove('open'); document.body.style.overflow = ''; }
+}
 
-function openDemo() { overlay.classList.add('open'); document.body.style.overflow = 'hidden'; }
-function closeDemo() { overlay.classList.remove('open'); document.body.style.overflow = ''; }
-
-openBtns.forEach(b => b.addEventListener('click', e => { e.preventDefault(); openDemo(); }));
-document.getElementById('demo-close').addEventListener('click', closeDemo);
-document.getElementById('btn-step3-close').addEventListener('click', closeDemo);
-overlay.addEventListener('click', e => { if (e.target === overlay) closeDemo(); });
+document.querySelectorAll('#btn-open-demo, [href="#contact"]').forEach(b => {
+  b.addEventListener('click', e => { e.preventDefault(); openDemo(); });
+});
+document.addEventListener('click', e => {
+  if (e.target.id === 'demo-close' || e.target.id === 'btn-step3-close') closeDemo();
+  if (e.target.id === 'demo-overlay') closeDemo();
+});
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDemo(); });
 
 function setStep(n) {
@@ -2140,7 +2147,8 @@ document.querySelectorAll('.fv-pp-export-btn').forEach(btn => {
   updateLot();
 })();
 </script>
-<!-- DEMO MODAL -->
+
+<!-- DEMO MODAL — placé avant le script principal pour que getElementById ne retourne pas null -->
 <div class="demo-overlay" id="demo-overlay" role="dialog" aria-modal="true">
   <div class="demo-modal">
     <button class="demo-close" id="demo-close" aria-label="Fermer">✕</button>
