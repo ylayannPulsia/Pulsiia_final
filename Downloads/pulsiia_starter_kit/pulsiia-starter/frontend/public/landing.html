@@ -661,6 +661,17 @@ h2 span { color: var(--teal); }
 .result-title { font-size: 17px; font-weight: 700; color: var(--text); margin-bottom: 10px; letter-spacing: -.3px; }
 .result-desc { font-size: 14px; color: var(--text-2); line-height: 1.65; }
 
+/* ── TOAST ── */
+.pulsiia-toast {
+  position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%) translateY(16px);
+  background: #1a1f2e; color: white; font-size: 13px; font-weight: 500;
+  padding: 12px 24px; border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,.35);
+  opacity: 0; transition: opacity .25s, transform .25s; z-index: 9999;
+  border: 1px solid rgba(255,255,255,.08); white-space: nowrap; pointer-events: none;
+}
+.pulsiia-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+.fvs-no { background: rgba(239,68,68,.1); color: #f87171; }
+
 /* ── PRICING ── */
 .pricing { padding: 96px 0; background: var(--bg); border-top: 1px solid var(--border); }
 .pricing-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: start; margin-top: 52px; }
@@ -900,7 +911,7 @@ footer { background: var(--dark); padding: 64px 0 28px; border-top: 1px solid rg
       </a>
       <ul class="nav-links">
         <li><a href="#fonctionnalites">Fonctionnalités</a></li>
-        <li><a href="#faq">Tarifs</a></li>
+        <li><a href="#tarifs">Tarifs</a></li>
         <li><a href="#faq">Ressources</a></li>
       </ul>
       <div class="nav-cta">
@@ -2018,6 +2029,92 @@ document.getElementById('btn-step2-next').addEventListener('click', async () => 
     btn.textContent = 'Réessayer';
     btn.innerHTML = 'Réessayer — une erreur est survenue';
   }
+});
+
+// ── Toast helper ─────────────────────────────────────────────
+function showToast(msg) {
+  const t = document.createElement('div');
+  t.className = 'pulsiia-toast';
+  t.textContent = msg;
+  document.body.appendChild(t);
+  requestAnimationFrame(() => t.classList.add('show'));
+  setTimeout(() => { t.classList.remove('show'); setTimeout(() => t.remove(), 300); }, 2800);
+}
+
+// ── Footer dead links ─────────────────────────────────────────
+const DEMO_KEYWORDS = ['documentation', "centre d'aide", 'api', 'changelog'];
+const LEGAL_KEYWORDS = ['mentions légales', 'confidentialité', 'rgpd', 'cgu', 'politique'];
+document.querySelectorAll('footer a[href="#"], .footer-links a[href="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    e.preventDefault();
+    const txt = a.textContent.trim().toLowerCase();
+    if (DEMO_KEYWORDS.some(k => txt.includes(k))) {
+      openDemo();
+    } else if (LEGAL_KEYWORDS.some(k => txt.includes(k))) {
+      showToast('Page en cours de rédaction — bientôt disponible.');
+    } else {
+      showToast('Bientôt disponible.');
+    }
+  });
+});
+
+// ── Hero planning week nav ─────────────────────────────────────
+const WEEKS = ['Sem. 20 · 11–17 mai', 'Sem. 21 · 18–24 mai', 'Sem. 22 · 25–31 mai', 'Sem. 23 · 1–7 juin', 'Sem. 24 · 8–14 juin'];
+let weekIdx = 2;
+const weekLabel = document.querySelector('.pv-week');
+document.querySelectorAll('.pv-nav-btn').forEach((btn, i) => {
+  btn.addEventListener('click', () => {
+    if (i === 0 && weekIdx > 0) weekIdx--;
+    if (i === 1 && weekIdx < WEEKS.length - 1) weekIdx++;
+    if (weekLabel) weekLabel.textContent = WEEKS[weekIdx];
+    btn.style.transform = 'scale(.85)';
+    setTimeout(() => { btn.style.transform = ''; }, 120);
+  });
+});
+
+// ── "Valider le planning" ──────────────────────────────────────
+document.querySelectorAll('.pvf-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    btn.textContent = '✓ Planning validé';
+    btn.style.background = 'rgba(52,211,153,.22)';
+    btn.style.color = '#34d399';
+    setTimeout(() => {
+      btn.textContent = 'Valider le planning';
+      btn.style.background = '';
+      btn.style.color = '';
+    }, 2200);
+  });
+});
+
+// ── Feature tab — abs approve/reject ──────────────────────────
+document.addEventListener('click', e => {
+  const ok = e.target.classList.contains('fv-abs-btn-ok');
+  const no = e.target.classList.contains('fv-abs-btn-no');
+  if (!ok && !no) return;
+  const row = e.target.closest('.fv-abs-row');
+  if (!row) return;
+  const s = row.querySelector('.fv-status');
+  if (ok) {
+    if (s) { s.textContent = 'Approuvée'; s.className = 'fv-status fvs-ok'; }
+  } else {
+    if (s) { s.textContent = 'Refusée'; s.className = 'fv-status fvs-no'; }
+    row.style.opacity = '.4';
+  }
+  row.querySelector('.fv-abs-btns')?.remove();
+});
+
+// ── Export pré-paie ───────────────────────────────────────────
+document.querySelectorAll('.fv-pp-export-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    btn.textContent = '✓ Téléchargé';
+    btn.style.background = 'rgba(52,211,153,.2)';
+    btn.style.color = '#34d399';
+    setTimeout(() => {
+      btn.textContent = '↓ Télécharger';
+      btn.style.background = '';
+      btn.style.color = '';
+    }, 2200);
+  });
 });
 
 // ── Lot calculator ────────────────────────────────────────────
