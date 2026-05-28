@@ -1995,47 +1995,49 @@ function setStep(n) {
   });
 }
 
-// Étape 1 → 2
-document.getElementById('btn-step1-next').addEventListener('click', () => {
-  const input = document.getElementById('demo-email');
-  const val = input.value.trim();
-  if (!val || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)) {
-    input.classList.add('error');
-    input.focus();
+// Étapes modal — event delegation car les éléments sont après ce script
+document.addEventListener('click', async e => {
+  // Étape 1 → 2
+  if (e.target.closest('#btn-step1-next')) {
+    const input = document.getElementById('demo-email');
+    const val = input.value.trim();
+    if (!val || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)) {
+      input.classList.add('error'); input.focus(); return;
+    }
+    input.classList.remove('error');
+    setStep(2);
     return;
   }
-  input.classList.remove('error');
-  setStep(2);
-});
-document.getElementById('demo-email').addEventListener('input', function() { this.classList.remove('error'); });
 
-// Étape 2 → 3 (envoi)
-document.getElementById('btn-step2-next').addEventListener('click', async () => {
-  const btn = document.getElementById('btn-step2-next');
-  btn.disabled = true;
-  btn.textContent = 'Envoi en cours…';
-
-  const payload = {
-    email:   document.getElementById('demo-email').value.trim(),
-    prenom:  document.getElementById('demo-prenom').value.trim(),
-    nom:     document.getElementById('demo-nom').value.trim(),
-    societe: document.getElementById('demo-societe').value.trim(),
-    taille:  document.getElementById('demo-taille').value,
-  };
-
-  try {
-    const res = await fetch('/api/demo', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
-    });
-    if (!res.ok) throw new Error();
-    setStep(3);
-  } catch {
-    btn.disabled = false;
-    btn.textContent = 'Réessayer';
-    btn.innerHTML = 'Réessayer — une erreur est survenue';
+  // Étape 2 → 3 (envoi)
+  if (e.target.closest('#btn-step2-next')) {
+    const btn = document.getElementById('btn-step2-next');
+    btn.disabled = true; btn.textContent = 'Envoi en cours…';
+    const payload = {
+      email:   document.getElementById('demo-email').value.trim(),
+      prenom:  document.getElementById('demo-prenom').value.trim(),
+      nom:     document.getElementById('demo-nom').value.trim(),
+      societe: document.getElementById('demo-societe').value.trim(),
+      taille:  document.getElementById('demo-taille').value,
+    };
+    try {
+      const res = await fetch('/api/demo', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      if (!res.ok) throw new Error();
+      setStep(3);
+    } catch {
+      btn.disabled = false;
+      btn.innerHTML = 'Réessayer — une erreur est survenue';
+    }
+    return;
   }
+});
+
+document.addEventListener('input', e => {
+  if (e.target.id === 'demo-email') e.target.classList.remove('error');
 });
 
 // ── Toast helper ─────────────────────────────────────────────
