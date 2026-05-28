@@ -3146,6 +3146,16 @@
     .dash-grid-2 { grid-template-columns: 1fr !important; gap: 12px !important; }
     .dash-grid-3c { grid-template-columns: 1fr !important; gap: 12px !important; }
 
+    /* ── Accueil collab : empilement vertical zone par zone ── */
+    #page-accueil-collab > div[style*="grid-template-columns:repeat(4,1fr)"] {
+      grid-template-columns: 1fr !important;
+      gap: 10px !important;
+    }
+    #page-accueil-collab > div[style*="grid-template-columns:1.4fr 1fr"] {
+      grid-template-columns: 1fr !important;
+      gap: 12px !important;
+    }
+
     /* ── Site rows : scroll horizontal ── */
     .site-rows-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
     .site-row { min-width: 480px; }
