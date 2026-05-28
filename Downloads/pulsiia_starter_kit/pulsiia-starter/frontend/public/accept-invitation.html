@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pulsiia — Accepter l'invitation</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+      background: linear-gradient(135deg, #F8FAFC 0%, #EEF2FF 100%);
+      color: #1E1B4B;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .card {
+      background: #fff;
+      border-radius: 24px;
+      padding: 40px 32px;
+      max-width: 480px;
+      width: 100%;
+      box-shadow: 0 32px 80px -16px rgba(91, 91, 247, 0.15);
+    }
+    h1 { font-size: 26px; font-weight: 800; margin-bottom: 8px; }
+    .subtitle { color: #6B7280; font-size: 15px; margin-bottom: 24px; line-height: 1.5; }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      background: #5B5BF7;
+      color: #fff;
+      border: none;
+      padding: 14px 20px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 15px;
+      font-family: inherit;
+      cursor: pointer;
+      text-decoration: none;
+      margin-top: 8px;
+    }
+    .btn:hover { background: #4F46E5; }
+    .btn-ghost {
+      background: transparent;
+      color: #5B5BF7;
+      border: 1.5px solid #E2E8F0;
+      margin-top: 12px;
+    }
+    .msg {
+      margin-top: 16px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      font-size: 14px;
+      line-height: 1.5;
+      display: none;
+    }
+    .msg.is-visible { display: block; }
+    .msg.error { background: #FEF2F2; color: #B91C1C; }
+    .msg.success { background: #ECFDF5; color: #065F46; }
+    .msg.info { background: #EFF6FF; color: #1D4ED8; }
+    .company-badge {
+      display: inline-block;
+      background: #EEF2FF;
+      color: #4338CA;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 14px;
+      margin: 12px 0 20px;
+    }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <img src="/assets/logo.svg" width="48" height="48" alt="Pulsiia" style="margin-bottom:20px">
+    <h1>Invitation entreprise</h1>
+    <p class="subtitle" id="intro">Chargement…</p>
+    <div id="company-badge" class="company-badge" style="display:none"></div>
+    <button type="button" class="btn" id="accept-btn" style="display:none">Accepter l'invitation</button>
+    <a href="/login.html" class="btn btn-ghost" id="login-link" style="display:none">Se connecter</a>
+    <p id="message" class="msg" role="alert"></p>
+  </main>
+  <script src="/config.defaults.js"></script>
+  <script src="/config.js"></script>
+  <script src="/js/pulsiia-client.js"></script>
+  <script src="/js/accept-invitation.js"></script>
+</body>
+</html>

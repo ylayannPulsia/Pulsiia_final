@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pulsiia — Connexion</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="apple-touch-icon" href="/icons/icon-192.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+      background: linear-gradient(135deg, #F8FAFC 0%, #EEF2FF 100%);
+      color: #1E1B4B;
+      min-height: 100vh;
+      min-height: 100dvh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 24px;
+      padding: 40px 32px;
+      max-width: 440px;
+      width: 100%;
+      box-shadow:
+        0 32px 80px -16px rgba(91, 91, 247, 0.15),
+        0 12px 32px rgba(91, 91, 247, 0.08);
+    }
+
+    @media (min-width: 480px) {
+      .card { padding: 48px 40px; }
+    }
+
+    .logo {
+      display: block;
+      width: 56px;
+      height: 56px;
+      margin-bottom: 24px;
+      object-fit: contain;
+    }
+
+    h1 {
+      font-size: 32px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      color: #6B7280;
+      font-size: 15px;
+      font-weight: 500;
+      margin-bottom: 32px;
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: #374151;
+      margin-bottom: 8px;
+    }
+
+    .field { margin-bottom: 20px; }
+
+    input {
+      width: 100%;
+      padding: 13px 16px;
+      border: 1.5px solid #E2E8F0;
+      border-radius: 12px;
+      font-size: 16px;
+      font-family: inherit;
+      color: #1E1B4B;
+      background: #fff;
+      transition: border-color 0.15s, box-shadow 0.15s;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+
+    input::placeholder { color: #9CA3AF; }
+
+    input:focus {
+      outline: none;
+      border-color: #5B5BF7;
+      box-shadow: 0 0 0 3px rgba(91, 91, 247, 0.15);
+    }
+
+    .btn {
+      width: 100%;
+      margin-top: 8px;
+      background: #5B5BF7;
+      color: #fff;
+      border: none;
+      padding: 14px 20px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 15px;
+      font-family: inherit;
+      cursor: pointer;
+      transition: background 0.15s, opacity 0.15s;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 48px;
+    }
+
+    .btn:hover:not(:disabled) { background: #4F46E5; }
+    .btn:active:not(:disabled) { transform: scale(0.99); }
+    .btn:disabled { opacity: 0.65; cursor: wait; }
+
+    .spinner {
+      width: 18px;
+      height: 18px;
+      border: 2px solid rgba(255, 255, 255, 0.35);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      display: none;
+    }
+
+    .btn.is-loading .spinner { display: block; }
+    .btn.is-loading .btn-label { opacity: 0.9; }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .error {
+      display: none;
+      margin-top: 16px;
+      background: #FEF2F2;
+      border-radius: 12px;
+      padding: 12px 14px;
+      font-size: 13px;
+      font-weight: 500;
+      color: #B91C1C;
+      line-height: 1.45;
+      text-align: center;
+    }
+
+    .error.is-visible { display: block; }
+
+    .forgot {
+      display: block;
+      margin-top: 20px;
+      text-align: center;
+      font-size: 14px;
+      font-weight: 600;
+      color: #5B5BF7;
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+
+    .forgot:hover { color: #4F46E5; }
+  </style>
+</head>
+<body>
+
+  <main class="card">
+    <img class="logo" src="/assets/logo.svg" width="56" height="56" alt="Pulsiia">
+    <h1>Bonjour 👋</h1>
+    <p class="subtitle">Connectez-vous à Pulsiia</p>
+
+    <form id="login-form" action="#" method="post" novalidate>
+      <div class="field">
+        <label for="email">Email</label>
+        <input
+          id="email"
+          name="email"
+          type="email"
+          inputmode="email"
+          autocomplete="email"
+          placeholder="vous@entreprise.fr"
+          required
+        >
+      </div>
+
+      <div class="field">
+        <label for="password">Mot de passe</label>
+        <input
+          id="password"
+          name="password"
+          type="password"
+          autocomplete="current-password"
+          placeholder="••••••••"
+          required
+        >
+      </div>
+
+      <div class="field" id="company-field" style="display:none">
+        <label for="company-select">Entreprise</label>
+        <select id="company-select" style="width:100%;padding:13px 16px;border:1.5px solid #E2E8F0;border-radius:12px;font-size:16px;font-family:inherit;color:#1E1B4B;background:#fff">
+        </select>
+      </div>
+
+      <div class="field" id="twofa-field" style="display:none">
+        <label for="twofa-code">Code d'authentification (2FA)</label>
+        <input
+          id="twofa-code"
+          name="twofa-code"
+          type="text"
+          inputmode="numeric"
+          autocomplete="one-time-code"
+          maxlength="6"
+          placeholder="123456"
+        >
+      </div>
+
+      <button type="button" class="btn" id="submit-btn">
+        <span class="spinner" aria-hidden="true"></span>
+        <span class="btn-label">Se connecter</span>
+      </button>
+
+      <p id="error" class="error" role="alert" aria-live="polite"></p>
+    </form>
+
+    <a href="#" class="forgot" id="forgot-link">Mot de passe oublié ?</a>
+  </main>
+
+  <script src="/config.defaults.js"></script>
+  <script src="/config.js"></script>
+  <script src="/js/pulsiia-client.js" id="pulsiia-client-script"></script>
+  <script src="/js/login.js"></script>
+
+</body>
+</html>

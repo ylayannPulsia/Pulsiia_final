@@ -1,0 +1,10 @@
+-- CreateEnum
+CREATE TYPE "QuestionType" AS ENUM ('SCALE', 'TEXT');
+
+-- AlterTable
+ALTER TABLE "Question" ADD COLUMN IF NOT EXISTS "type" "QuestionType" NOT NULL DEFAULT 'SCALE';
+ALTER TABLE "Question" ADD COLUMN IF NOT EXISTS "optional" BOOLEAN NOT NULL DEFAULT false;
+
+-- AlterTable
+ALTER TABLE "Answer" ALTER COLUMN "score" DROP NOT NULL;
+ALTER TABLE "Answer" ADD COLUMN IF NOT EXISTS "textValue" TEXT;

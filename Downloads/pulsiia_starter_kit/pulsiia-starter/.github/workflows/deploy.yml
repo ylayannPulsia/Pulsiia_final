@@ -1,0 +1,92 @@
+name: 🚀 Deploy Pulsiia — Scaleway Paris
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  # ─── Tests avant déploiement ──────────────────────────────
+  test:
+    name: ✅ Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: backend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+        working-directory: backend
+
+      - name: Run tests
+        run: npm test
+        working-directory: backend
+        env:
+          NODE_ENV: test
+          DATABASE_URL: postgresql://test:test@localhost:5432/test
+
+  # ─── Déploiement sur VPS Scaleway Paris ───────────────────
+  deploy:
+    name: 🚀 Deploy to Scaleway Paris
+    runs-on: ubuntu-latest
+    needs: test
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 🔐 Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: 2222
+          script: |
+            set -e
+            cd /home/pulsiia/app
+
+            echo "📥 Synchronisation du code (origin/main)..."
+            git fetch origin main
+            # Le VPS ne doit pas garder de modifs locales (sinon git pull échoue)
+            git reset --hard origin/main
+            git clean -fd
+
+            echo "📦 Installation des dépendances backend..."
+            cd backend && npm ci --omit=dev && cd ..
+
+            echo "📦 Installation des dépendances frontend..."
+            cd frontend && npm ci --omit=dev && cd ..
+
+            echo "🗄️  Migration base de données..."
+            cd backend
+            NODE_ENV=production npx prisma migrate deploy
+            cd ..
+
+            echo "♻️  Redémarrage PM2 (zero-downtime)..."
+            pm2 reload ecosystem.config.js --env production --update-env
+
+            echo "⏱️  Nginx — timeouts API (renvoi invitations en masse)..."
+            NGINX_SITE="/etc/nginx/sites-available/pulsiia"
+            if [ -f "$NGINX_SITE" ] && grep -q 'proxy_read_timeout 60s' "$NGINX_SITE"; then
+              sudo sed -i 's/proxy_read_timeout 60s/proxy_read_timeout 300s/g' "$NGINX_SITE"
+              sudo sed -i 's/proxy_send_timeout 60s/proxy_send_timeout 300s/g' "$NGINX_SITE"
+              sudo nginx -t && sudo systemctl reload nginx
+              echo "   Nginx timeouts mis à jour (300s)"
+            fi
+
+            echo "✅ Déploiement terminé !"
+            pm2 status
+
+      - name: 🔔 Notification succès
+        if: success()
+        run: echo "✅ Pulsiia déployé avec succès sur Scaleway Paris !"
+
+      - name: 🚨 Notification échec
+        if: failure()
+        run: echo "❌ Échec du déploiement — vérifier les logs GitHub Actions"

@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pulsiia — Démarrage</title>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="apple-touch-icon" href="/icons/icon-192.png">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background: linear-gradient(135deg, #F8FAFC 0%, #EEF2FF 100%);
+    color: #1E1B4B;
+    min-height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+    padding: 24px;
+  }
+  .card {
+    background: white;
+    border-radius: 24px;
+    padding: 40px;
+    max-width: 540px;
+    width: 100%;
+    box-shadow: 0 32px 80px -16px rgba(91,91,247,.15), 0 12px 32px rgba(91,91,247,.08);
+  }
+  .logo {
+    display: block;
+    width: 56px;
+    height: 56px;
+    margin-bottom: 20px;
+    object-fit: contain;
+  }
+  h1 { font-size: 28px; font-weight: 800; letter-spacing: -.8px; margin-bottom: 8px; }
+  .tag { color: #6B7280; font-size: 14px; margin-bottom: 28px; }
+  .step {
+    background: #F8FAFC;
+    border: 1px solid #E2E8F0;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 12px;
+  }
+  .step-num {
+    display: inline-block;
+    background: #5B5BF7;
+    color: white;
+    font-size: 12px; font-weight: 700;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    text-align: center; line-height: 22px;
+    margin-right: 8px;
+  }
+  .step-title { font-weight: 600; font-size: 14px; margin-bottom: 6px; }
+  .step-desc { font-size: 13px; color: #6B7280; line-height: 1.5; }
+  code {
+    background: #EEF2FF;
+    color: #5B5BF7;
+    padding: 2px 6px;
+    border-radius: 5px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+  }
+  .btn {
+    display: inline-block;
+    background: #5B5BF7; color: white;
+    text-decoration: none;
+    padding: 12px 24px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 14px;
+    margin-top: 20px;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .btn:hover { background: #4F46E5; }
+  .ok {
+    background: #ECFDF5;
+    border-color: #4FD1C5;
+    color: #065F46;
+  }
+  .ok .step-title { color: #065F46; }
+  .ok .step-desc { color: #047857; }
+  #status { margin-top: 14px; font-size: 13px; color: #6B7280; }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <img class="logo" src="/assets/logo.svg" width="56" height="56" alt="Pulsiia">
+  <h1>Pulsiia est prêt 🎉</h1>
+  <p class="tag">Le pouls de votre entreprise, aussi simple qu'un jeu d'enfant.</p>
+
+  <div class="step" id="step-api">
+    <div class="step-title"><span class="step-num">1</span>Backend API</div>
+    <div class="step-desc">
+      Test de connexion à <code id="api-url">…</code>
+      <div id="status">Vérification…</div>
+    </div>
+  </div>
+
+  <div class="step" id="step-maquette">
+    <div class="step-title"><span class="step-num">2</span>Maquette HTML</div>
+    <div class="step-desc">
+      La maquette connectée est dans <code>frontend/public/maquette.html</code>.
+      <a href="/dashboard" class="btn" style="margin-top:12px;display:inline-block">Ouvrir le dashboard →</a>
+      (connexion requise via <a href="/">la page de connexion</a>)
+    </div>
+  </div>
+
+  <div class="step" id="step-login">
+    <div class="step-title"><span class="step-num">3</span>Test login</div>
+    <div class="step-desc">
+      Compte initial (seed) : <code>marie.lambert@saveurs-co.fr</code> / <code>Pulsiia2026!</code>
+      <button class="btn" onclick="testLogin()">Tester le login</button>
+    </div>
+  </div>
+
+  <div id="login-result"></div>
+</div>
+
+<script src="/config.defaults.js"></script>
+<script src="/config.js"></script>
+<script src="/js/pulsiia-client.js"></script>
+<script>
+  document.getElementById('api-url').textContent =
+    window.__PULSIIA_CONFIG__?.apiUrl || 'http://localhost:3001';
+
+  // Test API connection
+  fetch(window.__PULSIIA_CONFIG__.apiUrl + '/health')
+    .then(r => r.json())
+    .then(data => {
+      document.getElementById('step-api').classList.add('ok');
+      document.getElementById('status').innerHTML = '✅ API connectée — v' + data.version;
+    })
+    .catch(err => {
+      document.getElementById('status').innerHTML = '❌ API injoignable. Lance <code>cd backend && npm run dev</code>';
+    });
+
+  async function testLogin() {
+    const result = document.getElementById('login-result');
+    result.innerHTML = '<div style="margin-top:14px;color:#5B5BF7;font-size:13px">Connexion…</div>';
+    try {
+      const user = await api.login('marie.lambert@saveurs-co.fr', 'Pulsiia2026!');
+      result.innerHTML = `
+        <div style="margin-top:20px;background:#ECFDF5;border:1px solid #4FD1C5;border-radius:12px;padding:16px;font-size:13px;color:#065F46">
+          ✅ Connecté en tant que <b>${user.firstName} ${user.lastName}</b> (${user.role})<br>
+          <small style="color:#047857">Token stocké.</small><br>
+          <a href="/dashboard" class="btn" style="margin-top:10px;display:inline-block">Ouvrir le dashboard →</a>
+        </div>
+      `;
+    } catch (err) {
+      result.innerHTML = `
+        <div style="margin-top:20px;background:#FEF2F2;border:1px solid #FECACA;border-radius:12px;padding:16px;font-size:13px;color:#7F1D1D">
+          ❌ Erreur : ${err.error || err.message}
+        </div>
+      `;
+    }
+  }
+</script>
+
+</body>
+</html>

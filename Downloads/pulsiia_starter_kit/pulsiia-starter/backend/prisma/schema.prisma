@@ -1,0 +1,853 @@
+// ═══════════════════════════════════════════════════════════════
+// PULSIIA — Schema Prisma
+// 18 modèles pour le SaaS RH complet
+// ═══════════════════════════════════════════════════════════════
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─── Enums ─────────────────────────────────────────────────────
+
+enum UserRole {
+  COLLABORATEUR
+  MANAGER
+  RH
+  DRH
+  ADMIN
+}
+
+enum ContractType {
+  CDI
+  CDD
+  INTERIM
+}
+
+enum ShiftType {
+  MATIN
+  APREM
+  NUIT
+  JOURNEE
+  OFF
+  ABSENT
+}
+
+enum AbsenceType {
+  CP                // Congés payés
+  RTT
+  MALADIE
+  ACCIDENT_TRAVAIL
+  MATERNITE
+  PATERNITE
+  PARENTAL
+  SANS_SOLDE
+  FORMATION
+  ENFANT_MALADE
+  DECES
+  MARIAGE
+  DEMENAGEMENT
+  HEURES_SUP
+  AUTRE
+}
+
+enum AbsenceStatus {
+  EN_ATTENTE
+  APPROUVE
+  REFUSE
+  ANNULE
+}
+
+enum PlanningWeekStatus {
+  DRAFT
+  AI_GENERATED
+  PENDING_VALIDATION
+  VALIDATED
+  PUBLISHED
+}
+
+enum PayVariableType {
+  HEURE_NORMALE
+  HEURE_SUP_125
+  HEURE_SUP_150
+  MAJORATION_NUIT
+  MAJORATION_DIMANCHE
+  MAJORATION_FERIE
+  ABSENCE_MALADIE
+  CONGES_PAYES
+  PRIME_ANCIENNETE
+  PRIME_PERFORMANCE
+  PRIME_PANIER
+  REMBOURSEMENT_TRANSPORT
+  AVANTAGE_NATURE
+  AUTRE
+}
+
+enum PayVariableStatus {
+  A_VALIDER
+  VALIDE
+  REJETE
+  ANOMALIE
+}
+
+enum SubscriptionStatus {
+  TRIAL
+  ACTIVE
+  SUSPENDED
+  CANCELLED
+}
+
+enum InvoiceStatus {
+  DRAFT
+  PENDING
+  PAID
+  OVERDUE
+  CANCELLED
+}
+
+enum SurveyStatus {
+  DRAFT
+  ACTIVE
+  CLOSED
+}
+
+enum QuestionType {
+  SCALE
+  TEXT
+}
+
+enum InvitationStatus {
+  PENDING
+  ACCEPTED
+  CANCELLED
+  EXPIRED
+}
+
+// ─── Entreprise & Sites ────────────────────────────────────────
+
+model Company {
+  id            String   @id @default(cuid())
+  name          String
+  siret         String?  @unique
+  convention    String?  // Convention collective (ex: "CHR")
+  settings      Json     @default("{}")
+  logoUrl       String?
+  ssoDomain     String?  @unique
+  ssoProvider   String?  // "google" | "microsoft" | "okta"
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  users         User[]
+  sites         Site[]
+  shifts        Shift[]
+  surveys       Survey[]
+  wellbeingMeetings WellbeingMeeting[]
+  variables     PayVariable[]
+  absences      Absence[]
+  prepaiePeriods PrepaiePeriodMeta[]
+  timesheetSheets   TimesheetSheet[]
+  jobPositions      JobPosition[]
+  operationalPoles  OperationalPole[]
+  skills            Skill[]
+  planningWeeks PlanningWeek[]
+  subscription  Subscription?
+  invoices      Invoice[]
+  invitations   CompanyInvitation[]
+
+  @@index([ssoDomain])
+}
+
+model Skill {
+  id        String   @id @default(cuid())
+  companyId String
+  name      String
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+
+  company   Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@unique([companyId, name])
+  @@index([companyId])
+}
+
+model JobPosition {
+  id        String   @id @default(cuid())
+  companyId String
+  name      String
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+
+  company   Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@unique([companyId, name])
+  @@index([companyId])
+}
+
+model OperationalPole {
+  id        String   @id @default(cuid())
+  companyId String
+  name      String
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+
+  company   Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@unique([companyId, name])
+  @@index([companyId])
+}
+
+model Site {
+  id          String   @id @default(cuid())
+  companyId   String
+  name        String
+  address     String?
+  postalCode  String?
+  city        String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+
+  company     Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  users       User[]
+  shifts      Shift[]
+  planningWeeks PlanningWeek[]
+
+  @@index([companyId])
+}
+
+// ─── Utilisateurs ──────────────────────────────────────────────
+
+model User {
+  id              String    @id @default(cuid())
+  email           String
+  passwordHash    String?
+  firstName       String
+  lastName        String
+  role            UserRole  @default(COLLABORATEUR)
+  jobTitle        String?
+  phone           String?
+  iban            String?
+  avatarColor     String?
+  avatarUrl       String?
+  twoFactorEnabled       Boolean  @default(false)
+  twoFactorSecret        String?
+  twoFactorPendingSecret String?
+  isActive        Boolean   @default(true)
+  lastLogin       DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  hourlyRate      Float?    // Taux horaire brut (€) pour estimations pré-paie
+  contractType    ContractType @default(CDI)
+  contractEndDate DateTime?
+  weeklyHours     Float?
+  competences     String[]  @default([])
+  secondaryRoles  String[]  @default([])
+
+  companyId       String
+  siteId          String?
+  managerId       String?
+
+  company         Company   @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  site            Site?     @relation(fields: [siteId], references: [id])
+  manager         User?     @relation("ManagerSubordinates", fields: [managerId], references: [id])
+  subordinates    User[]    @relation("ManagerSubordinates")
+
+  shifts          Shift[]
+  absences        Absence[]
+  variables       PayVariable[]
+  responses       SurveyResponse[]
+  wellbeingMeetingsCreated WellbeingMeeting[] @relation("MeetingCreator")
+  tokens          RefreshToken[]
+  pushSubs        PushSubscription[]
+  notificationReads NotificationRead[]
+  commMessages    CommMessage[]
+  ideaBoxPosts    IdeaBoxPost[]
+  ideaBoxReactions IdeaBoxReaction[]
+  consentLogs     ConsentLog[]
+  exportReqs      DataExportRequest[]
+  deletionReqs    DeletionRequest[]
+  ssoAccounts     SSOAccount[]
+  files           UploadedFile[]
+  passwordResets  PasswordResetToken[]
+  timesheetSheets TimesheetSheet[]
+  invitationsSent CompanyInvitation[] @relation("InvitationInvitedBy")
+
+  @@unique([companyId, email])
+  @@index([companyId])
+  @@index([siteId])
+  @@index([role])
+  @@index([email])
+}
+
+model CompanyInvitation {
+  id              String           @id @default(cuid())
+  tokenHash       String           @unique
+  email           String
+  companyId       String
+  invitedById     String?
+  status          InvitationStatus @default(PENDING)
+  expiresAt       DateTime
+  acceptedAt      DateTime?
+  createdAt       DateTime         @default(now())
+
+  firstName       String
+  lastName        String
+  role            UserRole         @default(COLLABORATEUR)
+  jobTitle        String?
+  phone           String?
+  siteId          String?
+  managerId       String?
+  contractType    ContractType     @default(CDI)
+  contractEndDate DateTime?
+  weeklyHours     Float?
+  hourlyRate      Float?
+  competences     String[]         @default([])
+  secondaryRoles  String[]         @default([])
+  avatarColor     String?
+
+  company         Company          @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  invitedBy       User?            @relation("InvitationInvitedBy", fields: [invitedById], references: [id], onDelete: SetNull)
+
+  @@index([companyId, email, status])
+  @@index([expiresAt])
+}
+
+// ─── Planning ──────────────────────────────────────────────────
+
+model Shift {
+  id          String    @id @default(cuid())
+  userId      String
+  siteId      String
+  companyId   String
+  date        DateTime
+  type        ShiftType
+  startTime   String?   // "06:00"
+  endTime     String?   // "14:00"
+  breakStart  String?   // "12:00" — début pause planifiée
+  breakEnd    String?   // "12:30" — fin pause planifiée
+  breakMin    Int?      // durée pause en minutes (alternative ou complément)
+  notes       String?
+  isAiGenerated Boolean @default(false)
+  aiConfidence  Float?
+  planningWeekId String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  site        Site      @relation(fields: [siteId], references: [id])
+  company     Company   @relation(fields: [companyId], references: [id])
+  planningWeek PlanningWeek? @relation(fields: [planningWeekId], references: [id], onDelete: SetNull)
+
+  @@index([userId, date])
+  @@index([siteId, date])
+  @@index([companyId, date])
+  @@index([planningWeekId])
+}
+
+// ─── Planning IA générative ────────────────────────────────────
+
+model PlanningWeek {
+  id              String              @id @default(cuid())
+  companyId       String
+  siteId          String
+  weekStart       DateTime            // lundi (minuit local UTC)
+  weekEnd         DateTime            // dimanche (fin de journée UTC)
+  status          PlanningWeekStatus  @default(DRAFT)
+  isAiGenerated   Boolean             @default(false)
+  aiModel         String?             // ex. "claude-sonnet-4-20250514" ou "heuristic-local"
+  aiConfidence    Float?              // score moyen 0-1
+  aiPrompt        Json?               // payload envoyé à l'IA (debug)
+  aiSummary       String?             // résumé textuel renvoyé par l'IA
+  aiSuggestions   Json?               // suggestions / warnings
+  conflicts       Json?               // conflits détectés
+  coverage        Json?               // analyse de couverture par créneau
+  generatedAt     DateTime?
+  generatedBy     String?             // userId qui a lancé la génération
+  validatedBy     String?
+  validatedAt     DateTime?
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+
+  company         Company             @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  site            Site                @relation(fields: [siteId], references: [id])
+  shifts          Shift[]
+
+  @@unique([siteId, weekStart])
+  @@index([companyId, weekStart])
+  @@index([status])
+}
+
+// ─── Absences ──────────────────────────────────────────────────
+
+model Absence {
+  id          String         @id @default(cuid())
+  userId      String
+  companyId   String
+  type        AbsenceType
+  startDate   DateTime
+  endDate     DateTime
+  days        Float
+  status      AbsenceStatus  @default(EN_ATTENTE)
+  reason      String?
+  refuseReason String?
+  approvedBy  String?
+  approvedAt  DateTime?
+  fileId      String?
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  user        User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  company     Company        @relation(fields: [companyId], references: [id])
+
+  @@index([userId])
+  @@index([companyId, status])
+  @@index([startDate, endDate])
+}
+
+// ─── Pré-paie ──────────────────────────────────────────────────
+
+model PayVariable {
+  id          String             @id @default(cuid())
+  userId      String
+  companyId   String
+  period      String             // "2026-05-19" (lundi) ou "2026-05" (export mensuel)
+  type        PayVariableType
+  value       Float
+  unit        String             // "h", "€", "jours"
+  source      String             // "planning_auto", "manuel", "import"
+  status      PayVariableStatus  @default(A_VALIDER)
+  notes       String?
+  validatedBy String?
+  validatedAt DateTime?
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+
+  user        User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  company     Company            @relation(fields: [companyId], references: [id])
+
+  @@index([userId, period])
+  @@index([companyId, period, status])
+}
+
+model PrepaiePeriodMeta {
+  id          String    @id @default(cuid())
+  companyId   String
+  period      String    // "2026-05-19" (lundi de semaine)
+  lastSyncAt  DateTime?
+  lockedAt    DateTime?
+  lockedBy    String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  company     Company   @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@unique([companyId, period])
+  @@index([companyId])
+}
+
+model TimesheetSheet {
+  id                 String    @id @default(cuid())
+  userId             String
+  companyId          String
+  period             String    // "2026-05-19" (lundi de semaine)
+  reference          String?
+  storedName         String?
+  status             String    @default("BROUILLON") // BROUILLON | EN_ATTENTE_SIGNATURE | SIGNE | REFUSE | EXPIRE
+  generatedBy        String?
+  generatedAt        DateTime?
+  signedAt           DateTime?
+
+  signatureProvider  String?
+  signatureRequestId String?
+  signatureSignerId  String?
+  signatureStatus    String?
+  signatureLink      String?
+  signatureLevel     String?
+
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+
+  user               User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  company            Company   @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@unique([companyId, userId, period])
+  @@index([companyId, period, status])
+  @@index([signatureRequestId])
+}
+
+// ─── Bien-être / QCM ───────────────────────────────────────────
+
+model Survey {
+  id               String        @id @default(cuid())
+  companyId        String
+  weekStart        DateTime
+  weekLabel        String        // "S18 — 28 avril au 4 mai"
+  status           SurveyStatus  @default(DRAFT)
+  durationDays     Int           @default(7)   // durée du questionnaire (jours)
+  endsAt           DateTime?                     // fin de période (calculée ou fixée)
+  onlyOnWorkShifts Boolean       @default(true)  // QCM visible si planifié ce jour-là (hors OFF)
+  isCustom           Boolean       @default(false) // true = questions fixes définies par les RH
+  createdAt        DateTime      @default(now())
+
+  company     Company       @relation(fields: [companyId], references: [id])
+  questions   Question[]
+  responses   SurveyResponse[]
+
+  @@index([companyId, weekStart])
+}
+
+model Question {
+  id        String       @id @default(cuid())
+  surveyId  String
+  text      String
+  order     Int
+  type      QuestionType @default(SCALE)
+  optional  Boolean      @default(false)
+
+  survey    Survey   @relation(fields: [surveyId], references: [id], onDelete: Cascade)
+  answers   Answer[]
+}
+
+model SurveyResponse {
+  id           String   @id @default(cuid())
+  surveyId     String
+  userId       String
+  responseDate DateTime // début de journée — une réponse par jour de sondage actif
+  createdAt    DateTime @default(now())
+
+  survey    Survey   @relation(fields: [surveyId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  answers   Answer[]
+
+  @@unique([surveyId, userId, responseDate])
+  @@index([userId])
+  @@index([responseDate])
+}
+
+model Answer {
+  id          String          @id @default(cuid())
+  responseId  String
+  questionId  String
+  score       Int?            // 1-10 (questions SCALE)
+  textValue   String?         // questions TEXT (anonymisées en agrégat RH)
+
+  response    SurveyResponse  @relation(fields: [responseId], references: [id], onDelete: Cascade)
+  question    Question        @relation(fields: [questionId], references: [id], onDelete: Cascade)
+}
+
+model WellbeingMeeting {
+  id          String   @id @default(cuid())
+  companyId   String
+  siteId      String?
+  teamLabel   String
+  scheduledAt DateTime
+  type        String   @default("Point manager bien-être")
+  note        String?
+  status      String   @default("PLANNED") // PLANNED | DONE | CANCELLED
+  createdById String
+  createdAt   DateTime @default(now())
+
+  company     Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  createdBy   User     @relation("MeetingCreator", fields: [createdById], references: [id], onDelete: Cascade)
+
+  @@index([companyId, status])
+  @@index([scheduledAt])
+}
+
+// ─── Facturation ───────────────────────────────────────────────
+
+model Subscription {
+  id                   String             @id @default(cuid())
+  companyId            String             @unique
+  status               SubscriptionStatus @default(TRIAL)
+  trialStartDate       DateTime           @default(now())
+  trialEndDate         DateTime
+  currentPeriodStart   DateTime?
+  currentPeriodEnd     DateTime?
+  pricePerEmployee     Float              @default(6.0)
+  createdAt            DateTime           @default(now())
+  updatedAt            DateTime           @updatedAt
+
+  company              Company            @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  invoices             Invoice[]
+
+  @@index([companyId])
+  @@index([status])
+}
+
+model Invoice {
+  id                String        @id @default(cuid())
+  companyId         String
+  subscriptionId    String
+  periodStart       DateTime
+  periodEnd         DateTime
+  employeeCount     Int
+  pricePerEmployee  Float
+  totalAmount       Float
+  status            InvoiceStatus @default(PENDING)
+  dueDate           DateTime
+  paidAt            DateTime?
+  notes             String?
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+
+  company           Company       @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  subscription      Subscription  @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
+
+  @@index([companyId])
+  @@index([status])
+  @@index([dueDate])
+}
+
+// ─── Auth & Tokens ─────────────────────────────────────────────
+
+model RefreshToken {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  userId    String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+model SSOAccount {
+  id                String    @id @default(cuid())
+  userId            String
+  provider          String
+  providerAccountId String
+  email             String?
+  accessToken       String?
+  refreshToken      String?
+  expiresAt         DateTime?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  user              User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+}
+
+// ─── Communication interne ─────────────────────────────────────
+
+model CommChannel {
+  id          String        @id @default(cuid())
+  companyId   String
+  slug        String
+  label       String
+  description String?
+  createdAt   DateTime      @default(now())
+
+  messages    CommMessage[]
+
+  @@unique([companyId, slug])
+  @@index([companyId])
+}
+
+model CommMessage {
+  id          String       @id @default(cuid())
+  channelId   String
+  userId      String
+  text        String
+  pinned      Boolean      @default(false)
+  parentId    String?
+  fileId      String?
+  createdAt   DateTime     @default(now())
+
+  channel     CommChannel  @relation(fields: [channelId], references: [id], onDelete: Cascade)
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  file        UploadedFile? @relation(fields: [fileId], references: [id], onDelete: SetNull)
+  parent      CommMessage? @relation("MessageReplies", fields: [parentId], references: [id])
+  replies     CommMessage[] @relation("MessageReplies")
+
+  @@index([channelId, createdAt])
+  @@index([userId])
+}
+
+// ─── Boîte à idées anonyme ─────────────────────────────────────
+
+model IdeaBoxPost {
+  id          String            @id @default(cuid())
+  companyId   String
+  userId      String            // jamais exposé au client, uniquement pour le quota
+  anonAlias   String            // alias anonyme ex: "Colibri #4" — stable par user/semaine
+  text        String
+  status      String            @default("VISIBLE") // VISIBLE | MODERATED
+  weekKey     String            // format "2026-W20" pour quota hebdo
+  createdAt   DateTime          @default(now())
+
+  user        User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  reactions   IdeaBoxReaction[]
+
+  @@index([companyId, createdAt])
+  @@index([userId, weekKey])
+}
+
+model IdeaBoxReaction {
+  id        String      @id @default(cuid())
+  postId    String
+  userId    String      // jamais exposé au client
+  emoji     String      // ex: "👍", "💡", "❤️"
+  createdAt DateTime    @default(now())
+
+  post      IdeaBoxPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([postId, userId, emoji])
+  @@index([postId])
+}
+
+// ─── Notifications in-app ────────────────────────────────────
+
+model NotificationRead {
+  id        String   @id @default(cuid())
+  userId    String
+  companyId String
+  key       String
+  readAt    DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, key])
+  @@index([userId])
+  @@index([companyId])
+}
+
+// ─── PWA & Push ────────────────────────────────────────────────
+
+model PushSubscription {
+  id           String   @id @default(cuid())
+  endpoint     String   @unique
+  subscription String
+  userId       String
+  companyId    String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([companyId])
+  @@index([userId])
+}
+
+// ─── RGPD ──────────────────────────────────────────────────────
+
+model ConsentLog {
+  id        String   @id @default(cuid())
+  userId    String
+  type      String   // "terms" | "privacy" | "push" | "analytics"
+  version   String
+  accepted  Boolean
+  ipAddress String?
+  userAgent String?
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, type])
+}
+
+model DataExportRequest {
+  id          String    @id @default(cuid())
+  userId      String
+  status      String    @default("PENDING")
+  downloadUrl String?
+  expiresAt   DateTime?
+  completedAt DateTime?
+  createdAt   DateTime  @default(now())
+
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model DeletionRequest {
+  id          String    @id @default(cuid())
+  userId      String
+  reason      String?
+  status      String    @default("PENDING")
+  scheduledAt DateTime
+  completedAt DateTime?
+  createdAt   DateTime  @default(now())
+
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model PasswordResetToken {
+  id        String    @id @default(cuid())
+  userId    String
+  tokenHash String    @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  userId    String?
+  companyId String?
+  action    String
+  resource  String?
+  ipAddress String?
+  userAgent String?
+  metadata  Json?
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([companyId])
+  @@index([action])
+  @@index([createdAt])
+}
+
+// ─── Fichiers ──────────────────────────────────────────────────
+
+model UploadedFile {
+  id           String    @id @default(cuid())
+  userId       String
+  companyId    String
+  originalName String
+  storedName   String    @unique
+  mimeType     String
+  size         Int
+  purpose      String    // "justificatif_absence", "document_rh", etc.
+  relatedId    String?
+  relatedType  String?
+  notes        String?
+  isDeleted    Boolean   @default(false)
+  deletedAt    DateTime?
+  createdAt    DateTime  @default(now())
+
+  // Versioning (historique des révisions)
+  rootFileId         String?
+  versionNumber      Int       @default(1)
+  isCurrentVersion   Boolean   @default(true)
+
+  // Signature électronique qualifiée eIDAS (Yousign — prestataire agréé)
+  signatureProvider    String?   // "yousign"
+  signatureRequestId   String?
+  signatureSignerId    String?
+  signatureStatus      String?   // initiated | pending | signed | declined | expired | error
+  signatureLink        String?
+  signatureLevel       String?   // electronic_signature | advanced_electronic_signature
+
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  commMessages CommMessage[]
+
+  @@index([userId])
+  @@index([companyId])
+  @@index([relatedId, relatedType])
+  @@index([rootFileId])
+  @@index([signatureRequestId])
+  @@index([isCurrentVersion])
+}
