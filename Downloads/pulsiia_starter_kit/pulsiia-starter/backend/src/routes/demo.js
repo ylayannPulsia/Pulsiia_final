@@ -12,19 +12,6 @@ router.post('/', async (req, res) => {
 
   const to = process.env.DEMO_EMAIL || 'contact@pulsiia.com';
 
-  // Transporter nodemailer — configure SMTP_HOST/USER/PASS dans .env
-  // Si non configuré, on log et on répond succès (mode dev)
-  const transportConfig = process.env.SMTP_HOST
-    ? {
-        host: process.env.SMTP_HOST,
-        port: parseInt(process.env.SMTP_PORT || '587'),
-        secure: process.env.SMTP_SECURE === 'true',
-        auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS },
-      }
-    : { jsonTransport: true };
-
-  const transporter = nodemailer.createTransport(transportConfig);
-
   const html = `
     <div style="font-family:sans-serif;max-width:560px;margin:0 auto">
       <h2 style="color:#1a6b7a">Nouvelle demande de démo — Pulsiia</h2>
@@ -41,25 +28,39 @@ router.post('/', async (req, res) => {
     </div>
   `;
 
-  try {
-    const info = await transporter.sendMail({
-      from: `"Pulsiia Demo" <${process.env.SMTP_USER || 'noreply@pulsiia.com'}>`,
-      to,
-      replyTo: email,
-      subject: `Demande de démo — ${prenom || ''} ${nom || ''} (${societe || email})`.trim(),
-      html,
-    });
+  // Log systématiquement (utile même si l'email échoue)
+  console.log('[Demo] Demande reçue :', { email, prenom, nom, societe, taille });
 
-    if (transportConfig.jsonTransport) {
-      // Mode dev sans SMTP — log uniquement
-      console.log('[Demo] Demande reçue (SMTP non configuré) :', { email, prenom, nom, societe, taille });
+  // Si SMTP configuré, on tente l'envoi — mais on répond succès dans tous les cas
+  if (process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS) {
+    try {
+      const transporter = nodemailer.createTransport({
+        host: process.env.SMTP_HOST,
+        port: parseInt(process.env.SMTP_PORT || '587'),
+        secure: process.env.SMTP_SECURE === 'true',
+        auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS },
+      });
+
+      await transporter.sendMail({
+        from: `"Pulsiia Demo" <${process.env.SMTP_USER}>`,
+        to,
+        replyTo: email,
+        subject: `Demande de démo — ${prenom || ''} ${nom || ''} (${societe || email})`.trim(),
+        html,
+      });
+
+      console.log('[Demo] Email envoyé à', to);
+    } catch (err) {
+      // SMTP a échoué — on log l'erreur mais on ne bloque pas l'utilisateur
+      console.error('[Demo] Échec envoi email (SMTP) :', err.message);
+      console.error('[Demo] Vérifiez SMTP_HOST / SMTP_USER / SMTP_PASS dans .env');
     }
-
-    res.json({ ok: true });
-  } catch (err) {
-    console.error('[Demo] Erreur envoi email :', err.message);
-    res.status(500).json({ error: 'Erreur lors de l\'envoi. Réessayez.' });
+  } else {
+    console.log('[Demo] SMTP non configuré — demande enregistrée en console uniquement.');
   }
+
+  // Toujours répondre succès : la demande est reçue même si l'email n'est pas parti
+  res.json({ ok: true });
 });
 
 module.exports = router;
