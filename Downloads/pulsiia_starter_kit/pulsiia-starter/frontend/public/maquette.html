@@ -3146,16 +3146,6 @@
     .dash-grid-2 { grid-template-columns: 1fr !important; gap: 12px !important; }
     .dash-grid-3c { grid-template-columns: 1fr !important; gap: 12px !important; }
 
-    /* ── Accueil collab : empilement vertical zone par zone ── */
-    #page-accueil-collab > div[style*="grid-template-columns:repeat(4,1fr)"] {
-      grid-template-columns: 1fr !important;
-      gap: 10px !important;
-    }
-    #page-accueil-collab > div[style*="grid-template-columns:1.4fr 1fr"] {
-      grid-template-columns: 1fr !important;
-      gap: 12px !important;
-    }
-
     /* ── Site rows : scroll horizontal ── */
     .site-rows-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
     .site-row { min-width: 480px; }
@@ -3571,19 +3561,23 @@
       display: none;
     }
 
-    /* ── Inline grids 2+ colonnes → 1 colonne ── */
-    .content div[style*="grid-template-columns:1fr 1fr"],
-    .content div[style*="grid-template-columns:1.4fr 1fr"],
-    .content div[style*="grid-template-columns:1.2fr 1fr"],
-    .content div[style*="grid-template-columns:2fr 1fr"],
-    .content div[style*="grid-template-columns:1fr 1.3fr"],
-    .content div[style*="grid-template-columns:repeat(3,1fr)"],
-    .content div[style*="grid-template-columns:repeat(3, 1fr)"] {
-      grid-template-columns: 1fr !important;
-    }
-    /* Sidebar à largeur fixe dans le contenu → collapse */
-    .content div[style*="grid-template-columns:210px"],
-    .content div[style*="grid-template-columns:220px"] {
+    /* ── Toutes les grilles inline 2+ colonnes → 1 colonne sur mobile ── */
+    .page div[style*="grid-template-columns:1fr 1fr"],
+    .page div[style*="grid-template-columns:1fr 1fr 1fr"],
+    .page div[style*="grid-template-columns:1.2fr 1fr"],
+    .page div[style*="grid-template-columns:1.4fr 1fr"],
+    .page div[style*="grid-template-columns:2fr 1fr"],
+    .page div[style*="grid-template-columns:1fr 1.3fr"],
+    .page div[style*="grid-template-columns:repeat(2,1fr)"],
+    .page div[style*="grid-template-columns:repeat(2, 1fr)"],
+    .page div[style*="grid-template-columns:repeat(3,1fr)"],
+    .page div[style*="grid-template-columns:repeat(3, 1fr)"],
+    .page div[style*="grid-template-columns:repeat(4,1fr)"],
+    .page div[style*="grid-template-columns:repeat(4, 1fr)"],
+    .page div[style*="grid-template-columns:repeat(5,1fr)"],
+    .page div[style*="grid-template-columns:repeat(5, 1fr)"],
+    .page div[style*="grid-template-columns:210px"],
+    .page div[style*="grid-template-columns:220px"] {
       grid-template-columns: 1fr !important;
     }
 
@@ -3602,11 +3596,6 @@
     }
     #comm-messages-panel {
       height: calc(100dvh - 54px - 80px - 160px) !important;
-    }
-
-    /* ── Mon salaire / Feuille heures ── */
-    .content div[style*="grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px"] {
-      grid-template-columns: 1fr !important;
     }
 
     /* ── Modal billing ── */
