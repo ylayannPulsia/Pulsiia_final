@@ -425,7 +425,7 @@
     return;
   }
 
-  if (!window.location.port || (window.location.port !== '3000' && window.location.hostname === 'localhost')) {
+  if (window.location.hostname === 'localhost' && window.location.port !== '3000') {
     showError('URL incorrecte : utilisez exactement http://localhost:3000 (frontend sur le port 3000).');
   }
 
