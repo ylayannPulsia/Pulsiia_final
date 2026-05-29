@@ -2964,65 +2964,6 @@
   .sidebar-overlay.open { display: block; }
   @keyframes fadeOverlay { from { opacity: 0; } to { opacity: 1; } }
 
-  /* ── Bottom nav bar (mobile only) ── */
-  .mobile-bottom-nav {
-    display: none;
-    position: fixed;
-    bottom: 0; left: 0; right: 0;
-    width: 100%;
-    box-sizing: border-box;
-    background: rgba(15, 17, 23, 0.97);
-    border-top: 1px solid rgba(255,255,255,.07);
-    padding: 8px 4px;
-    padding-bottom: calc(8px + env(safe-area-inset-bottom, 0px));
-    z-index: 80;
-    justify-content: space-around;
-    align-items: center;
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    transform: translateZ(0);
-    will-change: auto;
-  }
-  .mob-nav-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-    padding: 4px 6px 2px;
-    border-radius: 12px;
-    cursor: pointer;
-    color: rgba(255,255,255,.35);
-    font-size: 10px;
-    font-weight: 500;
-    min-width: 56px;
-    transition: color .2s, background .2s;
-    border: none; background: none;
-    font-family: inherit;
-    position: relative;
-    -webkit-tap-highlight-color: transparent;
-    letter-spacing: 0.01em;
-  }
-  .mob-nav-item:active { transform: scale(0.94); }
-  .mob-nav-item.active { color: #fff; }
-  .mob-nav-item.active .mob-nav-icon {
-    background: rgba(37,99,235,.3);
-    border-radius: 10px;
-    box-shadow: 0 2px 8px rgba(37,99,235,.2);
-  }
-  .mob-nav-icon {
-    display: flex; align-items: center; justify-content: center;
-    width: 38px; height: 30px;
-    transition: background .2s, box-shadow .2s;
-    border-radius: 10px;
-  }
-  .mob-nav-icon svg { width: 20px; height: 20px; display: block; }
-  .mob-nav-badge {
-    position: absolute; top: 2px; right: 6px;
-    width: 8px; height: 8px;
-    background: #EF4444; border-radius: 50%;
-    border: 1.5px solid rgba(15,17,23,.97);
-  }
-
   /* ══════════════════════════════════════════════════
      RESPONSIVE MOBILE — PORTRAIT PRIORITAIRE
   ══════════════════════════════════════════════════ */
@@ -3113,7 +3054,7 @@
       overscroll-behavior-y: contain;
       touch-action: pan-y;
       padding: 16px;
-      padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px));
+      padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
       width: 100%;
       box-sizing: border-box;
     }
@@ -3123,9 +3064,6 @@
       max-width: 100%;
       box-sizing: border-box;
     }
-
-    /* Bottom nav */
-    .mobile-bottom-nav { display: flex; }
 
     /* ── KPI grid : 2 colonnes ── */
     .kpi-grid {
@@ -19079,59 +19017,6 @@
 
 </div>
 
-<!-- ══════════════════════════════════════════
-     BARRE DE NAVIGATION MOBILE (bottom nav)
-══════════════════════════════════════════ -->
-<nav class="mobile-bottom-nav" id="mobile-bottom-nav" aria-label="Navigation principale">
-
-  <button class="mob-nav-item active" id="mob-nav-dashboard" onclick="showPageMobile('dashboard', this)" type="button">
-    <div class="mob-nav-icon">
-      <svg viewBox="0 0 16 16" fill="currentColor"><path d="M2 2h5v5H2V2zm0 7h5v5H2V9zm7-7h5v5H9V2zm0 7h5v5H9V9z"/></svg>
-    </div>
-    Accueil
-  </button>
-
-  <button class="mob-nav-item" id="mob-nav-planning" onclick="showPageMobile('planning', this)" type="button">
-    <div class="mob-nav-icon">
-      <svg viewBox="0 0 16 16" fill="currentColor"><path d="M4 1a1 1 0 0 0-1 1v1H2a1 1 0 0 0-1 1v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1h-1V2a1 1 0 0 0-2 0v1H5V2a1 1 0 0 0-1-1zM3 6h10v7H3V6z"/></svg>
-    </div>
-    <span class="mob-nav-badge" id="mob-badge-planning" style="display:none"></span>
-    Planning
-  </button>
-
-  <button class="mob-nav-item" id="mob-nav-absences" onclick="showPageMobile('absences', this)" type="button">
-    <div class="mob-nav-icon">
-      <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0zm.5 4.5v4.25l2.75 1.65-.5.85-3.25-1.95V4.5h1z"/></svg>
-    </div>
-    Absences
-  </button>
-
-  <button class="mob-nav-item" id="mob-nav-pulse" onclick="showPageMobile('pulse', this)" type="button">
-    <div class="mob-nav-icon">
-      <svg viewBox="0 0 180 210" fill="none" style="overflow:visible">
-        <rect x="54" y="108" width="72" height="68" rx="22" fill="currentColor" opacity=".9"/>
-        <ellipse cx="90" cy="74" rx="42" ry="44" fill="currentColor"/>
-        <ellipse cx="48" cy="72" rx="8" ry="10" fill="currentColor"/>
-        <ellipse cx="132" cy="72" rx="8" ry="10" fill="currentColor"/>
-        <ellipse cx="70" cy="68" rx="10" ry="11" fill="white" opacity=".85"/>
-        <ellipse cx="70" cy="69" rx="5" ry="6" fill="#0EA5C9"/>
-        <ellipse cx="110" cy="68" rx="10" ry="11" fill="white" opacity=".85"/>
-        <ellipse cx="110" cy="69" rx="5" ry="6" fill="#0EA5C9"/>
-        <path d="M 76 95 Q 90 105 104 95" stroke="white" stroke-width="5" stroke-linecap="round" fill="none"/>
-      </svg>
-    </div>
-    Pulse
-  </button>
-
-  <button class="mob-nav-item" id="mob-nav-menu" onclick="openMobileSidebar()" type="button">
-    <div class="mob-nav-icon">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-    </div>
-    Plus
-  </button>
-
-</nav>
-
 <!-- ── JS MOBILE ── -->
 <script>
 (function () {
@@ -19163,59 +19048,16 @@
     });
   });
 
-  /* ── showPageMobile : wrapper showPage + synchro bottom nav ── */
-  window.showPageMobile = function (pageId, mobBtn) {
-    if (typeof showPage === 'function') {
-      var sidebarItem = document.querySelector('.nav-item[onclick*="' + pageId + '"]');
-      showPage(pageId, sidebarItem || null);
-    }
-    document.querySelectorAll('.mob-nav-item').forEach(function (b) { b.classList.remove('active'); });
-    if (mobBtn) mobBtn.classList.add('active');
-  };
-
-  /* Synchro rétro du bottom nav quand showPage est appelé depuis la sidebar */
+  /* Fermer sidebar quand showPage est appelé */
   document.addEventListener('DOMContentLoaded', function () {
     var _orig = window.showPage;
     if (typeof _orig === 'function') {
       window.showPage = function (pageId, navEl) {
         _orig(pageId, navEl);
-        syncMobileNav(pageId);
         if (window.innerWidth <= 768) closeMobileSidebar();
       };
     }
-    syncBottomNavBadges();
   });
-
-  var pageToNav = {
-    'dashboard':      'mob-nav-dashboard',
-    'flux':           'mob-nav-dashboard',
-    'accueil-collab': 'mob-nav-dashboard',
-    'planning':       'mob-nav-planning',
-    'planning-ai':    'mob-nav-planning',
-    'mon-planning':   'mob-nav-planning',
-    'absences':       'mob-nav-absences',
-    'prepaie':        'mob-nav-absences',
-    'feuille-heure':  'mob-nav-absences',
-    'bienetre':       'mob-nav-menu',
-    'qcm':            'mob-nav-menu',
-    'communication': 'mob-nav-menu',
-    'pulse':         'mob-nav-pulse'
-  };
-
-  function syncMobileNav(pageId) {
-    document.querySelectorAll('.mob-nav-item').forEach(function (b) { b.classList.remove('active'); });
-    var id = pageToNav[pageId];
-    var btn = id ? document.getElementById(id) : document.getElementById('mob-nav-menu');
-    if (btn) btn.classList.add('active');
-  }
-
-  function syncBottomNavBadges() {
-    var planBadge = document.getElementById('badge-planning');
-    var mobBadge  = document.getElementById('mob-badge-planning');
-    if (planBadge && mobBadge && planBadge.textContent.trim()) {
-      mobBadge.style.display = 'block';
-    }
-  }
 
   /* ── Swipe left → fermer sidebar ── */
   var _touchStartX = 0;
