@@ -491,23 +491,12 @@ h1 span { color: var(--teal); }
 .stat-title { font-size: 16px; font-weight: 700; color: var(--text); margin-bottom: 8px; }
 .stat-l { font-size: 13.5px; color: var(--text-2); line-height: 1.6; }
 
-/* ── MARQUEE ── */
-.marquee-wrap { padding: 32px 0 0; overflow: hidden; }
-.marquee-track { position: relative; }
-.marquee-track::before, .marquee-track::after {
-  content: ''; position: absolute; top: 0; bottom: 0; width: 100px; z-index: 2; pointer-events: none;
-}
-.marquee-track::before { left: 0; background: linear-gradient(90deg, white, transparent); }
-.marquee-track::after  { right: 0; background: linear-gradient(-90deg, white, transparent); }
-@keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
-.marquee-inner { display: flex; gap: 10px; width: max-content; animation: marquee 36s linear infinite; }
-.marquee-inner:hover { animation-play-state: paused; }
-.m-badge {
-  display: inline-flex; align-items: center; gap: 7px;
-  padding: 8px 16px; border-radius: 999px; font-size: 12.5px; font-weight: 500;
-  white-space: nowrap; color: var(--text-2); border: 1.5px solid var(--border); background: var(--white);
-}
-.m-badge-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--teal); flex-shrink: 0; }
+/* ── FEATURES STRIP ── */
+.features-strip { padding: 56px 0 48px; border-top: 1px solid var(--border); background: var(--white); }
+.features-strip-label { text-align: center; font-size: 10.5px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #9ca3af; margin-bottom: 28px; }
+.features-strip-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px 28px; }
+.fs-item { display: inline-flex; align-items: center; gap: 7px; font-size: 13px; font-weight: 500; color: #6b7280; white-space: nowrap; }
+.fs-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--teal); opacity: .7; flex-shrink: 0; }
 
 /* ── SECTION LABELS ── */
 .sec-label {
@@ -1332,33 +1321,22 @@ footer { background: var(--dark); padding: 64px 0 28px; border-top: 1px solid rg
       </div>
     </div>
   </div>
-  <div class="marquee-wrap">
-    <div class="marquee-track">
-      <div class="marquee-inner">
-        <span class="m-badge"><span class="m-badge-dot"></span>Planning IA</span>
-        <span class="m-badge"><span class="m-badge-dot"></span>Absences & Congés</span>
-        <span class="m-badge"><span class="m-badge-dot"></span>Pré-paie automatique</span>
-        <span class="m-badge"><span class="m-badge-dot"></span>Bien-être & engagement</span>
-        <span class="m-badge"><span class="m-badge-dot"></span>Multi-sites</span>
-        <span class="m-badge"><span class="m-badge-dot"></span>RGPD conforme</span>
-        <span class="m-badge"><span class="m-badge-dot"></span>Application mobile</span>
-        <span class="m-badge"><span class="m-badge-dot"></span>Export Excel & PDF</span>
-        <span class="m-badge"><span class="m-badge-dot"></span>Support inclus</span>
-        <span class="m-badge"><span class="m-badge-dot"></span>Notifications push</span>
-        <span class="m-badge"><span class="m-badge-dot"></span>Accès par rôle</span>
-        <span class="m-badge"><span class="m-badge-dot"></span>Synchro temps réel</span>
-        <span class="m-badge"><span class="m-badge-dot"></span>Planning IA</span>
-        <span class="m-badge"><span class="m-badge-dot"></span>Absences & Congés</span>
-        <span class="m-badge"><span class="m-badge-dot"></span>Pré-paie automatique</span>
-        <span class="m-badge"><span class="m-badge-dot"></span>Bien-être & engagement</span>
-        <span class="m-badge"><span class="m-badge-dot"></span>Multi-sites</span>
-        <span class="m-badge"><span class="m-badge-dot"></span>RGPD conforme</span>
-        <span class="m-badge"><span class="m-badge-dot"></span>Application mobile</span>
-        <span class="m-badge"><span class="m-badge-dot"></span>Export Excel & PDF</span>
-        <span class="m-badge"><span class="m-badge-dot"></span>Support inclus</span>
-        <span class="m-badge"><span class="m-badge-dot"></span>Notifications push</span>
-        <span class="m-badge"><span class="m-badge-dot"></span>Accès par rôle</span>
-        <span class="m-badge"><span class="m-badge-dot"></span>Synchro temps réel</span>
+  <div class="features-strip">
+    <div class="container">
+      <div class="features-strip-label">Tout ce dont vos équipes ont besoin</div>
+      <div class="features-strip-grid">
+        <span class="fs-item"><span class="fs-dot"></span>Planning & Horaires</span>
+        <span class="fs-item"><span class="fs-dot"></span>Absences & Congés</span>
+        <span class="fs-item"><span class="fs-dot"></span>Pré-paie automatique</span>
+        <span class="fs-item"><span class="fs-dot"></span>Bien-être & engagement</span>
+        <span class="fs-item"><span class="fs-dot"></span>Multi-sites</span>
+        <span class="fs-item"><span class="fs-dot"></span>RGPD conforme</span>
+        <span class="fs-item"><span class="fs-dot"></span>Application mobile</span>
+        <span class="fs-item"><span class="fs-dot"></span>Export Excel & PDF</span>
+        <span class="fs-item"><span class="fs-dot"></span>Support inclus</span>
+        <span class="fs-item"><span class="fs-dot"></span>Notifications push</span>
+        <span class="fs-item"><span class="fs-dot"></span>Accès par rôle</span>
+        <span class="fs-item"><span class="fs-dot"></span>Synchro temps réel</span>
       </div>
     </div>
   </div>
